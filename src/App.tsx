@@ -231,7 +231,10 @@ function App() {
             <span className="game-over">Game over!</span>
           ) : (
             <>
-              <img src="/icons/bomb.svg" className="header-icon" />
+              <img
+                src={import.meta.env.BASE_URL + "/icons/bomb.svg"}
+                className="header-icon"
+              />
               {minesLeft}
             </>
           )}
@@ -253,7 +256,10 @@ function App() {
           </button>
         </div>
         <div className="header-label">
-          <img src="/icons/timer.svg" className="header-icon" />
+          <img
+            src={import.meta.env.BASE_URL + "/icons/timer.svg"}
+            className="header-icon"
+          />
           {getTimeDiff(timeNow, startTime)}
         </div>
       </header>
