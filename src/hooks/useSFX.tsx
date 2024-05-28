@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-const BASE = "/sfx/";
-
 const SOUNDS_LIST = {
   REVEAL_EMPTY: "reveal_empty.wav",
   REVEAL_NUMBER: "reveal_number.wav",
@@ -24,7 +22,9 @@ const useSFX = () => {
 
       let sound: TSoundName;
       for (sound in SOUNDS_LIST) {
-        list[sound] = new Audio(BASE + SOUNDS_LIST[sound]);
+        list[sound] = new Audio(
+          import.meta.env.BASE_URL + "sfx/" + SOUNDS_LIST[sound]
+        );
       }
 
       setSoundsList(list);
