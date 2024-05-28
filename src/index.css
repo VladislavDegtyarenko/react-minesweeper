@@ -1,0 +1,39 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  --surface: #ccc;
+  --text: #1a1a1a;
+  --cell-border-color: #bbbbbb;
+  --cell-mine-red: firebrick;
+  --cell-mine-green: forestgreen;
+  --one: blue;
+  --two: green;
+  --three: tomato;
+  --four: darkviolet;
+  --five: darkred;
+  --six: steelblue;
+  --seven: black;
+  --eight: black;
+
+  background-color: #15152a;
+  color: var(--text);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font-family: inherit;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 380px;
+  min-height: 100vh;
+}
