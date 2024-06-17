@@ -3,19 +3,18 @@ import clsx from "clsx";
 
 // Assets
 import mineIcon from "/icons/bomb.svg";
-import questionIcon from "/question-sign.png";
 import flagIcon from "/red-flag.png";
 
 // Typescript
-import { GameCell } from "../types";
-import { MouseEvent } from "react";
+import { GameCell, TLevel } from "../types";
+import { MouseEvent, memo } from "react";
 import { CELL_NUMBERS_COLORS } from "../utils/constants";
 
 type Props = {
   cell: GameCell;
   rowIndex: number;
   cellIndex: number;
-  level: string;
+  level: TLevel;
   handleCellLeftClick: (row: number, col: number) => void;
   handleCellRightClick: (
     e: MouseEvent<HTMLDivElement>,
@@ -43,7 +42,7 @@ const Cell = (props: Props) => {
           cell.hightlight === "green" &&
           "cell-mine-green",
         typeof cell.value === "number" && CELL_NUMBERS_COLORS[cell.value],
-        level === "Easy" ? "big" : "small"
+        level === "easy" ? "big" : "small"
       )}
       onClick={() => handleCellLeftClick(rowIndex, cellIndex)}
       onContextMenu={(e) => handleCellRightClick(e, rowIndex, cellIndex)}
@@ -57,11 +56,7 @@ const Cell = (props: Props) => {
         <div className="overlay">
           <img
             src={flagIcon}
-            className={clsx("mark", cell.mark === "flag" && "visible")}
-          />
-          <img
-            src={questionIcon}
-            className={clsx("mark", cell.mark === "question" && "visible")}
+            className={clsx("flag", cell.isFlagged && "visible")}
           />
         </div>
       )}
@@ -69,4 +64,6 @@ const Cell = (props: Props) => {
   );
 };
 
-export default Cell;
+const MemoCell = memo(Cell);
+
+export default MemoCell;

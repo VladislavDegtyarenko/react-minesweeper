@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 const SOUNDS_LIST = {
   REVEAL_EMPTY: "reveal_empty.wav",
   REVEAL_NUMBER: "reveal_number.wav",
-  MARK_FLAG: "mark_flag.wav",
-  MARK_QUESTION: "mark_question.wav",
-  MARK_REMOVE: "mark_remove.wav",
+  FLAG_PLACE: "flag_place.wav",
+  FLAG_REMOVE: "flag_remove.wav",
   GAME_OVER: "game_over.wav",
   GAME_WIN: "game_win.wav",
 };
@@ -27,6 +26,10 @@ const useSFX = () => {
         );
       }
 
+      for (sound in SOUNDS_LIST) {
+        list[sound].load();
+      }
+
       setSoundsList(list);
     }
   }, [soundsList]);
@@ -35,6 +38,7 @@ const useSFX = () => {
     try {
       const audioElement = soundsList![sfxName];
       // if (audioElement.HAVE_ENOUGH_DATA) {
+      audioElement.pause();
       audioElement.currentTime = 0;
       audioElement.play();
       // }

@@ -1,8 +1,8 @@
-import { Board } from "../types";
+import { IBoard } from "../types";
 import { DIRECTIONS } from "./constants";
 
 const createBoard = (rows: number, cols: number) => {
-  const board: Board = [];
+  const board: IBoard = [];
 
   for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     board[rowIndex] = [];
@@ -10,7 +10,7 @@ const createBoard = (rows: number, cols: number) => {
     for (let cellIndex = 0; cellIndex < cols; cellIndex++) {
       board[rowIndex][cellIndex] = {
         value: null,
-        mark: null,
+        isFlagged: false,
         isOpened: false,
       };
     }
@@ -20,12 +20,12 @@ const createBoard = (rows: number, cols: number) => {
 };
 
 const fillBoardWithMines = (
-  emptyBoard: Board,
+  emptyBoard: IBoard,
   rows: number,
   cols: number,
   totalMines: number
 ) => {
-  const boardWithMines: Board = JSON.parse(JSON.stringify(emptyBoard));
+  const boardWithMines: IBoard = JSON.parse(JSON.stringify(emptyBoard));
 
   let mines = 0;
 
@@ -42,8 +42,8 @@ const fillBoardWithMines = (
   return boardWithMines;
 };
 
-const fillBoardWithNumbers = (boardWithMines: Board) => {
-  const finalBoard: Board = JSON.parse(JSON.stringify(boardWithMines));
+const fillBoardWithNumbers = (boardWithMines: IBoard) => {
+  const finalBoard: IBoard = JSON.parse(JSON.stringify(boardWithMines));
 
   finalBoard.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
@@ -78,13 +78,13 @@ export const initBoard = (rows: number, cols: number, totalMines: number) => {
 };
 
 export const revealEmptyCells = (
-  board: Board,
+  board: IBoard,
   rows: number,
   cols: number,
   row: number,
   col: number
 ) => {
-  const gameBoard: Board = JSON.parse(JSON.stringify(board));
+  const gameBoard: IBoard = JSON.parse(JSON.stringify(board));
 
   const queue: [number, number][] = [[row, col]]; // Queue of cell coordinates
 
@@ -105,7 +105,7 @@ export const revealEmptyCells = (
           newCol >= 0 &&
           newCol < cols &&
           !gameBoard[newRow][newCol].isOpened &&
-          gameBoard[newRow][newCol].mark === null
+          !gameBoard[newRow][newCol].isFlagged
         ) {
           queue.push([newRow, newCol]); // Add adjacent empty cells to queue
         }
@@ -116,7 +116,7 @@ export const revealEmptyCells = (
   return gameBoard;
 };
 
-export const revealAllMines = (board: Board, highlightWin?: boolean) => {
+export const revealAllMines = (board: IBoard, highlightWin?: boolean) => {
   board.forEach((row) => {
     row.forEach((cell) => {
       if (cell.value === "mine") {
@@ -129,7 +129,7 @@ export const revealAllMines = (board: Board, highlightWin?: boolean) => {
   });
 };
 
-export const checkGameWin = (board: Board, totalMines: number) => {
+export const checkGameWin = (board: IBoard, totalMines: number) => {
   let unopenedCells = 0;
   // let flaggedCells = 0;
 
@@ -138,9 +138,6 @@ export const checkGameWin = (board: Board, totalMines: number) => {
       if (!cell.isOpened) {
         unopenedCells++;
       }
-      // if (cell.mark === "flag") {
-      //   flaggedCells++;
-      // }
     });
   });
 

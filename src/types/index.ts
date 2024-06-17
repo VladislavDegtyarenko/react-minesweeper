@@ -1,11 +1,13 @@
+import { LEVELS } from "../utils/constants";
+
 type OpenedCell = {
   isOpened: true;
-  mark: null;
+  isFlagged: false;
 };
 
 type ClosedCell = {
   isOpened: false;
-  mark: "flag" | "question" | null;
+  isFlagged: boolean;
 };
 
 type MineCell = {
@@ -24,7 +26,7 @@ type ClosedNumberCell = ClosedCell & NumberCell;
 
 type EmptyCell = {
   value: null;
-  mark: null;
+  isFlagged: false;
   isOpened: false;
 };
 
@@ -35,4 +37,5 @@ export type GameCell =
   | ClosedNumberCell
   | EmptyCell;
 
-export type Board = GameCell[][];
+export type IBoard = GameCell[][];
+export type TLevel = keyof typeof LEVELS;

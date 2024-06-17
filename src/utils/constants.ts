@@ -1,23 +1,20 @@
-export const LEVELS = [
-  {
-    name: "Easy",
+export const LEVELS = {
+  easy: {
     rows: 9,
     cols: 9,
     totalMines: 10,
   },
-  {
-    name: "Medium",
+  medium: {
     rows: 16,
     cols: 16,
     totalMines: 40,
   },
-  {
-    name: "Expert",
+  expert: {
     rows: 16,
     cols: 30,
     totalMines: 99,
   },
-];
+};
 
 export const DIRECTIONS = [
   [-1, -1],

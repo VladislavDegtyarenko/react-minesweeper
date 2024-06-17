@@ -4,7 +4,8 @@ import useSFX from "./hooks/useSFX";
 import { LEVELS } from "./utils/constants";
 
 // UI
-import Cell from "./components/Cell";
+import Header from "./components/Header";
+import Board from "./components/Board";
 import Confetti from "react-confetti";
 import SelectLevel from "./components/SelectLevel";
 
@@ -21,32 +22,36 @@ import {
 import "./App.css";
 
 // Types
-import { Board } from "./types";
+import { IBoard, OpenedMineCell, TLevel } from "./types";
+
+const DEFAULT_LEVEL: TLevel = "easy";
+const INITIAL_BOARD = initBoard(
+  LEVELS[DEFAULT_LEVEL].rows,
+  LEVELS[DEFAULT_LEVEL].cols,
+  LEVELS[DEFAULT_LEVEL].totalMines
+);
 
 function App() {
-  const [level, setLevel] = useState(LEVELS[0]);
-  const [gameBoard, setGameBoard] = useState<Board>(
-    initBoard(level.rows, level.cols, level.totalMines)
-    // MOCK_WINNING_BOARD
-  );
+  const [level, setLevel] = useState<TLevel>("easy");
+  const currentLevel = LEVELS[level];
+
+  const [gameBoard, setGameBoard] = useState<IBoard>(INITIAL_BOARD);
 
   const [isGameWin, setIsGameWin] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
 
   const [totalFlags, setTotalFlags] = useState(0);
-  const minesLeft = level.totalMines - totalFlags;
+  const minesLeft = currentLevel.totalMines - totalFlags;
 
   const timerInterval = useRef<null | number>(null);
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [timeNow, setTimeNow] = useState<Date | null>(null);
+  const timeDiff = getTimeDiff(timeNow, startTime);
 
   const { playSoundEffect } = useSFX();
 
   useEffect(() => {
-    if (!startTime) {
-      // runTimer()
-      return;
-    }
+    if (!startTime) return;
 
     if (isGameOver || isGameWin) {
       clearInterval(timerInterval.current!);
@@ -60,12 +65,18 @@ function App() {
     return () => clearInterval(timerInterval.current!);
   }, [startTime, isGameOver, isGameWin]);
 
-  const newGame = (rows: number, cols: number, totalMines: number) => {
+  useEffect(() => {
+    newGame();
+  }, [level]);
+
+  const newGame = () => {
     clearInterval(timerInterval.current!);
     setStartTime(null);
     setTimeNow(null);
     setTotalFlags(0);
-    setGameBoard(initBoard(rows, cols, totalMines));
+    setGameBoard(
+      initBoard(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
+    );
     setIsGameOver(false);
     setIsGameWin(false);
   };
@@ -80,7 +91,7 @@ function App() {
         row.map((cell) => {
           return {
             ...cell,
-            mark: null,
+            isFlagged: false,
             isOpened: false,
           };
         })
@@ -90,22 +101,15 @@ function App() {
     setIsGameWin(false);
   };
 
-  const changeLevel = (selectedLevelName: string) => {
-    const selectedLevel = LEVELS.find(
-      (level) => level.name === selectedLevelName
-    );
-
-    if (!selectedLevel) return;
-
+  const changeLevel = (selectedLevel: TLevel) => {
     setLevel(selectedLevel);
-    newGame(selectedLevel.rows, selectedLevel.cols, selectedLevel.totalMines);
   };
 
   const runTimer = () => {
     setStartTime(new Date());
   };
 
-  const handleCellLeftClick = (row: number, col: number) => {
+  const openCell = (row: number, col: number) => {
     if (isGameOver || isGameWin) return;
 
     if (!startTime) runTimer();
@@ -114,13 +118,13 @@ function App() {
       const cell = prevGameBoard[row][col];
 
       const mineCell = cell.value === "mine";
-      const markedCell = cell.mark !== null;
+      const flaggedCell = cell.isFlagged;
       const openedCell = cell.isOpened;
       const numberCell = typeof cell.value === "number";
       const zeroCell = cell.value === 0;
 
-      if (openedCell || markedCell) {
-        return prevGameBoard; // Prevent re-render for clicked/marked cells
+      if (openedCell || flaggedCell) {
+        return prevGameBoard; // Prevent re-render for clicked/flagged cells
       }
 
       // Number cell click
@@ -128,14 +132,20 @@ function App() {
         // If cell is 0, reveal adjacent cells
         // or deep copy otherwise
         const newGameBoard = zeroCell
-          ? revealEmptyCells(prevGameBoard, level.rows, level.cols, row, col)
+          ? revealEmptyCells(
+              prevGameBoard,
+              currentLevel.rows,
+              currentLevel.cols,
+              row,
+              col
+            )
           : JSON.parse(JSON.stringify(prevGameBoard));
 
         // Open the cell
         newGameBoard[row][col].isOpened = true;
 
         // Check for win
-        const isWin = checkGameWin(newGameBoard, level.totalMines);
+        const isWin = checkGameWin(newGameBoard, currentLevel.totalMines);
 
         if (isWin) {
           revealAllMines(newGameBoard, true);
@@ -152,25 +162,41 @@ function App() {
 
       // Mine cell click
       if (mineCell) {
-        const newGameBoard = JSON.parse(JSON.stringify(prevGameBoard));
+        const newGameBoard: IBoard = JSON.parse(JSON.stringify(prevGameBoard));
 
-        // Open the cell
         newGameBoard[row][col].isOpened = true;
-        newGameBoard[row][col].hightlight = "red";
-
-        // Reveal all mines (mutating)
-        revealAllMines(newGameBoard);
+        (newGameBoard[row][col] as OpenedMineCell).hightlight = "red";
 
         setIsGameOver(true);
         playSoundEffect("GAME_OVER");
-
-        console.log("Game Over!");
-
+        revealAllMines(newGameBoard);
         return newGameBoard;
       }
 
       return prevGameBoard;
     });
+  };
+
+  const handleCellLeftClick = (row: number, col: number) => {
+    const mineCell = gameBoard[row][col].value === "mine";
+    const isFirstClick = !startTime;
+    const isFirstClickOnMine = mineCell && isFirstClick;
+
+    if (isFirstClickOnMine) {
+      let newGameBoard: IBoard;
+
+      do {
+        newGameBoard = initBoard(
+          currentLevel.rows,
+          currentLevel.cols,
+          currentLevel.totalMines
+        );
+      } while (newGameBoard[row][col].value === "mine");
+
+      setGameBoard(newGameBoard);
+    }
+
+    openCell(row, col);
   };
 
   const handleCellRightClick = (
@@ -187,29 +213,18 @@ function App() {
     let flagsDiff = 0;
 
     setGameBoard((prevGameBoard) => {
-      const newGameBoard: Board = JSON.parse(JSON.stringify(prevGameBoard));
+      const newGameBoard: IBoard = JSON.parse(JSON.stringify(prevGameBoard));
       const cell = prevGameBoard[row][col];
 
       if (cell.isOpened === false) {
-        switch (cell.mark) {
-          case null:
-            newGameBoard[row][col].mark = "flag";
-            // Increment totalFlags
-            if (!flagsDiff) flagsDiff++;
-            playSoundEffect("MARK_FLAG");
-            break;
-
-          case "flag":
-            newGameBoard[row][col].mark = "question";
-            // Decrement totalFlags
-            if (!flagsDiff) flagsDiff--;
-            playSoundEffect("MARK_QUESTION");
-            break;
-
-          case "question":
-            newGameBoard[row][col].mark = null;
-            playSoundEffect("MARK_REMOVE");
-            break;
+        if (cell.isFlagged) {
+          newGameBoard[row][col].isFlagged = false;
+          if (!flagsDiff) flagsDiff--;
+          playSoundEffect("FLAG_REMOVE");
+        } else {
+          newGameBoard[row][col].isFlagged = true;
+          if (!flagsDiff) flagsDiff++;
+          playSoundEffect("FLAG_PLACE");
         }
 
         return newGameBoard;
@@ -223,64 +238,21 @@ function App() {
 
   return (
     <div className="game">
-      <header>
-        <div className="header-label">
-          {isGameWin ? (
-            <span className="win">You win!</span>
-          ) : isGameOver ? (
-            <span className="game-over">Game over!</span>
-          ) : (
-            <>
-              <img
-                src={import.meta.env.BASE_URL + "/icons/bomb.svg"}
-                className="header-icon"
-              />
-              {minesLeft}
-            </>
-          )}
-        </div>
-        <div className="header-buttons">
-          <button
-            onClick={() => {
-              newGame(level.rows, level.cols, level.totalMines);
-            }}
-          >
-            New
-          </button>
-          <button
-            onClick={() => {
-              restartGame();
-            }}
-          >
-            Restart
-          </button>
-        </div>
-        <div className="header-label">
-          <img
-            src={import.meta.env.BASE_URL + "/icons/timer.svg"}
-            className="header-icon"
-          />
-          {getTimeDiff(timeNow, startTime)}
-        </div>
-      </header>
-      <div className="board">
-        {gameBoard.map((rows, rowIndex) => (
-          <div className="row" key={rowIndex}>
-            {rows.map((cell, cellIndex) => (
-              <Cell
-                cell={cell}
-                rowIndex={rowIndex}
-                cellIndex={cellIndex}
-                handleCellLeftClick={handleCellLeftClick}
-                handleCellRightClick={handleCellRightClick}
-                level={level.name}
-                key={cellIndex}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      <SelectLevel level={level.name} changeLevel={changeLevel} />
+      <Header
+        isGameWin={isGameWin}
+        isGameOver={isGameOver}
+        minesLeft={minesLeft}
+        newGame={newGame}
+        restartGame={restartGame}
+        timeDiff={timeDiff}
+      />
+      <Board
+        gameBoard={gameBoard}
+        handleCellLeftClick={handleCellLeftClick}
+        handleCellRightClick={handleCellRightClick}
+        level={level}
+      />
+      <SelectLevel level={level} changeLevel={changeLevel} />
       {isGameWin && <Confetti />}
     </div>
   );

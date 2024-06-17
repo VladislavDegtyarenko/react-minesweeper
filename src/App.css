@@ -25,6 +25,7 @@
   height: var(--cell-size);
   border: solid 1px var(--cell-border-color);
   user-select: none;
+  cursor: default;
   position: relative;
   box-sizing: border-box;
 }
@@ -102,11 +103,11 @@
   box-shadow: 3px 3px 8px #33333366;
 }
 
-.mark {
+.flag {
   display: none;
 }
 
-.mark.visible {
+.flag.visible {
   display: block;
 }
 

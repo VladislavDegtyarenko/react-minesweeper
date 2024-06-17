@@ -3,19 +3,19 @@ import { LEVELS } from "../utils/constants";
 
 type SelectedLevelProps = {
   level: string;
-  changeLevel: (selectedLevelName: string) => void;
+  changeLevel: (selectedLevelName: keyof typeof LEVELS) => void;
 };
 
 const SelectLevel = ({ level, changeLevel }: SelectedLevelProps) => {
   return (
     <ul className="select-level">
-      {LEVELS.map(({ name }) => (
-        <li key={name}>
+      {Object.keys(LEVELS).map((levelName) => (
+        <li key={levelName}>
           <button
-            className={clsx(level === name && "active")}
-            onClick={() => changeLevel(name)}
+            className={clsx(level === levelName && "active")}
+            onClick={() => changeLevel(levelName as keyof typeof LEVELS)}
           >
-            {name}
+            {levelName}
           </button>
         </li>
       ))}
