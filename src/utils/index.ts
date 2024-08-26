@@ -1,8 +1,8 @@
-import { IBoard } from "../types";
+import { TBoard } from "../types";
 import { DIRECTIONS } from "./constants";
 
 const createBoard = (rows: number, cols: number) => {
-  const board: IBoard = [];
+  const board: TBoard = [];
 
   for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     board[rowIndex] = [];
@@ -20,32 +20,30 @@ const createBoard = (rows: number, cols: number) => {
 };
 
 const fillBoardWithMines = (
-  emptyBoard: IBoard,
+  board: TBoard,
   rows: number,
   cols: number,
   totalMines: number
 ) => {
-  const boardWithMines: IBoard = JSON.parse(JSON.stringify(emptyBoard));
-
   let mines = 0;
 
   while (mines < totalMines) {
     const row = Math.floor(Math.random() * rows);
     const column = Math.floor(Math.random() * cols);
 
-    if (boardWithMines[row][column].value !== "mine") {
-      boardWithMines[row][column].value = "mine";
+    if (board[row][column].value !== "mine") {
+      board[row][column].value = "mine";
       mines++;
     }
   }
 
-  return boardWithMines;
+  return board;
 };
 
-const fillBoardWithNumbers = (boardWithMines: IBoard) => {
-  const finalBoard: IBoard = JSON.parse(JSON.stringify(boardWithMines));
+const fillBoardWithNumbers = (board: TBoard) => {
+  // const finalBoard: TBoard = JSON.parse(JSON.stringify(boardWithMines));
 
-  finalBoard.forEach((row, rowIndex) => {
+  board.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
       if (cell.value !== "mine") {
         let minesAround = 0;
@@ -54,8 +52,8 @@ const fillBoardWithNumbers = (boardWithMines: IBoard) => {
           const newRow = rowIndex + dRow;
           const newCol = colIndex + dCol;
 
-          if (newRow in finalBoard && newCol in finalBoard[newRow]) {
-            if (finalBoard[newRow][newCol].value === "mine") {
+          if (newRow in board && newCol in board[newRow]) {
+            if (board[newRow][newCol].value === "mine") {
               minesAround++;
             }
           }
@@ -66,7 +64,7 @@ const fillBoardWithNumbers = (boardWithMines: IBoard) => {
     });
   });
 
-  return finalBoard;
+  return board;
 };
 
 export const initBoard = (rows: number, cols: number, totalMines: number) => {
@@ -78,20 +76,18 @@ export const initBoard = (rows: number, cols: number, totalMines: number) => {
 };
 
 export const revealEmptyCells = (
-  board: IBoard,
+  board: TBoard,
   rows: number,
   cols: number,
   row: number,
   col: number
 ) => {
-  const gameBoard: IBoard = JSON.parse(JSON.stringify(board));
-
   const queue: [number, number][] = [[row, col]]; // Queue of cell coordinates
 
   while (queue.length > 0) {
     const [currentRow, currentCol] = queue.shift()!; // Dequeue the next cell
 
-    const cell = gameBoard[currentRow][currentCol];
+    const cell = board[currentRow][currentCol];
     cell.isOpened = true;
 
     if (cell.value === 0) {
@@ -104,8 +100,8 @@ export const revealEmptyCells = (
           newRow < rows &&
           newCol >= 0 &&
           newCol < cols &&
-          !gameBoard[newRow][newCol].isOpened &&
-          !gameBoard[newRow][newCol].isFlagged
+          !board[newRow][newCol].isOpened &&
+          !board[newRow][newCol].isFlagged
         ) {
           queue.push([newRow, newCol]); // Add adjacent empty cells to queue
         }
@@ -113,10 +109,10 @@ export const revealEmptyCells = (
     }
   }
 
-  return gameBoard;
+  return board;
 };
 
-export const revealAllMines = (board: IBoard, highlightWin?: boolean) => {
+export const revealAllMines = (board: TBoard, highlightWin?: boolean) => {
   board.forEach((row) => {
     row.forEach((cell) => {
       if (cell.value === "mine") {
@@ -129,7 +125,7 @@ export const revealAllMines = (board: IBoard, highlightWin?: boolean) => {
   });
 };
 
-export const checkGameWin = (board: IBoard, totalMines: number) => {
+export const checkGameWin = (board: TBoard, totalMines: number) => {
   let unopenedCells = 0;
   // let flaggedCells = 0;
 
@@ -145,12 +141,12 @@ export const checkGameWin = (board: IBoard, totalMines: number) => {
   return unopenedCells === totalMines /* || flaggedCells === totalMines */;
 };
 
-export const getTimeDiff = (timeNow: Date | null, startTime: Date | null) => {
-  if (timeNow === null || startTime === null) return "00:00";
+export const getTimeDiff = (timeNow: Date | null, timeStarted: Date | null) => {
+  if (timeNow === null || timeStarted === null) return "00:00";
 
   return new Intl.DateTimeFormat("en-US", {
     minute: "2-digit",
     second: "numeric",
-  }).format(timeNow.getTime() - startTime.getTime());
+  }).format(timeNow.getTime() - timeStarted.getTime());
   // return Math.floor((timeNow.getTime() - startTime.getTime()) / 1000);
 };

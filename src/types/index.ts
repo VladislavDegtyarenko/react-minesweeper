@@ -37,5 +37,5 @@ export type GameCell =
   | ClosedNumberCell
   | EmptyCell;
 
-export type IBoard = GameCell[][];
+export type TBoard = GameCell[][];
 export type TLevel = keyof typeof LEVELS;

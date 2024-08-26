@@ -48,6 +48,7 @@ const Cell = (props: Props) => {
       onContextMenu={(e) => handleCellRightClick(e, rowIndex, cellIndex)}
     >
       {cell.value === "mine" && cell.isOpened && <img src={mineIcon} />}
+
       {typeof cell.value === "number" && cell.isOpened && (
         <>{cell.value || ""}</>
       )}

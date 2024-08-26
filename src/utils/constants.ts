@@ -1,3 +1,5 @@
+import type { TLevel } from "../types";
+
 export const LEVELS = {
   easy: {
     rows: 9,
@@ -15,6 +17,8 @@ export const LEVELS = {
     totalMines: 99,
   },
 };
+
+export const DEFAULT_LEVEL: TLevel = "easy";
 
 export const DIRECTIONS = [
   [-1, -1],

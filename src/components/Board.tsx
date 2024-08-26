@@ -1,9 +1,9 @@
 import { MouseEvent } from "react";
-import { IBoard, TLevel } from "../types";
+import { TBoard, TLevel } from "../types";
 import Cell from "./Cell";
 
 type BoardProps = {
-  gameBoard: IBoard;
+  gameBoard: TBoard;
   handleCellLeftClick: (row: number, col: number) => void;
   handleCellRightClick: (
     e: MouseEvent<HTMLDivElement>,

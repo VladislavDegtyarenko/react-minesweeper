@@ -1,7 +1,6 @@
 // Core
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import useSFX from "./hooks/useSFX";
-import { LEVELS } from "./utils/constants";
 
 // UI
 import Header from "./components/Header";
@@ -12,7 +11,6 @@ import SelectLevel from "./components/SelectLevel";
 // Functions
 import {
   checkGameWin,
-  getTimeDiff,
   initBoard,
   revealAllMines,
   revealEmptyCells,
@@ -22,9 +20,12 @@ import {
 import "./App.css";
 
 // Types
-import { IBoard, OpenedMineCell, TLevel } from "./types";
+import type { TBoard, OpenedMineCell, TLevel } from "./types";
 
-const DEFAULT_LEVEL: TLevel = "easy";
+// Constants
+import { DEFAULT_LEVEL, LEVELS } from "./utils/constants";
+import useTimer from "./hooks/useTimer";
+
 const INITIAL_BOARD = initBoard(
   LEVELS[DEFAULT_LEVEL].rows,
   LEVELS[DEFAULT_LEVEL].cols,
@@ -35,44 +36,33 @@ function App() {
   const [level, setLevel] = useState<TLevel>("easy");
   const currentLevel = LEVELS[level];
 
-  const [gameBoard, setGameBoard] = useState<IBoard>(INITIAL_BOARD);
+  const [gameBoard, setGameBoard] = useState<TBoard>(INITIAL_BOARD);
 
   const [isGameWin, setIsGameWin] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
+  const isGameEnded = isGameWin || isGameOver;
 
   const [totalFlags, setTotalFlags] = useState(0);
   const minesLeft = currentLevel.totalMines - totalFlags;
 
-  const timerInterval = useRef<null | number>(null);
-  const [startTime, setStartTime] = useState<Date | null>(null);
-  const [timeNow, setTimeNow] = useState<Date | null>(null);
-  const timeDiff = getTimeDiff(timeNow, startTime);
+  const { timeDiff, isTimerRunning, startTimer, stopTimer, resetTimer } =
+    useTimer();
 
   const { playSoundEffect } = useSFX();
 
   useEffect(() => {
-    if (!startTime) return;
-
-    if (isGameOver || isGameWin) {
-      clearInterval(timerInterval.current!);
-      return;
+    if (isGameEnded) {
+      stopTimer();
     }
-
-    timerInterval.current = setInterval(() => {
-      setTimeNow(new Date());
-    }, 1000);
-
-    return () => clearInterval(timerInterval.current!);
-  }, [startTime, isGameOver, isGameWin]);
+  }, [isGameEnded]);
 
   useEffect(() => {
     newGame();
   }, [level]);
 
   const newGame = () => {
-    clearInterval(timerInterval.current!);
-    setStartTime(null);
-    setTimeNow(null);
+    stopTimer();
+    resetTimer();
     setTotalFlags(0);
     setGameBoard(
       initBoard(currentLevel.rows, currentLevel.cols, currentLevel.totalMines)
@@ -82,9 +72,8 @@ function App() {
   };
 
   const restartGame = () => {
-    clearInterval(timerInterval.current!);
-    setStartTime(null);
-    setTimeNow(null);
+    stopTimer();
+    resetTimer();
     setTotalFlags(0);
     setGameBoard((prevGameBoard) =>
       prevGameBoard.map((row) =>
@@ -105,14 +94,10 @@ function App() {
     setLevel(selectedLevel);
   };
 
-  const runTimer = () => {
-    setStartTime(new Date());
-  };
-
   const openCell = (row: number, col: number) => {
-    if (isGameOver || isGameWin) return;
+    if (isGameEnded) return;
 
-    if (!startTime) runTimer();
+    if (!isTimerRunning) startTimer();
 
     setGameBoard((prevGameBoard) => {
       const cell = prevGameBoard[row][col];
@@ -124,22 +109,22 @@ function App() {
       const zeroCell = cell.value === 0;
 
       if (openedCell || flaggedCell) {
-        return prevGameBoard; // Prevent re-render for clicked/flagged cells
+        return prevGameBoard; // Prevent re-render for opened/flagged cells
       }
 
       // Number cell click
       if (numberCell) {
-        // If cell is 0, reveal adjacent cells
-        // or deep copy otherwise
-        const newGameBoard = zeroCell
-          ? revealEmptyCells(
-              prevGameBoard,
-              currentLevel.rows,
-              currentLevel.cols,
-              row,
-              col
-            )
-          : JSON.parse(JSON.stringify(prevGameBoard));
+        const newGameBoard: TBoard = JSON.parse(JSON.stringify(prevGameBoard));
+
+        if (zeroCell) {
+          revealEmptyCells(
+            newGameBoard,
+            currentLevel.rows,
+            currentLevel.cols,
+            row,
+            col
+          );
+        }
 
         // Open the cell
         newGameBoard[row][col].isOpened = true;
@@ -162,7 +147,7 @@ function App() {
 
       // Mine cell click
       if (mineCell) {
-        const newGameBoard: IBoard = JSON.parse(JSON.stringify(prevGameBoard));
+        const newGameBoard: TBoard = JSON.parse(JSON.stringify(prevGameBoard));
 
         newGameBoard[row][col].isOpened = true;
         (newGameBoard[row][col] as OpenedMineCell).hightlight = "red";
@@ -179,11 +164,11 @@ function App() {
 
   const handleCellLeftClick = (row: number, col: number) => {
     const mineCell = gameBoard[row][col].value === "mine";
-    const isFirstClick = !startTime;
+    const isFirstClick = !isTimerRunning;
     const isFirstClickOnMine = mineCell && isFirstClick;
 
     if (isFirstClickOnMine) {
-      let newGameBoard: IBoard;
+      let newGameBoard: TBoard;
 
       do {
         newGameBoard = initBoard(
@@ -206,14 +191,14 @@ function App() {
   ) => {
     e.preventDefault();
 
-    if (isGameOver || isGameWin) return;
+    if (isGameEnded) return;
 
-    if (!startTime) runTimer();
+    if (!isTimerRunning) startTimer();
 
     let flagsDiff = 0;
 
     setGameBoard((prevGameBoard) => {
-      const newGameBoard: IBoard = JSON.parse(JSON.stringify(prevGameBoard));
+      const newGameBoard: TBoard = JSON.parse(JSON.stringify(prevGameBoard));
       const cell = prevGameBoard[row][col];
 
       if (cell.isOpened === false) {
@@ -221,7 +206,9 @@ function App() {
           newGameBoard[row][col].isFlagged = false;
           if (!flagsDiff) flagsDiff--;
           playSoundEffect("FLAG_REMOVE");
-        } else {
+        }
+
+        if (!cell.isFlagged) {
           newGameBoard[row][col].isFlagged = true;
           if (!flagsDiff) flagsDiff++;
           playSoundEffect("FLAG_PLACE");
@@ -241,6 +228,7 @@ function App() {
       <Header
         isGameWin={isGameWin}
         isGameOver={isGameOver}
+        isGameEnded={isGameEnded}
         minesLeft={minesLeft}
         newGame={newGame}
         restartGame={restartGame}

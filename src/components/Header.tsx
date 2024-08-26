@@ -4,6 +4,7 @@ import TimerIcon from "/icons/timer.svg";
 type HeaderProps = {
   isGameWin: boolean;
   isGameOver: boolean;
+  isGameEnded: boolean;
   minesLeft: number;
   newGame: () => void;
   restartGame: () => void;
@@ -13,6 +14,7 @@ type HeaderProps = {
 const Header = ({
   isGameWin,
   isGameOver,
+  isGameEnded,
   minesLeft,
   newGame,
   restartGame,
@@ -23,7 +25,7 @@ const Header = ({
       <div className="header-label">
         {isGameWin && <span className="win">You win!</span>}
         {isGameOver && <span className="game-over">Game over!</span>}
-        {!isGameOver && !isGameWin && (
+        {!isGameEnded && (
           <>
             <img src={BombIcon} className="header-icon" />
             {minesLeft}
