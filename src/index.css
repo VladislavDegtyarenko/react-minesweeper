@@ -3,8 +3,11 @@
   line-height: 1.5;
   font-weight: 400;
 
+  --app-bg: #151515;
   --surface: #ccc;
   --text: #1a1a1a;
+  --btn-color: #151515;
+  --btn-active: #555;
   --cell-border-color: #bbbbbb;
   --cell-mine-red: firebrick;
   --cell-mine-green: forestgreen;
@@ -17,7 +20,8 @@
   --seven: black;
   --eight: black;
 
-  background-color: #15152a;
+  background-color: var(--app-bg);
+  /* background-color: #fff; */
   color: var(--text);
 
   font-synthesis: none;
