@@ -1,4 +1,4 @@
-import { TBoard } from "../types";
+import { GameCell, TBoard } from "../types";
 import { DIRECTIONS } from "../constants";
 
 const createBoard = (rows: number, cols: number) => {
@@ -32,8 +32,7 @@ const fillBoardWithMines = (
     const column = Math.floor(Math.random() * cols);
 
     if (board[row][column].value !== "mine") {
-      // @ts-expect-error, because we place mine on a non-mine cell
-      board[row][column].value = "mine";
+      (board[row][column] as GameCell).value = "mine";
       mines++;
     }
   }
