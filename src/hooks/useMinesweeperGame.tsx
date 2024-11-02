@@ -215,12 +215,25 @@ const useMinesweeperGame = () => {
           playSoundEffect("FLAG_PLACE");
         }
 
+        if (checkGameWin(newGameBoard, currentLevel.totalMines)) {
+          revealAllMines(newGameBoard, true);
+          setIsGameWin(true);
+          playSoundEffect("GAME_WIN");
+        }
+
         return newGameBoard;
       });
 
       setTotalFlags((prevTotalFlags) => prevTotalFlags + flagsDiff);
     },
-    [gameBoard, isGameEnded, isTimerRunning, playSoundEffect, startTimer]
+    [
+      gameBoard,
+      isGameEnded,
+      isTimerRunning,
+      currentLevel.totalMines,
+      playSoundEffect,
+      startTimer,
+    ]
   );
 
   return {
