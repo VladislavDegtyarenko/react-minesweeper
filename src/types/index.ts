@@ -1,4 +1,4 @@
-import { LEVELS } from "../utils/constants";
+import { LEVELS } from "../constants";
 
 type OpenedCell = {
   isOpened: true;

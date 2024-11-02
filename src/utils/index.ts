@@ -1,5 +1,5 @@
 import { TBoard } from "../types";
-import { DIRECTIONS } from "./constants";
+import { DIRECTIONS } from "../constants";
 
 const createBoard = (rows: number, cols: number) => {
   const board: TBoard = [];
@@ -32,6 +32,7 @@ const fillBoardWithMines = (
     const column = Math.floor(Math.random() * cols);
 
     if (board[row][column].value !== "mine") {
+      // @ts-expect-error, because we place mine on a non-mine cell
       board[row][column].value = "mine";
       mines++;
     }
@@ -73,6 +74,17 @@ export const initBoard = (rows: number, cols: number, totalMines: number) => {
   const gameBoard = fillBoardWithNumbers(boardWithMines);
 
   return gameBoard;
+};
+
+export const initGame = (rows: number, cols: number, totalMines: number) => {
+  // const boardInStorage = localStorage.getItem(LOCAL_STORAGE_KEYS.gameBoard);
+  // console.log("boardInStorage: ", boardInStorage);
+
+  // if (boardInStorage) {
+  //   return JSON.parse(boardInStorage) as TBoard;
+  // }
+
+  return initBoard(rows, cols, totalMines);
 };
 
 export const revealEmptyCells = (

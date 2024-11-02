@@ -1,12 +1,13 @@
 import clsx from "clsx";
-import { LEVELS } from "../utils/constants";
+import { LEVELS } from "../constants";
+import { memo } from "react";
 
 type SelectedLevelProps = {
   level: string;
   changeLevel: (selectedLevelName: keyof typeof LEVELS) => void;
 };
 
-const SelectLevel = ({ level, changeLevel }: SelectedLevelProps) => {
+const SelectLevel = memo(({ level, changeLevel }: SelectedLevelProps) => {
   return (
     <ul className="select-level">
       {Object.keys(LEVELS).map((levelName) => (
@@ -21,6 +22,6 @@ const SelectLevel = ({ level, changeLevel }: SelectedLevelProps) => {
       ))}
     </ul>
   );
-};
+});
 
 export default SelectLevel;

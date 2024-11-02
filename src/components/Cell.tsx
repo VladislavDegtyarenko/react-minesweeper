@@ -8,7 +8,7 @@ import flagIcon from "/red-flag.png";
 // Typescript
 import { GameCell, TLevel } from "../types";
 import { MouseEvent, memo } from "react";
-import { CELL_NUMBERS_COLORS } from "../utils/constants";
+import { CELL_NUMBERS_COLORS } from "../constants";
 
 type Props = {
   cell: GameCell;
@@ -47,11 +47,9 @@ const Cell = (props: Props) => {
       onClick={() => handleCellLeftClick(rowIndex, cellIndex)}
       onContextMenu={(e) => handleCellRightClick(e, rowIndex, cellIndex)}
     >
-      {cell.value === "mine" && cell.isOpened && <img src={mineIcon} />}
+      {cell.value === "mine" && <img src={mineIcon} />}
 
-      {typeof cell.value === "number" && cell.isOpened && (
-        <>{cell.value || ""}</>
-      )}
+      {typeof cell.value === "number" && <>{cell.value || ""}</>}
 
       {!cell.isOpened && (
         <div className="overlay">

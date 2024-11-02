@@ -1,25 +1,25 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { getTimeDiff } from "../utils";
 
 const useTimer = () => {
   const timerInterval = useRef<null | number>(null);
   const [timeStarted, setTimeStarted] = useState<Date | null>(null);
   const [timeNow, setTimeNow] = useState<Date | null>(null);
-  const timeDiff = getTimeDiff(timeNow, timeStarted);
+  const timeDiff = useMemo(() => getTimeDiff(timeNow, timeStarted), [timeNow]);
   const isTimerRunning = Boolean(timeStarted);
 
-  const startTimer = () => {
+  const startTimer = useCallback(() => {
     setTimeStarted(new Date());
-  };
+  }, []);
 
-  const stopTimer = () => {
+  const stopTimer = useCallback(() => {
     clearInterval(timerInterval.current!);
-  };
+  }, []);
 
-  const resetTimer = () => {
+  const resetTimer = useCallback(() => {
     setTimeStarted(null);
     setTimeNow(null);
-  };
+  }, []);
 
   useEffect(() => {
     if (!timeStarted) return;

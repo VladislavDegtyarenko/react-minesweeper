@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const SOUNDS_LIST = {
   REVEAL_EMPTY: "reveal_empty.wav",
@@ -34,18 +34,21 @@ const useSFX = () => {
     }
   }, [soundsList]);
 
-  const playSoundEffect = (sfxName: TSoundName) => {
-    try {
-      const audioElement = soundsList![sfxName];
-      // if (audioElement.HAVE_ENOUGH_DATA) {
-      audioElement.pause();
-      audioElement.currentTime = 0;
-      audioElement.play();
-      // }
-    } catch (error) {
-      console.warn("Unable to play sound: ", error);
-    }
-  };
+  const playSoundEffect = useCallback(
+    (sfxName: TSoundName) => {
+      try {
+        const audioElement = soundsList![sfxName];
+        // if (audioElement.HAVE_ENOUGH_DATA) {
+        audioElement.pause();
+        audioElement.currentTime = 0;
+        audioElement.play();
+        // }
+      } catch (error) {
+        console.warn("Unable to play sound: ", error);
+      }
+    },
+    [soundsList]
+  );
 
   return { playSoundEffect };
 };

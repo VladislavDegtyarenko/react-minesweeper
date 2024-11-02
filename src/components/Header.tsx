@@ -1,12 +1,12 @@
-import BombIcon from "/icons/bomb.svg";
-import TimerIcon from "/icons/timer.svg";
+import GameStatus from "./GameStatus";
+import TimerDisplay from "./TimerDisplay";
 
 type HeaderProps = {
   isGameWin: boolean;
   isGameOver: boolean;
   isGameEnded: boolean;
   minesLeft: number;
-  newGame: () => void;
+  startNewGame: () => void;
   restartGame: () => void;
   timeDiff: string;
 };
@@ -16,29 +16,26 @@ const Header = ({
   isGameOver,
   isGameEnded,
   minesLeft,
-  newGame,
+  startNewGame,
   restartGame,
   timeDiff,
 }: HeaderProps) => {
   return (
     <header>
       <div className="header-label">
-        {isGameWin && <span className="win">You win!</span>}
-        {isGameOver && <span className="game-over">Game over!</span>}
-        {!isGameEnded && (
-          <>
-            <img src={BombIcon} className="header-icon" />
-            {minesLeft}
-          </>
-        )}
+        <GameStatus
+          isGameWin={isGameWin}
+          isGameOver={isGameOver}
+          isGameEnded={isGameEnded}
+          minesLeft={minesLeft}
+        />
       </div>
       <div className="header-buttons">
-        <button onClick={newGame}>New</button>
+        <button onClick={startNewGame}>New</button>
         <button onClick={restartGame}>Restart</button>
       </div>
       <div className="header-label">
-        <img src={TimerIcon} className="header-icon" />
-        {timeDiff}
+        <TimerDisplay timeDiff={timeDiff} />
       </div>
     </header>
   );

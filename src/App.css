@@ -31,7 +31,7 @@
 }
 
 .cell.small {
-  --cell-size: 1.175rem;
+  --cell-size: 1.25rem;
 }
 
 .cell.big {
@@ -101,6 +101,7 @@
   justify-content: center;
   align-items: center;
   box-shadow: 3px 3px 8px #33333366;
+  position: absolute;
 }
 
 .flag {
