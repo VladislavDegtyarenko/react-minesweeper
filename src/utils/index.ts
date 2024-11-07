@@ -129,7 +129,7 @@ export const revealAllMines = (board: TBoard, highlightWin?: boolean) => {
       if (cell.value === "mine") {
         cell.isOpened = true;
         if (highlightWin) {
-          cell.hightlight = "green";
+          cell.highlight = "green";
         }
       }
     });
@@ -151,7 +151,6 @@ export const checkGameWin = (board: TBoard, totalMines: number) => {
       }
     });
   });
-  console.log("correctlyFlaggedMines: ", correctlyFlaggedMines);
 
   // Win condition: All non-mine cells are opened, or all mines are flagged.
   return unopenedCells === totalMines || correctlyFlaggedMines === totalMines;

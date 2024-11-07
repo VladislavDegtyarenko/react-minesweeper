@@ -1,14 +1,14 @@
 // Core
+import { MouseEvent, memo } from "react";
 import clsx from "clsx";
+import { CELL_NUMBERS_COLORS } from "../constants";
 
 // Assets
 import mineIcon from "/icons/bomb.svg";
 import flagIcon from "/red-flag.png";
 
 // Typescript
-import { GameCell, TLevel } from "../types";
-import { MouseEvent, memo } from "react";
-import { CELL_NUMBERS_COLORS } from "../constants";
+import { GameCell, OpenedMineCell, TLevel } from "../types";
 
 type Props = {
   cell: GameCell;
@@ -37,12 +37,9 @@ const Cell = (props: Props) => {
     <div
       className={clsx(
         "cell",
-        cell.value === "mine" && cell.hightlight === "red" && "cell-mine-red",
-        cell.value === "mine" &&
-          cell.hightlight === "green" &&
-          "cell-mine-green",
+        cell.value === "mine" && (cell as OpenedMineCell).highlight,
         typeof cell.value === "number" && CELL_NUMBERS_COLORS[cell.value],
-        level === "easy" ? "big" : "small"
+        level !== "easy" && "small"
       )}
       onClick={() => handleCellLeftClick(rowIndex, cellIndex)}
       onContextMenu={(e) => handleCellRightClick(e, rowIndex, cellIndex)}

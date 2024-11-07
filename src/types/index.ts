@@ -12,7 +12,7 @@ type ClosedCell = {
 
 type MineCell = {
   value: "mine";
-  hightlight?: "red" | "green";
+  highlight?: "red" | "green";
 };
 
 type NumberCell = {

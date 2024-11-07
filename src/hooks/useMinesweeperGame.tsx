@@ -16,7 +16,7 @@ import {
 } from "../utils";
 
 // Types
-import type { OpenedMineCell, TBoard, TLevel } from "../types";
+import type { TBoard, TLevel } from "../types";
 
 const useMinesweeperGame = () => {
   const [level, setLevel] = useState<TLevel>("easy");
@@ -66,7 +66,7 @@ const useMinesweeperGame = () => {
           prevGameBoard.map((row) =>
             row.map((cell) => {
               return {
-                ...cell,
+                value: cell.value,
                 isFlagged: false,
                 isOpened: false,
               };
@@ -105,23 +105,16 @@ const useMinesweeperGame = () => {
   }, [level, startNewGame]);
 
   const openCell = useCallback(
-    (row: number, col: number) => {
-      if (
-        isGameEnded ||
-        gameBoard[row][col].isOpened ||
-        gameBoard[row][col].isFlagged
-      )
-        return;
-
+    (board: TBoard, row: number, col: number): TBoard | null => {
       if (!isTimerRunning) startTimer();
 
-      const newGameBoard: TBoard = JSON.parse(JSON.stringify(gameBoard));
+      const newGameBoard: TBoard = JSON.parse(JSON.stringify(board));
       const cell = newGameBoard[row][col];
       const isMineCell = cell.value === "mine";
       const isNumberCell = typeof cell.value === "number" && cell.value > 0;
 
       if (isMineCell) {
-        (cell as OpenedMineCell).hightlight = "red";
+        cell.highlight = "red";
         setIsGameOver(true);
         playSoundEffect("GAME_OVER");
         revealAllMines(newGameBoard);
@@ -152,27 +145,28 @@ const useMinesweeperGame = () => {
         }
       }
 
-      setGameBoard(newGameBoard);
+      return newGameBoard;
     },
-    [
-      gameBoard,
-      currentLevel,
-      isGameEnded,
-      isTimerRunning,
-      playSoundEffect,
-      startTimer,
-    ]
+    [currentLevel, isTimerRunning, playSoundEffect, startTimer]
   );
 
   const handleCellLeftClick = useCallback(
     (row: number, col: number) => {
+      if (
+        isGameEnded ||
+        gameBoard[row][col].isOpened ||
+        gameBoard[row][col].isFlagged
+      ) {
+        return null;
+      }
+
       const mineCell = gameBoard[row][col].value === "mine";
       const isFirstClick = !isTimerRunning;
       const isFirstClickOnMine = mineCell && isFirstClick;
 
-      if (isFirstClickOnMine) {
-        let newGameBoard: TBoard;
+      let newGameBoard: TBoard;
 
+      if (isFirstClickOnMine) {
         do {
           newGameBoard = initBoard(
             currentLevel.rows,
@@ -180,13 +174,17 @@ const useMinesweeperGame = () => {
             currentLevel.totalMines
           );
         } while (newGameBoard[row][col].value === "mine");
-
-        setGameBoard(newGameBoard);
+      } else {
+        newGameBoard = JSON.parse(JSON.stringify(gameBoard));
       }
 
-      openCell(row, col);
+      const boardAfterOpeningCell = openCell(newGameBoard, row, col);
+
+      if (boardAfterOpeningCell) {
+        setGameBoard(boardAfterOpeningCell);
+      }
     },
-    [gameBoard, isTimerRunning, openCell, currentLevel]
+    [isGameEnded, gameBoard, isTimerRunning, openCell, currentLevel]
   );
 
   const handleCellRightClick = useCallback(

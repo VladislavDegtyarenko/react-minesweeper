@@ -15,7 +15,12 @@
   box-sizing: border-box;
 }
 
+.row {
+  display: flex;
+}
+
 .cell {
+  --cell-size: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,21 +39,17 @@
   --cell-size: 1.25rem;
 }
 
-.cell.big {
-  --cell-size: 2rem;
-}
-
 .cell img {
   width: 70%;
   height: 70%;
 }
 
-.cell-mine-red {
-  background-color: var(--cell-mine-red);
+.red {
+  background-color: var(--red);
 }
 
-.cell-mine-green {
-  background-color: var(--cell-mine-green);
+.green {
+  background-color: var(--green);
 }
 
 .cell.one {
@@ -102,6 +103,7 @@
   align-items: center;
   box-shadow: 3px 3px 8px #33333366;
   position: absolute;
+  opacity: 0.5;
 }
 
 .flag {
@@ -110,10 +112,6 @@
 
 .flag.visible {
   display: block;
-}
-
-.row {
-  display: flex;
 }
 
 header {
@@ -174,7 +172,6 @@ header {
 }
 
 .select-level button.active {
-  /* background-color: #e6e6e6; */
   background-color: var(--btn-active);
 }
 
