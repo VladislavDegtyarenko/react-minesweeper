@@ -46,3 +46,5 @@ export const LEVELS = {
 };
 
 export const DEFAULT_LEVEL: TLevel = "easy";
+
+export const HOLD_TIME = 300;

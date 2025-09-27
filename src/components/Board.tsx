@@ -1,12 +1,11 @@
-import { memo, MouseEvent } from "react";
+import { memo } from "react";
 import { TBoard, TLevel } from "../types";
 import Cell from "./Cell";
 
 type BoardProps = {
   gameBoard: TBoard;
-  handleCellLeftClick: (row: number, col: number) => void;
-  handleCellRightClick: (
-    e: MouseEvent<HTMLDivElement>,
+  handleCellInteraction: (
+    e: globalThis.PointerEvent,
     row: number,
     col: number
   ) => void;
@@ -16,8 +15,7 @@ type BoardProps = {
 const Board = memo(
   ({
     gameBoard,
-    handleCellLeftClick,
-    handleCellRightClick,
+    handleCellInteraction,
     level,
   }: BoardProps) => {
     return (
@@ -29,8 +27,7 @@ const Board = memo(
                 cell={cell}
                 rowIndex={rowIndex}
                 cellIndex={cellIndex}
-                handleCellLeftClick={handleCellLeftClick}
-                handleCellRightClick={handleCellRightClick}
+                handleCellInteraction={handleCellInteraction}
                 level={level}
                 key={cellIndex}
               />

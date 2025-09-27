@@ -19,8 +19,7 @@ function App() {
     timeDiff,
     startNewGame,
     restartGame,
-    handleCellLeftClick,
-    handleCellRightClick,
+    handleCellInteraction,
     isGameWin,
     isGameOver,
     isGameEnded,
@@ -39,8 +38,7 @@ function App() {
       />
       <Board
         gameBoard={gameBoard}
-        handleCellLeftClick={handleCellLeftClick}
-        handleCellRightClick={handleCellRightClick}
+        handleCellInteraction={handleCellInteraction}
         level={level}
       />
       <SelectLevel level={level} changeLevel={changeLevel} />

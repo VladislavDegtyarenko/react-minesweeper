@@ -1,5 +1,5 @@
 // Core
-import { MouseEvent, memo } from "react";
+import { memo, PointerEvent, MouseEvent } from "react";
 import clsx from "clsx";
 import { CELL_NUMBERS_COLORS } from "../constants";
 
@@ -15,23 +15,29 @@ type Props = {
   rowIndex: number;
   cellIndex: number;
   level: TLevel;
-  handleCellLeftClick: (row: number, col: number) => void;
-  handleCellRightClick: (
-    e: MouseEvent<HTMLDivElement>,
+  handleCellInteraction: (
+    e: globalThis.PointerEvent,
     row: number,
     col: number
   ) => void;
 };
 
 const Cell = (props: Props) => {
-  const {
-    cell,
-    rowIndex,
-    cellIndex,
-    level,
-    handleCellLeftClick,
-    handleCellRightClick,
-  } = props;
+  const { cell, rowIndex, cellIndex, level, handleCellInteraction } = props;
+
+  const onPointerEvent = (e: PointerEvent<HTMLDivElement>) =>
+    handleCellInteraction(
+      e.nativeEvent as unknown as globalThis.PointerEvent,
+      rowIndex,
+      cellIndex
+    );
+
+  const onContextMenu = (e: MouseEvent<HTMLDivElement>) =>
+    handleCellInteraction(
+      e.nativeEvent as unknown as globalThis.PointerEvent,
+      rowIndex,
+      cellIndex
+    );
 
   return (
     <div
@@ -41,8 +47,9 @@ const Cell = (props: Props) => {
         typeof cell.value === "number" && CELL_NUMBERS_COLORS[cell.value],
         level !== "easy" && "small"
       )}
-      onClick={() => handleCellLeftClick(rowIndex, cellIndex)}
-      onContextMenu={(e) => handleCellRightClick(e, rowIndex, cellIndex)}
+      onPointerDown={onPointerEvent}
+      onPointerUp={onPointerEvent}
+      onContextMenu={onContextMenu}
     >
       {cell.value === "mine" && <img src={mineIcon} />}
 
