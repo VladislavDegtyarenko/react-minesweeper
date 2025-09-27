@@ -1,10 +1,10 @@
 // Core
-import { MouseEvent, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useTimer from "./useTimer";
 import useSFX from "./useSFX";
 
 // Constants
-import { DEFAULT_LEVEL, LEVELS } from "../constants";
+import { DEFAULT_LEVEL, LEVELS, HOLD_TIME } from "../constants";
 
 // Utils
 import {
@@ -150,89 +150,144 @@ const useMinesweeperGame = () => {
     [currentLevel, isTimerRunning, playSoundEffect, startTimer]
   );
 
-  const handleCellLeftClick = useCallback(
-    (row: number, col: number) => {
-      if (
-        isGameEnded ||
-        gameBoard[row][col].isOpened ||
-        gameBoard[row][col].isFlagged
-      ) {
-        return null;
+  const shouldOpenCell = (row: number, col: number): boolean => {
+    if (
+      isGameEnded ||
+      gameBoard[row][col].isOpened ||
+      gameBoard[row][col].isFlagged
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleOpenCell = (row: number, col: number) => {
+    const mineCell = gameBoard[row][col].value === "mine";
+    const isFirstClick = !isTimerRunning;
+    const isFirstClickOnMine = mineCell && isFirstClick;
+
+    let newGameBoard: TBoard;
+
+    if (isFirstClickOnMine) {
+      do {
+        newGameBoard = initBoard(
+          currentLevel.rows,
+          currentLevel.cols,
+          currentLevel.totalMines
+        );
+      } while (newGameBoard[row][col].value === "mine");
+    } else {
+      newGameBoard = JSON.parse(JSON.stringify(gameBoard));
+    }
+
+    const boardAfterOpeningCell = openCell(newGameBoard, row, col);
+
+    if (boardAfterOpeningCell) {
+      setGameBoard(boardAfterOpeningCell);
+    }
+  };
+
+  const shouldToggleFlag = (row: number, col: number): boolean => {
+    if (isGameEnded || gameBoard[row][col].isOpened) return false;
+
+    return true;
+  };
+
+  const toggleFlag = (row: number, col: number) => {
+    if (!isTimerRunning) startTimer();
+
+    let flagsDiff = 0;
+
+    setGameBoard((prevGameBoard) => {
+      const newGameBoard: TBoard = JSON.parse(JSON.stringify(prevGameBoard));
+      const cell = prevGameBoard[row][col];
+
+      if (cell.isFlagged) {
+        newGameBoard[row][col].isFlagged = false;
+        if (!flagsDiff) flagsDiff--;
+        playSoundEffect("FLAG_REMOVE");
       }
 
-      const mineCell = gameBoard[row][col].value === "mine";
-      const isFirstClick = !isTimerRunning;
-      const isFirstClickOnMine = mineCell && isFirstClick;
-
-      let newGameBoard: TBoard;
-
-      if (isFirstClickOnMine) {
-        do {
-          newGameBoard = initBoard(
-            currentLevel.rows,
-            currentLevel.cols,
-            currentLevel.totalMines
-          );
-        } while (newGameBoard[row][col].value === "mine");
-      } else {
-        newGameBoard = JSON.parse(JSON.stringify(gameBoard));
+      if (!cell.isFlagged) {
+        newGameBoard[row][col].isFlagged = true;
+        if (!flagsDiff) flagsDiff++;
+        playSoundEffect("FLAG_PLACE");
       }
 
-      const boardAfterOpeningCell = openCell(newGameBoard, row, col);
-
-      if (boardAfterOpeningCell) {
-        setGameBoard(boardAfterOpeningCell);
+      if (checkGameWin(newGameBoard, currentLevel.totalMines)) {
+        revealAllMines(newGameBoard, true);
+        setIsGameWin(true);
+        playSoundEffect("GAME_WIN");
       }
-    },
-    [isGameEnded, gameBoard, isTimerRunning, openCell, currentLevel]
-  );
 
-  const handleCellRightClick = useCallback(
-    (e: MouseEvent<HTMLDivElement>, row: number, col: number) => {
+      return newGameBoard;
+    });
+
+    setTotalFlags((prevTotalFlags) => prevTotalFlags + flagsDiff);
+  };
+
+  const touchDownTimeRef = useRef<number | null>(null);
+  const touchHoldTimeoutRef = useRef<null | number>(null);
+
+  const cleanupTimers = () => {
+    clearTimeout(touchHoldTimeoutRef.current!);
+    touchHoldTimeoutRef.current = null;
+    touchDownTimeRef.current = null;
+  };
+
+  const handleCellInteraction = (e: PointerEvent, row: number, col: number) => {
+    const isLeftClick =
+      e.type === "pointerup" && e.button === 0 && e.pointerType === "mouse";
+    const isRightClick = e.type === "contextmenu" && e.button === 2; // test with real mouse
+
+    const isTouchDown = e.type === "pointerdown" && e.pointerType === "touch";
+    const isTouchUp = e.type === "pointerup" && e.pointerType === "touch";
+
+    const contextMenuByHoldingFinger =
+      e.button === -1 && e.type === "contextmenu";
+
+    if (isLeftClick) {
+      if (shouldOpenCell(row, col)) {
+        handleOpenCell(row, col);
+      }
+    }
+
+    if (isRightClick) {
       e.preventDefault();
 
-      if (isGameEnded || gameBoard[row][col].isOpened) return;
+      if (shouldToggleFlag(row, col)) {
+        toggleFlag(row, col);
+      }
+    }
 
-      if (!isTimerRunning) startTimer();
+    if (isTouchUp) {
+      e.preventDefault();
 
-      let flagsDiff = 0;
+      const touchUpTime = new Date().getTime();
 
-      setGameBoard((prevGameBoard) => {
-        const newGameBoard: TBoard = JSON.parse(JSON.stringify(prevGameBoard));
-        const cell = prevGameBoard[row][col];
-
-        if (cell.isFlagged) {
-          newGameBoard[row][col].isFlagged = false;
-          if (!flagsDiff) flagsDiff--;
-          playSoundEffect("FLAG_REMOVE");
+      if (touchUpTime - touchDownTimeRef.current! < HOLD_TIME) {
+        if (shouldOpenCell(row, col)) {
+          handleOpenCell(row, col);
         }
+      }
 
-        if (!cell.isFlagged) {
-          newGameBoard[row][col].isFlagged = true;
-          if (!flagsDiff) flagsDiff++;
-          playSoundEffect("FLAG_PLACE");
-        }
+      cleanupTimers();
+    }
 
-        if (checkGameWin(newGameBoard, currentLevel.totalMines)) {
-          revealAllMines(newGameBoard, true);
-          setIsGameWin(true);
-          playSoundEffect("GAME_WIN");
-        }
+    if (isTouchDown && shouldToggleFlag(row, col)) {
+      touchDownTimeRef.current = new Date().getTime();
 
-        return newGameBoard;
-      });
+      touchHoldTimeoutRef.current = setTimeout(() => {
+        toggleFlag(row, col);
+        cleanupTimers();
+      }, HOLD_TIME);
+    }
 
-      setTotalFlags((prevTotalFlags) => prevTotalFlags + flagsDiff);
-    },
-    [
-      gameBoard,
-      isGameEnded,
-      isTimerRunning,
-      currentLevel.totalMines,
-      playSoundEffect,
-      startTimer,
-    ]
-  );
+    if (contextMenuByHoldingFinger) {
+      e.preventDefault();
+    }
+  };
 
   return {
     level,
@@ -242,8 +297,7 @@ const useMinesweeperGame = () => {
     timeDiff,
     startNewGame,
     restartGame,
-    handleCellLeftClick,
-    handleCellRightClick,
+    handleCellInteraction,
     isGameWin,
     isGameOver,
     isGameEnded,
