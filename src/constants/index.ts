@@ -2,6 +2,7 @@ import type { TLevel } from "../types";
 
 export const LOCAL_STORAGE_KEYS = {
   gameBoard: "GAME_BOARD",
+  isMutedSFX: "IS_MUTED_SFX",
 };
 
 export const DIRECTIONS = [

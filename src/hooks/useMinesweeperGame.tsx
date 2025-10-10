@@ -9,6 +9,7 @@ import { DEFAULT_LEVEL, LEVELS, HOLD_TIME } from "../constants";
 // Utils
 import {
   checkGameWin,
+  deepClone,
   initBoard,
   initGame,
   revealAllMines,
@@ -16,7 +17,7 @@ import {
 } from "../utils";
 
 // Types
-import type { TBoard, TLevel } from "../types";
+import type { HandleCellInteractionProps, TBoard, TLevel } from "../types";
 
 const useMinesweeperGame = () => {
   const [level, setLevel] = useState<TLevel>("easy");
@@ -51,7 +52,7 @@ const useMinesweeperGame = () => {
   const { timeDiff, isTimerRunning, startTimer, stopTimer, resetTimer } =
     useTimer();
 
-  const { playSoundEffect } = useSFX();
+  const { playSoundEffect, isMutedSFX, toggleMuteSFX } = useSFX();
 
   const resetBoard = useCallback(
     (isRestart?: boolean) => {
@@ -108,7 +109,7 @@ const useMinesweeperGame = () => {
     (board: TBoard, row: number, col: number): TBoard | null => {
       if (!isTimerRunning) startTimer();
 
-      const newGameBoard: TBoard = JSON.parse(JSON.stringify(board));
+      const newGameBoard: TBoard = deepClone(board);
       const cell = newGameBoard[row][col];
       const isMineCell = cell.value === "mine";
       const isNumberCell = typeof cell.value === "number" && cell.value > 0;
@@ -178,7 +179,7 @@ const useMinesweeperGame = () => {
         );
       } while (newGameBoard[row][col].value === "mine");
     } else {
-      newGameBoard = JSON.parse(JSON.stringify(gameBoard));
+      newGameBoard = deepClone(gameBoard);
     }
 
     const boardAfterOpeningCell = openCell(newGameBoard, row, col);
@@ -189,7 +190,13 @@ const useMinesweeperGame = () => {
   };
 
   const shouldToggleFlag = (row: number, col: number): boolean => {
-    if (isGameEnded || gameBoard[row][col].isOpened) return false;
+    const isCellOpened = gameBoard[row][col].isOpened;
+    const isCellNotFlagged = !gameBoard[row][col].isFlagged;
+    const allFlagsPlaced = minesLeft === 0;
+
+    if (isGameEnded || isCellOpened || (allFlagsPlaced && isCellNotFlagged)) {
+      return false;
+    }
 
     return true;
   };
@@ -200,7 +207,7 @@ const useMinesweeperGame = () => {
     let flagsDiff = 0;
 
     setGameBoard((prevGameBoard) => {
-      const newGameBoard: TBoard = JSON.parse(JSON.stringify(prevGameBoard));
+      const newGameBoard: TBoard = deepClone(prevGameBoard);
       const cell = prevGameBoard[row][col];
 
       if (cell.isFlagged) {
@@ -236,7 +243,12 @@ const useMinesweeperGame = () => {
     touchDownTimeRef.current = null;
   };
 
-  const handleCellInteraction = (e: PointerEvent, row: number, col: number) => {
+  const handleCellInteraction = ({
+    e,
+    row,
+    col,
+    onFlagToggle,
+  }: HandleCellInteractionProps) => {
     const isLeftClick =
       e.type === "pointerup" && e.button === 0 && e.pointerType === "mouse";
     const isRightClick = e.type === "contextmenu" && e.button === 2; // test with real mouse
@@ -258,6 +270,7 @@ const useMinesweeperGame = () => {
 
       if (shouldToggleFlag(row, col)) {
         toggleFlag(row, col);
+        onFlagToggle?.();
       }
     }
 
@@ -301,6 +314,8 @@ const useMinesweeperGame = () => {
     isGameWin,
     isGameOver,
     isGameEnded,
+    isMutedSFX,
+    toggleMuteSFX,
   };
 };
 

@@ -13,8 +13,8 @@ const GameStatus = memo((props: Props) => {
 
   return (
     <>
-      {isGameWin && <span className="win">You win!</span>}
-      {isGameOver && <span className="game-over">Game over!</span>}
+      {isGameWin && <span className="win">Win!</span>}
+      {isGameOver && <span className="game-over">Lost!</span>}
       {!isGameEnded && (
         <>
           <img src={BombIcon} className="header-icon" />

@@ -1,23 +1,20 @@
 import { memo } from "react";
-import { TBoard, TLevel } from "../types";
+import type { HandleCellInteractionProps, TBoard, TLevel } from "../types";
 import Cell from "./Cell";
 
 type BoardProps = {
   gameBoard: TBoard;
-  handleCellInteraction: (
-    e: globalThis.PointerEvent,
-    row: number,
-    col: number
-  ) => void;
+  handleCellInteraction: ({
+    e,
+    row,
+    col,
+    onFlagToggle,
+  }: HandleCellInteractionProps) => void;
   level: TLevel;
 };
 
 const Board = memo(
-  ({
-    gameBoard,
-    handleCellInteraction,
-    level,
-  }: BoardProps) => {
+  ({ gameBoard, handleCellInteraction, level }: BoardProps) => {
     return (
       <div className="board">
         {gameBoard.map((rows, rowIndex) => (
