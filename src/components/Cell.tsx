@@ -38,6 +38,7 @@ const Cell = (props: Props) => {
       e: e.nativeEvent as unknown as globalThis.PointerEvent,
       row: rowIndex,
       col: cellIndex,
+      onFlagToggle: () => setShouldAnimate(true),
     });
   };
 

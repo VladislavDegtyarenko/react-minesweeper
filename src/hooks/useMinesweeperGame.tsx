@@ -288,12 +288,16 @@ const useMinesweeperGame = () => {
       cleanupTimers();
     }
 
-    if (isTouchDown && shouldToggleFlag(row, col)) {
+    if (isTouchDown) {
       touchDownTimeRef.current = new Date().getTime();
 
       touchHoldTimeoutRef.current = setTimeout(() => {
-        toggleFlag(row, col);
-        cleanupTimers();
+        if (shouldToggleFlag(row, col)) {
+          toggleFlag(row, col);
+          onFlagToggle?.();
+
+          cleanupTimers();
+        }
       }, HOLD_TIME);
     }
 
