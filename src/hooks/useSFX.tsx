@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useMuteSFX } from "./useMuteSFX";
 
 const SOUNDS_LIST = {
   REVEAL_EMPTY: "reveal_empty.wav",
@@ -14,6 +15,7 @@ type TSoundsList = Record<TSoundName, HTMLAudioElement>;
 
 const useSFX = () => {
   const [soundsList, setSoundsList] = useState<TSoundsList | null>(null);
+  const { isMutedSFX, toggleMuteSFX } = useMuteSFX();
 
   useEffect(() => {
     if (!soundsList) {
@@ -36,6 +38,8 @@ const useSFX = () => {
 
   const playSoundEffect = useCallback(
     (sfxName: TSoundName) => {
+      if (isMutedSFX) return;
+
       try {
         const audioElement = soundsList![sfxName];
         // if (audioElement.HAVE_ENOUGH_DATA) {
@@ -47,10 +51,10 @@ const useSFX = () => {
         console.warn("Unable to play sound: ", error);
       }
     },
-    [soundsList]
+    [soundsList, isMutedSFX]
   );
 
-  return { playSoundEffect };
+  return { playSoundEffect, isMutedSFX, toggleMuteSFX };
 };
 
 export default useSFX;

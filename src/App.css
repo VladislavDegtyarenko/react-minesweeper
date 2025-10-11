@@ -1,8 +1,29 @@
+html,
+body {
+  -webkit-user-select: none; /* Safari / iOS */
+  -ms-user-select: none; /* Old Edge */
+  user-select: none; /* Modern browsers */
+  -webkit-touch-callout: none; /* Disable callout on long press (iOS) */
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0.5rem;
   text-align: center;
+}
+
+footer {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--surface);
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+footer a {
+  color: var(--surface);
 }
 
 .game {
@@ -106,11 +127,44 @@
 }
 
 .flag {
-  display: none;
+  visibility: hidden;
 }
 
 .flag.visible {
-  display: block;
+  visibility: visible;
+  animation: flag-appear 0.075s ease-in-out;
+}
+
+.flag.hidden {
+  visibility: hidden;
+  animation: flag-disappear 0.075s ease-in-out;
+}
+
+@keyframes flag-appear {
+  from {
+    visibility: hidden;
+    transform: translateY(-200%);
+    opacity: 0.5;
+  }
+  to {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes flag-disappear {
+  from {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    visibility: visible;
+    transform: translateY(-200%);
+    opacity: 0.5;
+  }
 }
 
 header {
@@ -132,6 +186,14 @@ header {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+.header-label.mines-left {
+  min-width: 50px;
+}
+
+.header-label.timer {
+  font-variant-numeric: tabular-nums;
 }
 
 .header-icon {
@@ -160,7 +222,7 @@ header {
   flex-grow: 1;
 }
 
-.select-level button {
+.select-level .button {
   width: 100%;
   display: flex;
   padding: 0.25em 1rem;
@@ -174,12 +236,33 @@ header {
   background-color: var(--btn-active);
 }
 
-button {
-  background-color: var(--btn-color);
-  color: var(--surface);
+img {
+  -webkit-touch-callout: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.button img {
+  width: 1.125em;
+  height: 1.125em;
+  flex-shrink: 0;
+}
+
+.button {
   border: none;
-  padding: 0.25rem 0.5rem;
   font-size: 0.75rem;
   border-radius: 0.25rem;
   font-weight: 700;
+}
+
+.button.solid {
+  padding: 0.25rem 0.5rem;
+  background-color: var(--btn-color);
+  color: var(--surface);
+}
+
+.button.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

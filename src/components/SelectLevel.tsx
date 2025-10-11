@@ -13,7 +13,7 @@ const SelectLevel = memo(({ level, changeLevel }: SelectedLevelProps) => {
       {Object.keys(LEVELS).map((levelName) => (
         <li key={levelName}>
           <button
-            className={clsx(level === levelName && "active")}
+            className={clsx("button", "solid", level === levelName && "active")}
             onClick={() => changeLevel(levelName as keyof typeof LEVELS)}
           >
             {levelName}

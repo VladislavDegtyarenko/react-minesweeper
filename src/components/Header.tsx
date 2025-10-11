@@ -1,5 +1,7 @@
 import GameStatus from "./GameStatus";
 import TimerDisplay from "./TimerDisplay";
+import SoundIcon from "/icons/sound.svg";
+import SoundMutedIcon from "/icons/sound-muted.svg";
 
 type HeaderProps = {
   isGameWin: boolean;
@@ -9,6 +11,8 @@ type HeaderProps = {
   startNewGame: () => void;
   restartGame: () => void;
   timeDiff: string;
+  isMutedSFX: boolean;
+  toggleMuteSFX: () => void;
 };
 
 const Header = ({
@@ -19,10 +23,12 @@ const Header = ({
   startNewGame,
   restartGame,
   timeDiff,
+  isMutedSFX,
+  toggleMuteSFX,
 }: HeaderProps) => {
   return (
     <header>
-      <div className="header-label">
+      <div className="header-label mines-left">
         <GameStatus
           isGameWin={isGameWin}
           isGameOver={isGameOver}
@@ -31,10 +37,20 @@ const Header = ({
         />
       </div>
       <div className="header-buttons">
-        <button onClick={startNewGame}>New</button>
-        <button onClick={restartGame}>Restart</button>
+        <button className="button solid" onClick={startNewGame}>
+          New
+        </button>
+        <button className="button solid" onClick={restartGame}>
+          Restart
+        </button>
+        <button className="button solid icon" onClick={toggleMuteSFX}>
+          <img
+            src={isMutedSFX ? SoundMutedIcon : SoundIcon}
+            alt={isMutedSFX ? "Unmute" : "Mute"}
+          />
+        </button>
       </div>
-      <div className="header-label">
+      <div className="header-label timer">
         <TimerDisplay timeDiff={timeDiff} />
       </div>
     </header>

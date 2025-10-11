@@ -39,3 +39,10 @@ export type GameCell =
 
 export type TBoard = GameCell[][];
 export type TLevel = keyof typeof LEVELS;
+
+export type HandleCellInteractionProps = {
+  e: globalThis.PointerEvent;
+  row: number;
+  col: number;
+  onFlagToggle?: () => void;
+};

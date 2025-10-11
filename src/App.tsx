@@ -23,27 +23,33 @@ function App() {
     isGameWin,
     isGameOver,
     isGameEnded,
+    isMutedSFX,
+    toggleMuteSFX,
   } = useMinesweeperGame();
 
   return (
-    <div className="game">
-      <Header
-        isGameWin={isGameWin}
-        isGameOver={isGameOver}
-        isGameEnded={isGameEnded}
-        minesLeft={minesLeft}
-        startNewGame={startNewGame}
-        restartGame={restartGame}
-        timeDiff={timeDiff}
-      />
-      <Board
-        gameBoard={gameBoard}
-        handleCellInteraction={handleCellInteraction}
-        level={level}
-      />
-      <SelectLevel level={level} changeLevel={changeLevel} />
-      {isGameWin && <Confetti />}
-    </div>
+    <>
+      <div className="game">
+        <Header
+          isGameWin={isGameWin}
+          isGameOver={isGameOver}
+          isGameEnded={isGameEnded}
+          minesLeft={minesLeft}
+          startNewGame={startNewGame}
+          restartGame={restartGame}
+          timeDiff={timeDiff}
+          isMutedSFX={isMutedSFX}
+          toggleMuteSFX={toggleMuteSFX}
+        />
+        <Board
+          gameBoard={gameBoard}
+          handleCellInteraction={handleCellInteraction}
+          level={level}
+        />
+        <SelectLevel level={level} changeLevel={changeLevel} />
+        {isGameWin && <Confetti />}
+      </div>
+    </>
   );
 }
 
