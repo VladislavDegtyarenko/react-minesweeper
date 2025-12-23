@@ -1,5 +1,4 @@
 import { memo } from "react";
-import BombIcon from "/icons/bomb.svg";
 
 type Props = {
   isGameWin: boolean;
@@ -17,7 +16,7 @@ const GameStatus = memo((props: Props) => {
       {isGameOver && <span className="game-over">Lost!</span>}
       {!isGameEnded && (
         <>
-          <img src={BombIcon} className="header-icon" />
+          <img src="/icons/bomb.svg" className="header-icon" alt="mines left" />
           {minesLeft}
         </>
       )}

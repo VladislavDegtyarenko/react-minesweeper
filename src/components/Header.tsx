@@ -1,7 +1,5 @@
 import GameStatus from "./GameStatus";
 import TimerDisplay from "./TimerDisplay";
-import SoundIcon from "/icons/sound.svg";
-import SoundMutedIcon from "/icons/sound-muted.svg";
 
 type HeaderProps = {
   isGameWin: boolean;
@@ -45,7 +43,7 @@ const Header = ({
         </button>
         <button className="button solid icon" onClick={toggleMuteSFX}>
           <img
-            src={isMutedSFX ? SoundMutedIcon : SoundIcon}
+            src={isMutedSFX ? "/icons/sound-muted.svg" : "/icons/sound.svg"}
             alt={isMutedSFX ? "Unmute" : "Mute"}
           />
         </button>

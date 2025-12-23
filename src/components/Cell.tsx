@@ -3,10 +3,6 @@ import { memo, PointerEvent, MouseEvent, useState } from "react";
 import clsx from "clsx";
 import { CELL_NUMBERS_COLORS } from "../constants";
 
-// Assets
-import mineIcon from "/icons/bomb.svg";
-import flagIcon from "/red-flag.png";
-
 // Typescript
 import type {
   GameCell,
@@ -63,14 +59,15 @@ const Cell = (props: Props) => {
       onPointerUp={onPointerEvent}
       onContextMenu={onContextMenu}
     >
-      {cell.value === "mine" && <img src={mineIcon} />}
+      {cell.value === "mine" && <img src="/icons/bomb.svg" alt="mine" />}
 
       {typeof cell.value === "number" && <>{cell.value || ""}</>}
 
       {!cell.isOpened && (
         <div className="overlay">
           <img
-            src={flagIcon}
+            src="/red-flag.png"
+            alt="flag"
             className={clsx(
               "flag",
               shouldAnimate && cell.isFlagged === true && "visible",
