@@ -235,7 +235,7 @@ const useMinesweeperGame = () => {
   };
 
   const touchDownTimeRef = useRef<number | null>(null);
-  const touchHoldTimeoutRef = useRef<null | number>(null);
+  const touchHoldTimeoutRef = useRef<null | NodeJS.Timeout>(null);
 
   const cleanupTimers = () => {
     clearTimeout(touchHoldTimeoutRef.current!);

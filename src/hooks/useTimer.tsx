@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { getTimeDiff } from "../utils";
 
 const useTimer = () => {
-  const timerInterval = useRef<null | number>(null);
+  const timerInterval = useRef<null | NodeJS.Timeout>(null);
   const [timeStarted, setTimeStarted] = useState<Date | null>(null);
   const [timeNow, setTimeNow] = useState<Date | null>(null);
   const timeDiff = useMemo(() => getTimeDiff(timeNow, timeStarted), [timeNow]);

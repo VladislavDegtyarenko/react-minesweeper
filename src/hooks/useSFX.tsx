@@ -13,6 +13,10 @@ const SOUNDS_LIST = {
 type TSoundName = keyof typeof SOUNDS_LIST;
 type TSoundsList = Record<TSoundName, HTMLAudioElement>;
 
+/**
+ * Custom hook for managing sound effects in the game.
+ * Handles loading, playing, and muting of game sounds.
+ */
 const useSFX = () => {
   const [soundsList, setSoundsList] = useState<TSoundsList | null>(null);
   const { isMutedSFX, toggleMuteSFX } = useMuteSFX();
@@ -23,9 +27,7 @@ const useSFX = () => {
 
       let sound: TSoundName;
       for (sound in SOUNDS_LIST) {
-        list[sound] = new Audio(
-          import.meta.env.BASE_URL + "sfx/" + SOUNDS_LIST[sound]
-        );
+        list[sound] = new Audio("/sfx/" + SOUNDS_LIST[sound]);
       }
 
       for (sound in SOUNDS_LIST) {
@@ -42,11 +44,9 @@ const useSFX = () => {
 
       try {
         const audioElement = soundsList![sfxName];
-        // if (audioElement.HAVE_ENOUGH_DATA) {
         audioElement.pause();
         audioElement.currentTime = 0;
         audioElement.play();
-        // }
       } catch (error) {
         console.warn("Unable to play sound: ", error);
       }
