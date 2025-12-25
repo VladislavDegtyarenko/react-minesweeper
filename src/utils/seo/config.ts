@@ -18,3 +18,20 @@ export const SITE_NAME = "Minesweeper";
 export const DEFAULT_DESCRIPTION =
   "Play classic Minesweeper online — the timeless puzzle game. Choose from multiple difficulty levels, customize grid sizes, and enjoy a modern mobile-friendly experience.";
 
+/**
+ * Default keywords for SEO.
+ */
+export const DEFAULT_KEYWORDS = [
+  "minesweeper",
+  "minesweeper online",
+  "play minesweeper",
+  "minesweeper game",
+  "free minesweeper",
+  "puzzle game",
+  "logic game",
+  "mine sweeper",
+  "classic minesweeper",
+  "browser game",
+  "online game",
+  "mobile minesweeper",
+];
