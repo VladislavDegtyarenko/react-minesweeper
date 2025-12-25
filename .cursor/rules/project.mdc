@@ -1,0 +1,36 @@
+---
+description: Project-specific coding guidelines
+globs:
+alwaysApply: true
+---
+
+## Project Structure
+
+- Utils: One file per function in `src/utils/` with barrel export via `index.ts`
+- SEO utilities: `src/utils/seo/`
+- Constants: `src/constants/`
+- Hooks: `src/hooks/` with brief JSDoc comments
+
+## Code Style
+
+- Files should not exceed ~100 lines. If larger, split into:
+  - Utility functions in `src/utils/`
+  - Custom hooks in `src/hooks/`
+  - Smaller components
+- One React component per file
+- Extract complex logic from components into hooks or utils
+- Components: `export default function ComponentName()`
+- Hooks/utils: `export function useSomething()` (named export)
+
+## SEO
+
+- Use `generateMetadata()` from `src/utils/seo` for all page metadata
+- Hidden pages: add to `HIDDEN_ROUTES` in `middleware.ts` + set `noIndex: true`
+- Public pages: add to `PUBLIC_PAGES` in `src/utils/seo/publicPages.ts`
+- Production URL: `NEXT_PUBLIC_SITE_URL` env variable
+
+## Next.js
+
+- App Router in `src/app/`
+- Route groups: `(pages)` for content pages
+- Dynamic game: `[[...slug]]/` with client-only rendering
