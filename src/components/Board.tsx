@@ -1,39 +1,24 @@
+import { useShallow } from "zustand/react/shallow";
+import { useGameStore } from "@/store/game";
 import { memo } from "react";
-import type { HandleCellInteractionProps, TBoard, TLevel } from "../types";
-import Cell from "./Cell";
+import Row from "./Row";
 
-type BoardProps = {
-  gameBoard: TBoard;
-  handleCellInteraction: ({
-    e,
-    row,
-    col,
-    onFlagToggle,
-  }: HandleCellInteractionProps) => void;
-  level: TLevel;
+const Board = () => {
+  const { rows } = useGameStore(
+    useShallow((state) => ({
+      rows: state.level.rows,
+    }))
+  );
+
+  return (
+    <div className="board">
+      {Array.from({ length: rows }, (_, rowIndex) => (
+        <Row rowIndex={rowIndex} key={rowIndex} />
+      ))}
+    </div>
+  );
 };
 
-const Board = memo(
-  ({ gameBoard, handleCellInteraction, level }: BoardProps) => {
-    return (
-      <div className="board">
-        {gameBoard.map((rows, rowIndex) => (
-          <div className="row" key={rowIndex}>
-            {rows.map((cell, cellIndex) => (
-              <Cell
-                cell={cell}
-                rowIndex={rowIndex}
-                cellIndex={cellIndex}
-                handleCellInteraction={handleCellInteraction}
-                level={level}
-                key={cellIndex}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-    );
-  }
-);
+Board.displayName = "Board";
 
-export default Board;
+export default memo(Board);

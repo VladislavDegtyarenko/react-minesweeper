@@ -1,14 +1,12 @@
 import { memo } from "react";
+import { useGameStore } from "@/store/game";
+import { selectIsGameEnded, selectMinesLeft } from "@/store/game/selectors";
 
-type Props = {
-  isGameWin: boolean;
-  isGameOver: boolean;
-  isGameEnded: boolean;
-  minesLeft: number;
-};
-
-const GameStatus = memo((props: Props) => {
-  const { isGameWin, isGameOver, isGameEnded, minesLeft } = props;
+const GameStatus = memo(() => {
+  const isGameWin = useGameStore((state) => state.isGameWin);
+  const isGameOver = useGameStore((state) => state.isGameOver);
+  const isGameEnded = useGameStore(selectIsGameEnded);
+  const minesLeft = useGameStore(selectMinesLeft);
 
   return (
     <>

@@ -1,27 +1,25 @@
 import clsx from "clsx";
-import { LEVELS } from "../constants";
-import { memo } from "react";
+import { LEVELS_CONFIG } from "@/constants";
+import { useGameStore } from "@/store/game";
+import { changeLevel } from "@/store/game/actions";
 
-type SelectedLevelProps = {
-  level: string;
-  changeLevel: (selectedLevelName: keyof typeof LEVELS) => void;
-};
+const SelectLevel = () => {
+  const level = useGameStore((state) => state.level);
 
-const SelectLevel = memo(({ level, changeLevel }: SelectedLevelProps) => {
   return (
     <ul className="select-level">
-      {Object.keys(LEVELS).map((levelName) => (
-        <li key={levelName}>
+      {LEVELS_CONFIG.map(({ id }) => (
+        <li key={id}>
           <button
-            className={clsx("button", "solid", level === levelName && "active")}
-            onClick={() => changeLevel(levelName as keyof typeof LEVELS)}
+            className={clsx("button", "solid", level.id === id && "active")}
+            onClick={() => changeLevel(id)}
           >
-            {levelName}
+            {id}
           </button>
         </li>
       ))}
     </ul>
   );
-});
+};
 
 export default SelectLevel;

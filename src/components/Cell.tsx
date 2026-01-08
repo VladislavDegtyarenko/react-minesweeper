@@ -1,31 +1,36 @@
 // Core
 import { memo, PointerEvent, MouseEvent, useState } from "react";
 import clsx from "clsx";
+import { useShallow } from "zustand/react/shallow";
 import { CELL_NUMBERS_COLORS } from "../constants";
 
 // Typescript
-import type {
-  GameCell,
-  HandleCellInteractionProps,
-  OpenedMineCell,
-  TLevel,
-} from "../types";
+import type { OpenedMineCell } from "../types";
+import { handleCellInteraction } from "@/utils/board";
+import { useGameStore } from "@/store/game";
 
 type Props = {
-  cell: GameCell;
   rowIndex: number;
   cellIndex: number;
-  level: TLevel;
-  handleCellInteraction: ({
-    e,
-    row,
-    col,
-    onFlagToggle,
-  }: HandleCellInteractionProps) => void;
 };
 
 const Cell = (props: Props) => {
-  const { cell, rowIndex, cellIndex, level, handleCellInteraction } = props;
+  const { rowIndex, cellIndex } = props;
+
+  // Subscribe to individual primitive values to prevent re-renders when other cells change
+  const { value, isOpened, isFlagged, highlight, levelId } = useGameStore(
+    useShallow((state) => {
+      const cell = state.board[rowIndex][cellIndex];
+
+      return {
+        value: cell.value,
+        isOpened: cell.isOpened,
+        isFlagged: cell.isFlagged,
+        highlight: (cell as OpenedMineCell).highlight,
+        levelId: state.level.id,
+      };
+    })
+  );
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
@@ -51,27 +56,27 @@ const Cell = (props: Props) => {
     <div
       className={clsx(
         "cell",
-        cell.value === "mine" && (cell as OpenedMineCell).highlight,
-        typeof cell.value === "number" && CELL_NUMBERS_COLORS[cell.value],
-        level !== "easy" && "small"
+        value === "mine" && highlight,
+        typeof value === "number" && CELL_NUMBERS_COLORS[value],
+        levelId !== "easy" && "small"
       )}
       onPointerDown={onPointerEvent}
       onPointerUp={onPointerEvent}
       onContextMenu={onContextMenu}
     >
-      {cell.value === "mine" && <img src="/icons/bomb.svg" alt="mine" />}
+      {value === "mine" && <img src="/icons/bomb.svg" alt="mine" />}
 
-      {typeof cell.value === "number" && <>{cell.value || ""}</>}
+      {typeof value === "number" && <>{value || ""}</>}
 
-      {!cell.isOpened && (
+      {!isOpened && (
         <div className="overlay">
           <img
             src="/red-flag.png"
             alt="flag"
             className={clsx(
               "flag",
-              shouldAnimate && cell.isFlagged === true && "visible",
-              shouldAnimate && cell.isFlagged === false && "hidden"
+              shouldAnimate && isFlagged === true && "visible",
+              shouldAnimate && isFlagged === false && "hidden"
             )}
           />
         </div>
@@ -80,6 +85,6 @@ const Cell = (props: Props) => {
   );
 };
 
-const MemoCell = memo(Cell);
+Cell.displayName = "Cell";
 
-export default MemoCell;
+export default memo(Cell);

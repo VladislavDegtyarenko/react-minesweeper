@@ -1,4 +1,5 @@
-import type { TLevel } from "../types";
+import type { Level, LevelId, LevelsConfig } from "../types";
+import { getLevelById } from "@/utils/getLevelById";
 
 export const LOCAL_STORAGE_KEYS = {
   gameBoard: "GAME_BOARD",
@@ -28,24 +29,13 @@ export const CELL_NUMBERS_COLORS = [
   "eight",
 ];
 
-export const LEVELS = {
-  easy: {
-    rows: 9,
-    cols: 9,
-    totalMines: 10,
-  },
-  medium: {
-    rows: 16,
-    cols: 16,
-    totalMines: 40,
-  },
-  expert: {
-    rows: 16,
-    cols: 30,
-    totalMines: 99,
-  },
-};
+export const LEVELS_CONFIG: LevelsConfig = [
+  { id: "easy", rows: 9, cols: 9, totalMines: 10 },
 
-export const DEFAULT_LEVEL: TLevel = "easy";
+  { id: "medium", rows: 16, cols: 16, totalMines: 40 },
 
-export const HOLD_TIME = 300;
+  { id: "expert", rows: 16, cols: 30, totalMines: 99 },
+];
+
+export const DEFAULT_LEVEL_ID: LevelId = "easy";
+export const DEFAULT_LEVEL: Level = getLevelById(DEFAULT_LEVEL_ID);
