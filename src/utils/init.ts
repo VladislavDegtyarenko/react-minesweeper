@@ -85,17 +85,19 @@ export const initGame = (level: Omit<Level, "id">) => {
   //   return JSON.parse(boardInStorage) as TBoard;
   // }
 
-  const screenOrientation = window.screen.orientation.type;
-  const isPortrait = screenOrientation.includes("portrait");
+  // const screenOrientation = window.screen.orientation.type;
+  // const isPortrait = screenOrientation.includes("portrait");
 
   const { rows, cols, totalMines } = level;
 
-  const totalRows = isPortrait && rows !== cols ? cols : rows;
-  const totalCols = isPortrait && rows !== cols ? rows : cols;
+  // const totalRows = isPortrait && rows !== cols ? cols : rows;
+  // const totalCols = isPortrait && rows !== cols ? rows : cols;
 
   return initBoard({
-    rows: totalRows,
-    cols: totalCols,
+    // rows: totalRows,
+    // cols: totalCols,
+    rows,
+    cols,
     totalMines,
   });
 };
