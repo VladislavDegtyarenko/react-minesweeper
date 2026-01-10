@@ -1,53 +1,20 @@
 // UI
 import Header from "./components/Header";
 import Board from "./components/Board";
-import Confetti from "react-confetti";
 import SelectLevel from "./components/SelectLevel";
-
-// Game logic
-import useMinesweeperGame from "./hooks/useMinesweeperGame";
+import WinOverlay from "./components/WinOverlay";
 
 // Styles
 import "./App.css";
 
 function App() {
-  const {
-    level,
-    changeLevel,
-    gameBoard,
-    minesLeft,
-    timeDiff,
-    startNewGame,
-    restartGame,
-    handleCellInteraction,
-    isGameWin,
-    isGameOver,
-    isGameEnded,
-    isMutedSFX,
-    toggleMuteSFX,
-  } = useMinesweeperGame();
-
   return (
     <>
       <div className="game">
-        <Header
-          isGameWin={isGameWin}
-          isGameOver={isGameOver}
-          isGameEnded={isGameEnded}
-          minesLeft={minesLeft}
-          startNewGame={startNewGame}
-          restartGame={restartGame}
-          timeDiff={timeDiff}
-          isMutedSFX={isMutedSFX}
-          toggleMuteSFX={toggleMuteSFX}
-        />
-        <Board
-          gameBoard={gameBoard}
-          handleCellInteraction={handleCellInteraction}
-          level={level}
-        />
-        <SelectLevel level={level} changeLevel={changeLevel} />
-        {isGameWin && <Confetti />}
+        <Header />
+        <Board />
+        <SelectLevel />
+        <WinOverlay />
       </div>
     </>
   );

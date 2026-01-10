@@ -1,5 +1,3 @@
-import { LEVELS } from "../constants";
-
 type OpenedCell = {
   isOpened: true;
   isFlagged: false;
@@ -38,11 +36,12 @@ export type GameCell =
   | EmptyCell;
 
 export type TBoard = GameCell[][];
-export type TLevel = keyof typeof LEVELS;
 
-export type HandleCellInteractionProps = {
-  e: globalThis.PointerEvent;
-  row: number;
-  col: number;
-  onFlagToggle?: () => void;
+export type Level = {
+  id: LevelId;
+  rows: number;
+  cols: number;
+  totalMines: number;
 };
+export type LevelId = "easy" | "medium" | "expert";
+export type LevelsConfig = Level[];

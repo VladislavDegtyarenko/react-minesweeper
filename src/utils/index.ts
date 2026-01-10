@@ -6,3 +6,4 @@ export { getTimeDiff } from "./getTimeDiff";
 export { getDataFromLocalStorage } from "./getDataFromLocalStorage";
 export { setDataToLocalStorage } from "./setDataToLocalStorage";
 export { deepClone } from "./deepClone";
+export { debounce } from "./debounce";

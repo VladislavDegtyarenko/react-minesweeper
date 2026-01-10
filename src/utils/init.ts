@@ -1,4 +1,4 @@
-import type { TBoard, GameCell } from "../types";
+import type { TBoard, GameCell, Level } from "../types";
 import { DIRECTIONS } from "../constants";
 
 const createBoard = (rows: number, cols: number) => {
@@ -67,7 +67,9 @@ const fillBoardWithNumbers = (board: TBoard) => {
   return board;
 };
 
-export const initBoard = (rows: number, cols: number, totalMines: number) => {
+export const initBoard = (level: Omit<Level, "id">) => {
+  const { rows, cols, totalMines } = level;
+
   const emptyBoard = createBoard(rows, cols);
   const boardWithMines = fillBoardWithMines(emptyBoard, rows, cols, totalMines);
   const gameBoard = fillBoardWithNumbers(boardWithMines);
@@ -75,7 +77,7 @@ export const initBoard = (rows: number, cols: number, totalMines: number) => {
   return gameBoard;
 };
 
-export const initGame = (rows: number, cols: number, totalMines: number) => {
+export const initGame = (level: Omit<Level, "id">) => {
   // const boardInStorage = localStorage.getItem(LOCAL_STORAGE_KEYS.gameBoard);
   // console.log("boardInStorage: ", boardInStorage);
 
@@ -83,11 +85,19 @@ export const initGame = (rows: number, cols: number, totalMines: number) => {
   //   return JSON.parse(boardInStorage) as TBoard;
   // }
 
-  const screenOrientation = window.screen.orientation.type;
-  const isPortrait = screenOrientation.includes("portrait");
+  // const screenOrientation = window.screen.orientation.type;
+  // const isPortrait = screenOrientation.includes("portrait");
 
-  const totalRows = isPortrait && rows !== cols ? cols : rows;
-  const totalCols = isPortrait && rows !== cols ? rows : cols;
+  const { rows, cols, totalMines } = level;
 
-  return initBoard(totalRows, totalCols, totalMines);
+  // const totalRows = isPortrait && rows !== cols ? cols : rows;
+  // const totalCols = isPortrait && rows !== cols ? rows : cols;
+
+  return initBoard({
+    // rows: totalRows,
+    // cols: totalCols,
+    rows,
+    cols,
+    totalMines,
+  });
 };
