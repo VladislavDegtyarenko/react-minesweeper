@@ -17,8 +17,8 @@ import { TBoard } from '@/types';
 import { produce } from 'immer';
 import { checkGameWin } from '../checkGameWin';
 import { initBoard } from '../init';
-import { revealAllMines } from '../revealAllMines';
-import { revealEmptyCells } from '../revealEmptyCells';
+import { revealBoard } from './revealBoard';
+import { revealEmptyCells } from './revealEmptyCells';
 import type { HandleCellInteractionProps } from './types';
 
 const HOLD_TIME = 250;
@@ -27,6 +27,7 @@ let touchDownTime: number | null = null;
 let touchHoldTimeoutId: number | null = null;
 let pointerDownCoordinates: { x: number; y: number } | null = null;
 let latestPointerCoordinates: { x: number; y: number } | null = null;
+
 const getLatestPointerCoordinates = (): { x: number; y: number } | null => {
   if (latestPointerCoordinates) {
     return latestPointerCoordinates;
@@ -34,7 +35,8 @@ const getLatestPointerCoordinates = (): { x: number; y: number } | null => {
 
   return pointerDownCoordinates;
 };
-let isPointerMoved = (x: number, y: number, delta = 0.5): boolean => {
+
+const isPointerMoved = (x: number, y: number, delta = 0.5): boolean => {
   if (!pointerDownCoordinates) {
     return false;
   }
@@ -99,7 +101,7 @@ const openCell = (board: TBoard, row: number, col: number): TBoard | null => {
       cell.highlight = 'red';
       useGameStore.setState({ gameStatus: 'lost' });
       playSFX('GAME_OVER');
-      revealAllMines(draft);
+      revealBoard(draft);
     }
 
     if (!isMineCell) {
@@ -116,7 +118,7 @@ const openCell = (board: TBoard, row: number, col: number): TBoard | null => {
       }
 
       if (checkGameWin(draft as TBoard, level.totalMines)) {
-        revealAllMines(draft, true);
+        revealBoard(draft, true);
         useGameStore.setState({ gameStatus: 'won' });
         playSFX('GAME_WIN');
       }
@@ -196,7 +198,7 @@ const toggleFlag = (row: number, col: number) => {
     }
 
     if (checkGameWin(draft as TBoard, level.totalMines)) {
-      revealAllMines(draft, true);
+      revealBoard(draft, true);
       useGameStore.setState({ gameStatus: 'won' });
       playSFX('GAME_WIN');
     }

@@ -1,12 +1,12 @@
-import { DIRECTIONS } from "../constants";
-import { type TBoard } from "../types";
+import { DIRECTIONS } from '../../constants';
+import { type TBoard } from '../../types';
 
 export const revealEmptyCells = (
   board: TBoard,
   rows: number,
   cols: number,
   row: number,
-  col: number
+  col: number,
 ) => {
   const queue: [number, number][] = [[row, col]]; // Queue of cell coordinates
 
