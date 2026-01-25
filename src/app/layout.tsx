@@ -1,4 +1,6 @@
 import { generateMetadata } from "../utils/seo";
+// import DebugPopup from "../components/DebugPopup";
+// import { DebugProvider } from "@/contexts/DebugContext";
 
 /**
  * Global metadata configuration for the entire site.
@@ -14,7 +16,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div id="root">{children}</div>
+        <div id="root">
+          {/* <DebugProvider> */}
+          {children}
+
+          {/* <DebugPopup /> */}
+          {/* </DebugProvider> */}
+        </div>
       </body>
     </html>
   );

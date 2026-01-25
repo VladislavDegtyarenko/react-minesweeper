@@ -1,13 +1,11 @@
 // Core
-import { memo, PointerEvent, MouseEvent, useState } from "react";
-import clsx from "clsx";
-import { useShallow } from "zustand/react/shallow";
-import { CELL_NUMBERS_COLORS } from "../constants";
+import { memo, useState, useEffect, useRef } from 'react';
+import clsx from 'clsx';
+import { useShallow } from 'zustand/react/shallow';
+import { CELL_NUMBERS_COLORS } from '../constants';
 
-// Typescript
-import type { OpenedMineCell } from "../types";
-import { handleCellInteraction } from "@/utils/board";
-import { useGameStore } from "@/store/game";
+import type { OpenedMineCell } from '../types';
+import { useGameStore } from '@/store/game';
 
 type Props = {
   rowIndex: number;
@@ -18,73 +16,74 @@ const Cell = (props: Props) => {
   const { rowIndex, cellIndex } = props;
 
   // Subscribe to individual primitive values to prevent re-renders when other cells change
-  const { value, isOpened, isFlagged, highlight, levelId } = useGameStore(
-    useShallow((state) => {
-      const cell = state.board[rowIndex][cellIndex];
+  const { value, isOpened, isFlagged, highlight, levelId, gameStatus } =
+    useGameStore(
+      useShallow((state) => {
+        const cell = state.board[rowIndex][cellIndex];
 
-      return {
-        value: cell.value,
-        isOpened: cell.isOpened,
-        isFlagged: cell.isFlagged,
-        highlight: (cell as OpenedMineCell).highlight,
-        levelId: state.level.id,
-      };
-    })
-  );
+        return {
+          value: cell.value,
+          isOpened: cell.isOpened,
+          isFlagged: cell.isFlagged,
+          highlight: (cell as OpenedMineCell).highlight,
+          levelId: state.level.id,
+          gameStatus: state.gameStatus,
+        };
+      }),
+    );
 
-  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const [isFlagToggled, setIsFlagToggled] = useState(false);
+  const previousIsFlagged = useRef(isFlagged);
+  const shouldAnimate = isFlagToggled;
 
-  const onPointerEvent = (e: PointerEvent<HTMLDivElement>) => {
-    handleCellInteraction({
-      e: e.nativeEvent as unknown as globalThis.PointerEvent,
-      row: rowIndex,
-      col: cellIndex,
-      onFlagToggle: () => setShouldAnimate(true),
-    });
-  };
+  useEffect(() => {
+    if (previousIsFlagged.current !== isFlagged && !isFlagToggled) {
+      setIsFlagToggled(true);
+      previousIsFlagged.current = isFlagged;
+    }
+  }, [isFlagged, isFlagToggled]);
 
-  const onContextMenu = (e: MouseEvent<HTMLDivElement>) => {
-    handleCellInteraction({
-      e: e.nativeEvent as unknown as globalThis.PointerEvent,
-      row: rowIndex,
-      col: cellIndex,
-      onFlagToggle: () => setShouldAnimate(true),
-    });
-  };
+  const isFlagNotCorrect =
+    gameStatus === 'lost' && isFlagged && value !== 'mine';
 
   return (
     <div
       className={clsx(
-        "cell",
-        value === "mine" && highlight,
-        typeof value === "number" && CELL_NUMBERS_COLORS[value],
-        levelId !== "easy" && "small"
+        'cell',
+        value === 'mine' && isOpened && highlight,
+        typeof value === 'number' && isOpened && CELL_NUMBERS_COLORS[value],
       )}
-      onPointerDown={onPointerEvent}
-      onPointerUp={onPointerEvent}
-      onContextMenu={onContextMenu}
+      data-row={rowIndex}
+      data-cell={cellIndex}
     >
-      {value === "mine" && <img src="/icons/bomb.svg" alt="mine" />}
+      {value === 'mine' && isOpened && <img src="/icons/bomb.svg" alt="mine" />}
 
-      {typeof value === "number" && <>{value || ""}</>}
+      {typeof value === 'number' && isOpened && <>{value || ''}</>}
 
-      {!isOpened && (
+      {!isOpened && !isFlagNotCorrect && (
         <div className="overlay">
           <img
             src="/red-flag.png"
             alt="flag"
             className={clsx(
-              "flag",
-              shouldAnimate && isFlagged === true && "visible",
-              shouldAnimate && isFlagged === false && "hidden"
+              'flag',
+              shouldAnimate && isFlagged === true && 'visible',
+              shouldAnimate && isFlagged === false && 'hidden',
             )}
           />
         </div>
+      )}
+
+      {isFlagNotCorrect && (
+        <>
+          <img src="/icons/bomb.svg" alt="mine" />
+          <img src="/icons/cross.svg" alt="cross" className="cross-flag" />
+        </>
       )}
     </div>
   );
 };
 
-Cell.displayName = "Cell";
+Cell.displayName = 'Cell';
 
 export default memo(Cell);

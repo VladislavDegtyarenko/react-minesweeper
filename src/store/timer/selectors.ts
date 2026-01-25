@@ -1,7 +1,7 @@
-import type { TimerState } from ".";
+import type { TimerState } from "./types";
 import { getTimeDiff } from "../../utils";
 
 export const selectTimeDiff = (state: TimerState) =>
-  getTimeDiff(state.timeNow, state.timeStarted);
+  getTimeDiff(state.elapsedMs);
 export const selectIsTimerRunning = (state: TimerState) =>
-  Boolean(state.timeStarted);
+  state.status === "running";

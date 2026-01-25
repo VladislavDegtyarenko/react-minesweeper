@@ -67,7 +67,7 @@ const fillBoardWithNumbers = (board: TBoard) => {
   return board;
 };
 
-export const initBoard = (level: Omit<Level, "id">) => {
+export const initBoard = (level: Omit<Level, "id" | "label">) => {
   const { rows, cols, totalMines } = level;
 
   const emptyBoard = createBoard(rows, cols);
@@ -77,7 +77,7 @@ export const initBoard = (level: Omit<Level, "id">) => {
   return gameBoard;
 };
 
-export const initGame = (level: Omit<Level, "id">) => {
+export const initGame = (level: Omit<Level, "id" | "label">) => {
   // const boardInStorage = localStorage.getItem(LOCAL_STORAGE_KEYS.gameBoard);
   // console.log("boardInStorage: ", boardInStorage);
 

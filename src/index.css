@@ -19,18 +19,28 @@
   --eight: black;
   --red: firebrick;
   --green: forestgreen;
-
   background-color: var(--app-bg);
   color: var(--text);
 
+  overscroll-behavior-x: none;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-button {
-  font-family: inherit;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  -webkit-user-select: none; /* Safari / iOS */
+  -ms-user-select: none; /* Old Edge */
+  user-select: none; /* Modern browsers */
+  -webkit-touch-callout: none; /* Disable callout on long press (iOS) */
 }
 
 body {
@@ -38,6 +48,11 @@ body {
   display: flex;
   place-items: center;
   min-width: 380px;
-  min-height: 100vh;
+  max-width: 100dvw;
+  height: 100dvh;
   overflow: hidden;
+}
+
+button {
+  font-family: inherit;
 }

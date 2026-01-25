@@ -1,8 +1,8 @@
-import { useGameStore } from ".";
-import { LevelId, TBoard } from "@/types";
-import { initGame } from "@/utils";
-import { getLevelById } from "@/utils/getLevelById";
-import { stopTimer, resetTimer } from "../timer/actions";
+import { LevelId, TBoard } from '@/types';
+import { initGame } from '@/utils';
+import { getLevelById } from '@/utils/getLevelById';
+import { resetTimer, stopTimer } from '../timer/actions';
+import { useGameStore } from './store';
 
 export const changeLevel = (newLevelId: LevelId) => {
   useGameStore.setState({ level: getLevelById(newLevelId) });
@@ -20,15 +20,15 @@ export const resetBoard = (isRestart?: boolean) => {
           value: cell.value,
           isFlagged: false,
           isOpened: false,
-        }))
+        })),
       )
     : initGame(level);
 
   useGameStore.setState({
     board: newBoard as TBoard,
     totalFlags: 0,
-    isGameWin: false,
-    isGameOver: false,
+    gameStatus: 'idle',
+    isGameRestarted: Boolean(isRestart),
   });
 };
 
@@ -42,4 +42,16 @@ export const restartGame = () => {
 
 export const setBoard = (board: TBoard) => {
   useGameStore.setState({ board });
+};
+
+export const togglePause = () => {
+  const { gameStatus } = useGameStore.getState();
+
+  if (gameStatus === 'won' || gameStatus === 'lost' || gameStatus === 'idle') {
+    return undefined;
+  }
+
+  useGameStore.setState((state) => ({
+    gameStatus: state.gameStatus === 'paused' ? 'playing' : 'paused',
+  }));
 };
