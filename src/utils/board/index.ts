@@ -128,7 +128,9 @@ export const handleOpenCell = (row: number, col: number) => {
   const { board, level, isGameRestarted } = useGameStore.getState();
 
   const isMineCell = board[row][col].value === 'mine';
-  const isFirstClick = !selectIsTimerRunning(useTimerStore.getState());
+  const isFirstClick =
+    !selectIsTimerRunning(useTimerStore.getState()) &&
+    selectGameStatus(useGameStore.getState()) === 'idle';
   const isFirstClickOnMine = isMineCell && isFirstClick;
 
   let newGameBoard: TBoard;
@@ -172,6 +174,10 @@ const shouldToggleFlag = (row: number, col: number): boolean => {
 const toggleFlag = (row: number, col: number) => {
   if (!selectIsTimerRunning(useTimerStore.getState())) {
     startTimer();
+  }
+
+  if (selectGameStatus(useGameStore.getState()) === 'idle') {
+    useGameStore.setState({ gameStatus: 'playing' });
   }
 
   const { board, level } = useGameStore.getState();
