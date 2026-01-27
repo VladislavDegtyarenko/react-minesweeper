@@ -1,6 +1,4 @@
 import { useSFXStore, SoundName, SOUNDS_CONFIG } from ".";
-import { LOCAL_STORAGE_KEYS } from "@/constants";
-import { setDataToLocalStorage } from "@/utils";
 
 let isInitializing = false;
 
@@ -98,8 +96,6 @@ export const playSFX = (soundName: SoundName): void => {
  */
 export const toggleMuteSFX = (): void => {
   const { isMuted } = useSFXStore.getState();
-  const newMutedState = !isMuted;
 
-  useSFXStore.setState({ isMuted: newMutedState });
-  setDataToLocalStorage(LOCAL_STORAGE_KEYS.isMutedSFX, newMutedState);
+  useSFXStore.setState({ isMuted: !isMuted });
 };

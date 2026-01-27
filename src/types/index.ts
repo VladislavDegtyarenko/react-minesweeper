@@ -3,14 +3,14 @@ type OpenedCell = {
   isFlagged: false;
 };
 
-type ClosedCell = {
+export type ClosedCell = {
   isOpened: false;
   isFlagged: boolean;
 };
 
 type MineCell = {
-  value: "mine";
-  highlight?: "red" | "green";
+  value: 'mine';
+  highlight?: 'red' | 'green';
 };
 
 type NumberCell = {
@@ -39,9 +39,10 @@ export type TBoard = GameCell[][];
 
 export type Level = {
   id: LevelId;
+  label: string;
   rows: number;
   cols: number;
   totalMines: number;
 };
-export type LevelId = "easy" | "medium" | "expert";
+export type LevelId = 'easy' | 'medium' | 'expert';
 export type LevelsConfig = Level[];

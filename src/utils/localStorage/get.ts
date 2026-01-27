@@ -1,4 +1,4 @@
-export const getDataFromLocalStorage = (key: string) => {
+export const get = (key: string) => {
   try {
     const data = localStorage.getItem(key);
 

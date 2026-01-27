@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import Confetti from "react-confetti";
 import { useGameStore } from "@/store/game";
 import useWindowSize from "@/hooks/useWindowSize";
+import { selectGameStatus } from "@/store/game/selectors";
 
 const CSS_COLOR_VARIABLES = [
   "--one",
@@ -17,7 +18,7 @@ const CSS_COLOR_VARIABLES = [
 ] as const;
 
 const WinOverlay = () => {
-  const isGameWin = useGameStore((state) => state.isGameWin);
+  const gameStatus = useGameStore(selectGameStatus);
   const { width, height } = useWindowSize();
 
   const confettiColors = useMemo(() => {
@@ -28,7 +29,7 @@ const WinOverlay = () => {
     );
   }, []);
 
-  if (!isGameWin) {
+  if (gameStatus !== "won") {
     return null;
   }
 

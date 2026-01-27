@@ -1,17 +1,15 @@
+// timerStore.ts
 import { create } from "zustand";
+import type { TimerState } from "./types";
+import { devtools, subscribeWithSelector } from "zustand/middleware";
 
-export type TimerState = {
-  timeStarted: Date | null;
-  timeNow: Date | null;
-  timerInterval: number | null;
-};
-
-export const useTimerStore = create<TimerState>()(() => {
-  const timerState: TimerState = {
-    timeStarted: null,
-    timeNow: null,
-    timerInterval: null,
-  };
-
-  return { ...timerState };
-});
+export const useTimerStore = create<TimerState>()(
+  subscribeWithSelector(
+    devtools(() => ({
+      status: "idle",
+      elapsedMs: 0,
+      startedAtMs: null,
+      rafId: null,
+    }))
+  )
+);

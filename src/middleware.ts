@@ -11,7 +11,6 @@ const HIDDEN_ROUTES: string[] = [
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  console.log("pathname: ", pathname);
 
   if (HIDDEN_ROUTES.includes(pathname)) {
     const url = new URL("/", request.url);
