@@ -1,0 +1,116 @@
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.labelText {
+  display: inline-flex;
+}
+
+.infoButton {
+  border: none;
+  padding: 0;
+  background: transparent;
+  color: var(--surface);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+}
+
+.infoButton:hover {
+  color: var(--btn-active);
+}
+
+.infoButton:focus-visible {
+  outline: 2px solid var(--surface);
+  outline-offset: 2px;
+}
+
+.infoIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(90vw, 360px);
+  background-color: var(--surface);
+  color: var(--text);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem 1.25rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.description {
+  margin-top: 0.75rem;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.itemTitle {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.itemDescription {
+  display: block;
+  font-size: 0.8rem;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  border: none;
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  color: var(--btn-color);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.closeIcon {
+  width: 1rem;
+  height: 1rem;
+}

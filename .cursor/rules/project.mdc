@@ -6,6 +6,9 @@ alwaysApply: true
 
 ## Project Structure
 
+- Feature components live in `src/components/`
+- Reusable UI parts live in `src/components/ui/`
+- Component folder structure: `ComponentName/index.tsx` + `styles.module.scss`
 - Utils: One file per function in `src/utils/` with barrel export via `index.ts`
 - SEO utilities: `src/utils/seo/`
 - Constants: `src/constants/`
@@ -19,8 +22,14 @@ alwaysApply: true
   - Smaller components
 - One React component per file
 - Extract complex logic from components into hooks or utils
-- Components: `export default function ComponentName()`
-- Hooks/utils: `export function useSomething()` (named export)
+- Components: use arrow functions and declare `export default` at the end
+- Hooks: use named exports, e.g. `export function useSomething()`
+- Prefer `classnames/bind` when combining classes or using prop-based classes
+- Prefer `type Props` for local component/hook props, and `ComponentNameProps` when exported
+- Prefer `PropsWithChildren` over `children: ReactNode` unless explicit ReactNode is needed
+- Prefer `props: Props` param and destructure props on the first line, except when no props are used
+- Prefer single quotes in JS/TS/TSX
+- Omit empty returns: use `return undefined` in functions and `return null` in React components
 
 ## SEO
 

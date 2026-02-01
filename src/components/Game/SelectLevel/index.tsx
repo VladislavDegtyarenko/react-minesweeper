@@ -1,11 +1,13 @@
-import { LEVELS_CONFIG } from "@/constants";
-import { useGameStore } from "@/store/game";
-import { changeLevel } from "@/store/game/actions";
+import { LEVELS_CONFIG } from '@/constants';
+import { useGameStore } from '@/store/game';
+import { changeLevel } from '@/store/game/actions';
 
-import { memo } from "react";
-import SelectButtons from "./ui/SelectButtons";
+import { memo } from 'react';
+import SelectButtons from '../../ui/SelectButtons';
 
-import classes from "./SelectLevel.module.scss";
+import styles from './styles.module.scss';
+import classNames from 'classnames/bind';
+const cx = classNames.bind(styles);
 
 const SelectLevel = memo(() => {
   const levelOptions = LEVELS_CONFIG.map((level) => ({
@@ -19,7 +21,7 @@ const SelectLevel = memo(() => {
       options={levelOptions}
       selectedOption={selectedLevelId}
       onSelect={changeLevel}
-      className={classes.root}
+      className={cx('root')}
     />
   );
 });

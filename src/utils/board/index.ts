@@ -1,3 +1,4 @@
+import { CELL_MARKERS } from '@/constants';
 import { useGameStore } from '@/store/game';
 import { setBoard } from '@/store/game/actions';
 import { selectGameStatus, selectMinesLeft } from '@/store/game/selectors';
@@ -6,6 +7,7 @@ import {
   selectIsDigMode,
   selectIsFlagMode,
   selectIsGesturesMode,
+  selectIsQuestionMarkEnabled,
   selectIsToggleMode,
 } from '@/store/settings/selectors';
 import { useSFXStore } from '@/store/sfx';
@@ -13,7 +15,7 @@ import { initSFX, playSFX } from '@/store/sfx/actions';
 import { useTimerStore } from '@/store/timer';
 import { startTimer } from '@/store/timer/actions';
 import { selectIsTimerRunning } from '@/store/timer/selectors';
-import { TBoard } from '@/types';
+import { type CellMarkerState, TBoard } from '@/types';
 import { produce } from 'immer';
 import { checkGameWin } from '../checkGameWin';
 import { initBoard } from '../init';
@@ -27,6 +29,7 @@ let touchDownTime: number | null = null;
 let touchHoldTimeoutId: number | null = null;
 let pointerDownCoordinates: { x: number; y: number } | null = null;
 let latestPointerCoordinates: { x: number; y: number } | null = null;
+let isPointerSequenceBlocked = false;
 
 const getLatestPointerCoordinates = (): { x: number; y: number } | null => {
   if (latestPointerCoordinates) {
@@ -58,12 +61,27 @@ const cleanupTimers = () => {
   latestPointerCoordinates = null;
 };
 
+const getNextMarker = (
+  marker: CellMarkerState,
+  isQuestionMarkEnabled: boolean,
+): CellMarkerState => {
+  if (marker === CELL_MARKERS.FLAG) {
+    return isQuestionMarkEnabled ? CELL_MARKERS.QUESTION : null;
+  }
+
+  if (marker === CELL_MARKERS.QUESTION) {
+    return null;
+  }
+
+  return CELL_MARKERS.FLAG;
+};
+
 const shouldOpenCell = (row: number, col: number): boolean => {
   const state = useGameStore.getState();
   const { board } = state;
   const gameStatus = selectGameStatus(state);
   const isCellOpened = board[row][col].isOpened;
-  const isCellFlagged = board[row][col].isFlagged;
+  const isCellFlagged = board[row][col].marker === CELL_MARKERS.FLAG;
 
   if (
     gameStatus === 'won' ||
@@ -108,6 +126,7 @@ const openCell = (board: TBoard, row: number, col: number): TBoard | null => {
       const { level } = useGameStore.getState();
 
       cell.isOpened = true;
+      cell.marker = null;
       if (cell.value === 0) {
         playSFX('REVEAL_EMPTY');
         revealEmptyCells(draft, level.rows, level.cols, row, col);
@@ -152,20 +171,26 @@ export const handleOpenCell = (row: number, col: number) => {
   }
 };
 
-const shouldToggleFlag = (row: number, col: number): boolean => {
+const shouldToggleMarker = (
+  row: number,
+  col: number,
+  isQuestionMarkEnabled: boolean,
+): boolean => {
   const { board } = useGameStore.getState();
   const gameStatus = selectGameStatus(useGameStore.getState());
   const minesLeft = selectMinesLeft(useGameStore.getState());
 
   const isCellOpened = board[row][col].isOpened;
-  const isCellNotFlagged = !board[row][col].isFlagged;
-  const allFlagsPlaced = minesLeft === 0;
+  const marker = board[row][col].marker;
+  const nextMarker = getNextMarker(marker, isQuestionMarkEnabled);
+  const isFlagLimitReached =
+    minesLeft === 0 && nextMarker === CELL_MARKERS.FLAG;
 
   if (
     gameStatus === 'won' ||
     gameStatus === 'lost' ||
     isCellOpened ||
-    (allFlagsPlaced && isCellNotFlagged)
+    isFlagLimitReached
   ) {
     return false;
   }
@@ -173,7 +198,11 @@ const shouldToggleFlag = (row: number, col: number): boolean => {
   return true;
 };
 
-const toggleFlag = (row: number, col: number) => {
+const toggleMarker = (
+  row: number,
+  col: number,
+  isQuestionMarkEnabled: boolean,
+) => {
   if (!selectIsTimerRunning(useTimerStore.getState())) {
     startTimer();
   }
@@ -184,18 +213,25 @@ const toggleFlag = (row: number, col: number) => {
 
   const { board, level } = useGameStore.getState();
   const cell = board[row][col];
+  const nextMarker = getNextMarker(cell.marker, isQuestionMarkEnabled);
   let flagsDiff = 0;
 
   const newGameBoard = produce<TBoard>(board, (draft) => {
-    if (cell.isFlagged) {
-      draft[row][col].isFlagged = false;
+    const draftCell = draft[row][col];
+    const isCurrentlyFlagged = draftCell.marker === CELL_MARKERS.FLAG;
+    const isNextFlagged = nextMarker === CELL_MARKERS.FLAG;
+
+    if (isCurrentlyFlagged && !isNextFlagged) {
       flagsDiff = -1;
       playSFX('FLAG_REMOVE');
-    } else {
-      draft[row][col].isFlagged = true;
+    }
+
+    if (!isCurrentlyFlagged && isNextFlagged) {
       flagsDiff = 1;
       playSFX('FLAG_PLACE');
     }
+
+    draftCell.marker = nextMarker;
 
     if (checkGameWin(draft as TBoard, level.totalMines)) {
       revealBoard(draft, true);
@@ -215,7 +251,26 @@ export const handleCellInteraction = ({
   row,
   col,
 }: HandleCellInteractionProps) => {
+  const { isSettingsOpened } = useSettingsStore.getState();
+
   const isPointerMove = e.type === 'pointermove';
+  const isPointerDown = e.type === 'pointerdown';
+  const isPointerUp = e.type === 'pointerup';
+  const isPointerCancelled = e.type === 'pointercancel';
+
+  // Prevent interaction with the board if settings are opened
+  if (isSettingsOpened) {
+    if (isPointerDown) {
+      isPointerSequenceBlocked = true;
+    }
+
+    if (isPointerUp || isPointerCancelled) {
+      isPointerSequenceBlocked = false;
+      cleanupTimers();
+    }
+
+    return undefined;
+  }
 
   if (isPointerMove) {
     latestPointerCoordinates = { x: e.screenX, y: e.screenY };
@@ -223,7 +278,6 @@ export const handleCellInteraction = ({
     return undefined;
   }
 
-  const isPointerDown = e.type === 'pointerdown';
   const isLeftClick =
     e.type === 'pointerup' && e.button === 0 && e.pointerType === 'mouse';
   const isRightClick = e.type === 'contextmenu' && e.button === 2;
@@ -232,8 +286,6 @@ export const handleCellInteraction = ({
   const isTouchUp = e.type === 'pointerup' && e.pointerType === 'touch';
 
   const pointerCoordinates = { x: e.screenX, y: e.screenY };
-
-  const isPointerCancelled = e.type === 'pointercancel';
 
   const contextMenuByHoldingFinger =
     e.button === -1 && e.type === 'contextmenu';
@@ -245,6 +297,21 @@ export const handleCellInteraction = ({
 
   const isDigMode = selectIsDigMode(settingsState);
   const isFlagMode = selectIsFlagMode(settingsState);
+  const isQuestionMarkEnabled = selectIsQuestionMarkEnabled(settingsState);
+
+  if (isPointerSequenceBlocked) {
+    if (isPointerUp || isPointerCancelled) {
+      isPointerSequenceBlocked = false;
+      cleanupTimers();
+      return undefined;
+    }
+
+    if (!isPointerDown) {
+      return undefined;
+    }
+
+    isPointerSequenceBlocked = false;
+  }
 
   if (isPointerCancelled) {
     cleanupTimers();
@@ -267,8 +334,8 @@ export const handleCellInteraction = ({
   if (isRightClick) {
     e.preventDefault();
 
-    if (shouldToggleFlag(row, col)) {
-      toggleFlag(row, col);
+    if (shouldToggleMarker(row, col, isQuestionMarkEnabled)) {
+      toggleMarker(row, col, isQuestionMarkEnabled);
     }
   }
 
@@ -288,10 +355,10 @@ export const handleCellInteraction = ({
         }
 
         if (
-          shouldToggleFlag(row, col) &&
+          shouldToggleMarker(row, col, isQuestionMarkEnabled) &&
           !isPointerMoved(latestCoordinates.x, latestCoordinates.y)
         ) {
-          toggleFlag(row, col);
+          toggleMarker(row, col, isQuestionMarkEnabled);
           cleanupTimers();
         }
       }, HOLD_TIME);
@@ -334,8 +401,8 @@ export const handleCellInteraction = ({
         }
 
         if (isFlagMode) {
-          if (shouldToggleFlag(row, col)) {
-            toggleFlag(row, col);
+          if (shouldToggleMarker(row, col, isQuestionMarkEnabled)) {
+            toggleMarker(row, col, isQuestionMarkEnabled);
           }
         }
       }

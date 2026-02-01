@@ -1,4 +1,4 @@
-import { ControlModes, DigFlag } from "./types";
+import { ControlModes, DigFlag } from './types';
 
 export const MOBILE_CONTROL_MODES = new Set<ControlModes>([
   ControlModes.Toggle,
@@ -6,7 +6,7 @@ export const MOBILE_CONTROL_MODES = new Set<ControlModes>([
 ]);
 
 export const MOBILE_CONTROL_MODES_OPTIONS = Array.from(
-  MOBILE_CONTROL_MODES
+  MOBILE_CONTROL_MODES,
 ).map((mode) => ({
   value: mode as ControlModes,
   label: String(mode),
@@ -18,14 +18,16 @@ export const DIG_FLAG_OPTIONS = [
 ];
 
 export const ZOOM_OPTIONS = [
-  { value: 0.75, label: "Small" },
-  { value: 1, label: "Medium" },
-  { value: 1.25, label: "Large" },
-  { value: 1.5, label: "Extra Large" },
+  { value: 0.8, label: 'S' },
+  { value: 1, label: 'M' },
+  { value: 1.25, label: 'L' },
+  { value: 1.5, label: 'XL' },
 ];
 
 export const ZOOM_VALUES = ZOOM_OPTIONS.map((option) => option.value);
 
 export const DEFAULT_ZOOM = ZOOM_OPTIONS.find(
-  (option) => option.label === "Medium"
+  (option) => option.label === 'M',
 )!;
+
+export const DEFAULT_QUESTION_MARK_ENABLED = false;

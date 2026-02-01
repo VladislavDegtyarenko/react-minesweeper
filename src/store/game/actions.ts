@@ -18,7 +18,7 @@ export const resetBoard = (isRestart?: boolean) => {
     ? board.map((row) =>
         row.map((cell) => ({
           value: cell.value,
-          isFlagged: false,
+          marker: null,
           isOpened: false,
         })),
       )

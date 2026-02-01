@@ -1,6 +1,5 @@
-import "../../index.css";
-import { ClientOnly } from "./client";
-import { generateWebsiteJsonLd, generateGameJsonLd } from "../../utils/seo";
+import { ClientOnly } from './client';
+import { generateWebsiteJsonLd, generateGameJsonLd } from '../../utils/seo';
 
 /**
  * Homepage with JSON-LD structured data for SEO.

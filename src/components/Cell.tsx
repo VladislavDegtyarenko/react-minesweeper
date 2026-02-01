@@ -3,6 +3,7 @@ import { memo, useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { useShallow } from 'zustand/react/shallow';
 import { CELL_NUMBERS_COLORS } from '../constants';
+import { CELL_MARKERS } from '@/constants';
 
 import type { OpenedMineCell } from '../types';
 import { useGameStore } from '@/store/game';
@@ -16,7 +17,7 @@ const Cell = (props: Props) => {
   const { rowIndex, cellIndex } = props;
 
   // Subscribe to individual primitive values to prevent re-renders when other cells change
-  const { value, isOpened, isFlagged, highlight, levelId, gameStatus } =
+  const { value, isOpened, marker, highlight, levelId, gameStatus } =
     useGameStore(
       useShallow((state) => {
         const cell = state.board[rowIndex][cellIndex];
@@ -24,7 +25,7 @@ const Cell = (props: Props) => {
         return {
           value: cell.value,
           isOpened: cell.isOpened,
-          isFlagged: cell.isFlagged,
+          marker: cell.marker,
           highlight: (cell as OpenedMineCell).highlight,
           levelId: state.level.id,
           gameStatus: state.gameStatus,
@@ -32,16 +33,19 @@ const Cell = (props: Props) => {
       }),
     );
 
-  const [isFlagToggled, setIsFlagToggled] = useState(false);
-  const previousIsFlagged = useRef(isFlagged);
-  const shouldAnimate = isFlagToggled;
+  const isFlagged = marker === CELL_MARKERS.FLAG;
+  const isQuestionMarked = marker === CELL_MARKERS.QUESTION;
+
+  const [isMarkerToggled, setIsMarkerToggled] = useState(Boolean(marker));
+  const previousMarker = useRef(marker);
+  const shouldAnimate = isMarkerToggled;
 
   useEffect(() => {
-    if (previousIsFlagged.current !== isFlagged && !isFlagToggled) {
-      setIsFlagToggled(true);
-      previousIsFlagged.current = isFlagged;
+    if (previousMarker.current !== marker && !isMarkerToggled) {
+      setIsMarkerToggled(true);
+      previousMarker.current = marker;
     }
-  }, [isFlagged, isFlagToggled]);
+  }, [isMarkerToggled, marker]);
 
   const isFlagNotCorrect =
     gameStatus === 'lost' && isFlagged && value !== 'mine';
@@ -50,8 +54,8 @@ const Cell = (props: Props) => {
     <div
       className={clsx(
         'cell',
-        value === 'mine' && isOpened && highlight,
         typeof value === 'number' && isOpened && CELL_NUMBERS_COLORS[value],
+        gameStatus === 'lost' && highlight === 'red' && 'red',
       )}
       data-row={rowIndex}
       data-cell={cellIndex}
@@ -61,16 +65,11 @@ const Cell = (props: Props) => {
       {typeof value === 'number' && isOpened && <>{value || ''}</>}
 
       {!isOpened && !isFlagNotCorrect && (
-        <div className="overlay">
-          <img
-            src="/red-flag.png"
-            alt="flag"
-            className={clsx(
-              'flag',
-              shouldAnimate && isFlagged === true && 'visible',
-              shouldAnimate && isFlagged === false && 'hidden',
-            )}
-          />
+        <div
+          className={clsx('overlay', value === 'mine' && isOpened && highlight)}
+        >
+          {isFlagged && <img src="/red-flag.png" alt="flag" />}
+          {isQuestionMarked && <span className="question-mark">?</span>}
         </div>
       )}
 

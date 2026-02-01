@@ -1,4 +1,5 @@
-import { TBoard } from "../types";
+import { CELL_MARKERS } from '@/constants';
+import { TBoard } from '../types';
 
 export const checkGameWin = (board: TBoard, totalMines: number) => {
   let unopenedCells = 0;
@@ -10,7 +11,7 @@ export const checkGameWin = (board: TBoard, totalMines: number) => {
         unopenedCells++;
       }
 
-      if (cell.isFlagged && cell.value === "mine") {
+      if (cell.marker === CELL_MARKERS.FLAG && cell.value === 'mine') {
         correctlyFlaggedMines++;
       }
     });

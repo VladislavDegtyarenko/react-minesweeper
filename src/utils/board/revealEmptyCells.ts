@@ -1,3 +1,4 @@
+import { CELL_MARKERS } from '@/constants';
 import { DIRECTIONS } from '../../constants';
 import { type TBoard } from '../../types';
 
@@ -15,6 +16,7 @@ export const revealEmptyCells = (
 
     const cell = board[currentRow][currentCol];
     cell.isOpened = true;
+    cell.marker = null;
 
     if (cell.value === 0) {
       for (const [dRow, dCol] of DIRECTIONS) {
@@ -27,7 +29,7 @@ export const revealEmptyCells = (
           newCol >= 0 &&
           newCol < cols &&
           !board[newRow][newCol].isOpened &&
-          !board[newRow][newCol].isFlagged
+          board[newRow][newCol].marker !== CELL_MARKERS.FLAG
         ) {
           queue.push([newRow, newCol]); // Add adjacent empty cells to queue
         }
