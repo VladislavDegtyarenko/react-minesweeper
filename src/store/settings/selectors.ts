@@ -1,5 +1,5 @@
-import { MOBILE_CONTROL_MODES } from "./constants";
-import { ControlModes, DigFlag, type SettingsState } from "./types";
+import { MOBILE_CONTROL_MODES } from './constants';
+import { ControlModes, DigFlag, type SettingsState } from './types';
 
 export const selectControlMode = (state: SettingsState) => state.controlMode;
 
@@ -21,3 +21,9 @@ export const selectIsTouchScreen = (state: SettingsState) =>
 
 export const selectIsMobileControlMode = (state: SettingsState) =>
   MOBILE_CONTROL_MODES.has(state.controlMode);
+
+export const selectIsSettingsOpened = (state: SettingsState) =>
+  state.isSettingsOpened;
+
+export const selectIsQuestionMarkEnabled = (state: SettingsState) =>
+  state.isQuestionMarkEnabled;

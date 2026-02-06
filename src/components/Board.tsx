@@ -77,7 +77,7 @@ const Board = () => {
       className="board"
       style={
         {
-          '--cell-size': `${2 * zoom}rem`,
+          '--cell-size': `${2.125 * zoom}rem`,
         } as CSSProperties
       }
       onPointerDown={onPointerEvent}

@@ -1,5 +1,5 @@
-import { useSettingsStore } from "./store";
-import { ControlModes, DigFlag } from "./types";
+import { useSettingsStore } from './store';
+import { ControlModes, DigFlag } from './types';
 
 /**
  * Sets the control mode for the game.
@@ -20,4 +20,20 @@ export const setDigFlag = (digFlag: DigFlag): void => {
  */
 export const adjustZoom = (zoom: number): void => {
   useSettingsStore.setState({ zoom });
+};
+
+/**
+ * Sets the settings opened state.
+ */
+export const setIsSettingsOpened = (isSettingsOpened: boolean): void => {
+  useSettingsStore.setState({ isSettingsOpened });
+};
+
+/**
+ * Toggles whether question mark markers are enabled.
+ */
+export const setIsQuestionMarkEnabled = (
+  isQuestionMarkEnabled: boolean,
+): void => {
+  useSettingsStore.setState({ isQuestionMarkEnabled });
 };

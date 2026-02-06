@@ -1,0 +1,11 @@
+.popoverContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--app-bg);
+  color: var(--surface);
+  border-radius: 0.5rem;
+  // border: solid 1px var(--cell-border-color);
+  box-shadow: 0.5rem 0.5rem 0.5rem #11111144;
+}

@@ -1,4 +1,4 @@
-import { useSFXStore, SoundName, SOUNDS_CONFIG } from ".";
+import { SoundName, SOUNDS_CONFIG, useSFXStore } from '.';
 
 let isInitializing = false;
 
@@ -7,7 +7,7 @@ let isInitializing = false;
  */
 const loadAudioBuffer = async (
   audioContext: AudioContext,
-  url: string
+  url: string,
 ): Promise<AudioBuffer> => {
   const response = await fetch(url);
   const arrayBuffer = await response.arrayBuffer();
@@ -25,7 +25,7 @@ const loadAllAudioBuffers = async (context: AudioContext): Promise<void> => {
     async ([name, url]) => {
       const buffer = await loadAudioBuffer(context, url);
       audioBuffers.set(name as SoundName, buffer);
-    }
+    },
   );
 
   await Promise.all(loadPromises);
@@ -53,7 +53,7 @@ export const initSFX = (): void => {
   const context = audioContext ?? new AudioContext();
 
   // Resume if suspended (also synchronous within gesture)
-  if (context.state === "suspended") {
+  if (context.state === 'suspended') {
     context.resume();
   }
 
@@ -89,6 +89,13 @@ export const playSFX = (soundName: SoundName): void => {
   source.buffer = buffer;
   source.connect(audioContext.destination);
   source.start(0);
+};
+
+/**
+ * Sets the mute state for sound effects.
+ */
+export const setMuteSFX = (isMuted: boolean): void => {
+  useSFXStore.setState({ isMuted });
 };
 
 /**

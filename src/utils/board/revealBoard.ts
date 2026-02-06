@@ -1,14 +1,18 @@
+import { CELL_MARKERS } from '@/constants';
 import { type TBoard } from '../../types';
 
 export const revealBoard = (board: TBoard, highlightWin?: boolean) => {
   board.forEach((row) => {
     row.forEach((cell) => {
-      if (cell.value === 'mine' && !cell.isFlagged) {
+      if (cell.value === 'mine') {
         // Open non-flagged mines
-        cell.isOpened = true;
+
+        if (cell.marker !== CELL_MARKERS.FLAG) {
+          cell.isOpened = true;
+        }
 
         if (highlightWin) {
-          // Highlight mines on win
+          // Highlight all mines on win
           cell.highlight = 'green';
         }
       }

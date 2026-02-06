@@ -1,11 +1,16 @@
+import { CELL_MARKERS } from '@/constants';
+
+export type CellMarker = (typeof CELL_MARKERS)[keyof typeof CELL_MARKERS];
+export type CellMarkerState = CellMarker | null;
+
 type OpenedCell = {
   isOpened: true;
-  isFlagged: false;
+  marker: null;
 };
 
 export type ClosedCell = {
   isOpened: false;
-  isFlagged: boolean;
+  marker: CellMarkerState;
 };
 
 type MineCell = {
@@ -22,10 +27,8 @@ type ClosedMineCell = ClosedCell & MineCell;
 export type OpenedNumberCell = OpenedCell & NumberCell;
 type ClosedNumberCell = ClosedCell & NumberCell;
 
-type EmptyCell = {
+type EmptyCell = ClosedCell & {
   value: null;
-  isFlagged: false;
-  isOpened: false;
 };
 
 export type GameCell =

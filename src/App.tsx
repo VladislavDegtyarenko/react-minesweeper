@@ -1,19 +1,14 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 // UI
-import Header from "./components/Header";
-import Board from "./components/Board";
-import SelectLevel from "./components/SelectLevel";
-import SelectControlMode from "./components/SelectControlMode";
-import SelectDigFlag from "./components/SelectDigFlag";
-import WinOverlay from "./components/WinOverlay";
-import SelectZoom from "./components/SelectZoom";
+import Header from './components/Header';
+import Board from './components/Board';
+import SelectLevel from './components/Game/SelectLevel';
+import SelectDigFlag from './components/Game/SelectDigFlag';
+import WinOverlay from './components/WinOverlay';
 
 // Store
-import { initTouchScreenListener } from "@/store/settings";
-
-// Styles
-import "./App.css";
+import { initTouchScreenListener } from '@/store/settings';
 
 function App() {
   useEffect(() => {
@@ -29,9 +24,7 @@ function App() {
         <Board />
         <SelectLevel />
         <WinOverlay />
-        <SelectControlMode />
         <SelectDigFlag />
-        <SelectZoom />
       </div>
     </>
   );

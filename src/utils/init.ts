@@ -1,5 +1,5 @@
-import type { TBoard, GameCell, Level } from "../types";
-import { DIRECTIONS } from "../constants";
+import { DIRECTIONS } from '../constants';
+import type { GameCell, Level, TBoard } from '../types';
 
 const createBoard = (rows: number, cols: number) => {
   const board: TBoard = [];
@@ -10,7 +10,7 @@ const createBoard = (rows: number, cols: number) => {
     for (let cellIndex = 0; cellIndex < cols; cellIndex++) {
       board[rowIndex][cellIndex] = {
         value: null,
-        isFlagged: false,
+        marker: null,
         isOpened: false,
       };
     }
@@ -23,7 +23,7 @@ const fillBoardWithMines = (
   board: TBoard,
   rows: number,
   cols: number,
-  totalMines: number
+  totalMines: number,
 ) => {
   let mines = 0;
 
@@ -31,8 +31,8 @@ const fillBoardWithMines = (
     const row = Math.floor(Math.random() * rows);
     const column = Math.floor(Math.random() * cols);
 
-    if (board[row][column].value !== "mine") {
-      (board[row][column] as GameCell).value = "mine";
+    if (board[row][column].value !== 'mine') {
+      (board[row][column] as GameCell).value = 'mine';
       mines++;
     }
   }
@@ -45,7 +45,7 @@ const fillBoardWithNumbers = (board: TBoard) => {
 
   board.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
-      if (cell.value !== "mine") {
+      if (cell.value !== 'mine') {
         let minesAround = 0;
 
         DIRECTIONS.forEach(([dRow, dCol]) => {
@@ -53,7 +53,7 @@ const fillBoardWithNumbers = (board: TBoard) => {
           const newCol = colIndex + dCol;
 
           if (newRow in board && newCol in board[newRow]) {
-            if (board[newRow][newCol].value === "mine") {
+            if (board[newRow][newCol].value === 'mine') {
               minesAround++;
             }
           }
@@ -67,7 +67,7 @@ const fillBoardWithNumbers = (board: TBoard) => {
   return board;
 };
 
-export const initBoard = (level: Omit<Level, "id" | "label">) => {
+export const initBoard = (level: Omit<Level, 'id' | 'label'>) => {
   const { rows, cols, totalMines } = level;
 
   const emptyBoard = createBoard(rows, cols);
@@ -77,7 +77,7 @@ export const initBoard = (level: Omit<Level, "id" | "label">) => {
   return gameBoard;
 };
 
-export const initGame = (level: Omit<Level, "id" | "label">) => {
+export const initGame = (level: Omit<Level, 'id' | 'label'>) => {
   // const boardInStorage = localStorage.getItem(LOCAL_STORAGE_KEYS.gameBoard);
   // console.log("boardInStorage: ", boardInStorage);
 
