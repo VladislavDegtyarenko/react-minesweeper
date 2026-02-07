@@ -1,0 +1,17 @@
+.boardScrollable {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.board {
+  box-sizing: border-box;
+  --cell-size: 2rem;
+  overflow: auto;
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: scroll;
+  margin: 0 auto;
+  max-width: 100%;
+}

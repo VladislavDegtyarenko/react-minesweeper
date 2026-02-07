@@ -1,0 +1,17 @@
+---
+description: Prefer @/ alias imports for src
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Alias Imports
+
+Prefer `@/` alias imports for files under `src/` instead of relative paths.
+
+```typescript
+// ✅ Good
+import { useGameStore } from '@/store/game';
+
+// ❌ Avoid
+import { useGameStore } from '../../store/game';
+```

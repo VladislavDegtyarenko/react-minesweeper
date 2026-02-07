@@ -1,12 +1,17 @@
-import { useShallow } from 'zustand/react/shallow';
-import { useGameStore } from '@/store/game';
 import { CSSProperties, memo, PointerEvent, MouseEvent } from 'react';
-import Row from './Row';
+import { useShallow } from 'zustand/react/shallow';
+import classNames from 'classnames/bind';
+import { useGameStore } from '@/store/game';
 import { selectZoom } from '@/store/settings/selectors';
 import { useSettingsStore } from '@/store/settings';
-import PauseOverlay from './PauseOverlay';
 import { handleCellInteraction } from '@/utils/board';
 import { throttle } from '@/utils';
+import Row from '../Row';
+import PauseOverlay from '../PauseOverlay';
+import styles from './styles.module.scss';
+
+const cx = classNames.bind(styles);
+const CELL_SELECTOR = '[data-cell]';
 
 const Board = () => {
   const { rows, gameStatus } = useGameStore(
@@ -22,18 +27,24 @@ const Board = () => {
     e: PointerEvent<HTMLDivElement>,
   ): { rowIndex: number; cellIndex: number } | undefined => {
     const element = e.target as HTMLElement;
-    const cellElement = element.closest('.cell');
+    const cellElement = element.closest(CELL_SELECTOR);
 
-    if (!cellElement || !(cellElement instanceof HTMLElement)) return;
+    if (!cellElement || !(cellElement instanceof HTMLElement)) {
+      return undefined;
+    }
 
     const { row, cell } = cellElement.dataset;
 
-    if (!row || !cell) return;
+    if (!row || !cell) {
+      return undefined;
+    }
 
     const rowIndex = parseInt(row);
     const cellIndex = parseInt(cell);
 
-    if (isNaN(rowIndex) || isNaN(cellIndex)) return;
+    if (isNaN(rowIndex) || isNaN(cellIndex)) {
+      return undefined;
+    }
 
     return { rowIndex, cellIndex };
   };
@@ -74,7 +85,7 @@ const Board = () => {
 
   return (
     <div
-      className="board"
+      className={cx('boardScrollable', 'board')}
       style={
         {
           '--cell-size': `${2.125 * zoom}rem`,

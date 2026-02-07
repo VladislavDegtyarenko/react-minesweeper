@@ -1,0 +1,46 @@
+.button {
+  border: none;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.solid {
+  padding: 0.5rem;
+  background-color: var(--btn-color);
+  color: var(--surface);
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.active {
+  background-color: var(--btn-active);
+}
+
+.button img {
+  width: 1.125em;
+  height: 1.125em;
+  flex-shrink: 0;
+  -webkit-touch-callout: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+@media screen and (max-width: 768px) {
+  .button img {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}

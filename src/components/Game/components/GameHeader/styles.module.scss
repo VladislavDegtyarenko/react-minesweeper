@@ -1,0 +1,29 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  font-weight: 700;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.headerButtons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.headerLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.minesLeft {
+  min-width: 50px;
+}
+
+.timer {
+  font-variant-numeric: tabular-nums;
+}

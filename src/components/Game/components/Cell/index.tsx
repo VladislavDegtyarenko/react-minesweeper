@@ -1,12 +1,13 @@
 // Core
 import { memo, useState, useEffect, useRef } from 'react';
-import clsx from 'clsx';
+import classNames from 'classnames/bind';
 import { useShallow } from 'zustand/react/shallow';
-import { CELL_NUMBERS_COLORS } from '../constants';
-import { CELL_MARKERS } from '@/constants';
-
-import type { OpenedMineCell } from '../types';
+import { CELL_NUMBERS_COLORS, CELL_MARKERS } from '@/constants';
+import type { OpenedMineCell } from '@/types';
 import { useGameStore } from '@/store/game';
+import styles from './styles.module.scss';
+
+const cx = classNames.bind(styles);
 
 type Props = {
   rowIndex: number;
@@ -49,34 +50,54 @@ const Cell = (props: Props) => {
 
   const isFlagNotCorrect =
     gameStatus === 'lost' && isFlagged && value !== 'mine';
+  const cellNumberClass =
+    typeof value === 'number' && isOpened ? CELL_NUMBERS_COLORS[value] : null;
 
   return (
     <div
-      className={clsx(
+      className={cx(
         'cell',
-        typeof value === 'number' && isOpened && CELL_NUMBERS_COLORS[value],
+        cellNumberClass || undefined,
         gameStatus === 'lost' && highlight === 'red' && 'red',
       )}
       data-row={rowIndex}
       data-cell={cellIndex}
     >
-      {value === 'mine' && isOpened && <img src="/icons/bomb.svg" alt="mine" />}
+      {value === 'mine' && isOpened && (
+        <img
+          src="/icons/bomb.svg"
+          alt="mine"
+          className={cx('image', 'cellImage')}
+        />
+      )}
 
       {typeof value === 'number' && isOpened && <>{value || ''}</>}
 
       {!isOpened && !isFlagNotCorrect && (
-        <div
-          className={clsx('overlay', value === 'mine' && isOpened && highlight)}
-        >
-          {isFlagged && <img src="/red-flag.png" alt="flag" />}
-          {isQuestionMarked && <span className="question-mark">?</span>}
+        <div className={cx('overlay', value === 'mine' && highlight)}>
+          {isFlagged && (
+            <img
+              src="/red-flag.png"
+              alt="flag"
+              className={cx('image', 'cellImage')}
+            />
+          )}
+          {isQuestionMarked && <span className={cx('questionMark')}>?</span>}
         </div>
       )}
 
       {isFlagNotCorrect && (
         <>
-          <img src="/icons/bomb.svg" alt="mine" />
-          <img src="/icons/cross.svg" alt="cross" className="cross-flag" />
+          <img
+            src="/icons/bomb.svg"
+            alt="mine"
+            className={cx('image', 'cellImage')}
+          />
+          <img
+            src="/icons/cross.svg"
+            alt="cross"
+            className={cx('image', 'crossFlag')}
+          />
         </>
       )}
     </div>

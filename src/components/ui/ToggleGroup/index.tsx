@@ -13,14 +13,17 @@ type RootProps = ComponentPropsWithoutRef<typeof ToggleGroupRoot>;
 type Props = RootProps &
   PropsWithChildren<{
     label?: ReactNode;
+    labelClassName?: string;
+    wrapperClassName?: string;
   }>;
 
 const ToggleGroup = (props: Props) => {
-  const { label, children, ...rootProps } = props;
+  const { label, labelClassName, wrapperClassName, children, ...rootProps } =
+    props;
 
   return (
-    <div className={cx('wrapper')}>
-      {label && <p className={cx('label')}>{label}</p>}
+    <div className={cx('wrapper', wrapperClassName)}>
+      {label && <p className={cx('label', labelClassName)}>{label}</p>}
 
       <ToggleGroupRoot {...rootProps}>{children}</ToggleGroupRoot>
     </div>
