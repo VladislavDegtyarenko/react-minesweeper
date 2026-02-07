@@ -1,14 +1,6 @@
 import { useEffect } from 'react';
-
-// UI
-import Header from './components/Header';
-import Board from './components/Board';
-import SelectLevel from './components/Game/SelectLevel';
-import SelectDigFlag from './components/Game/SelectDigFlag';
-import WinOverlay from './components/WinOverlay';
-
-// Store
 import { initTouchScreenListener } from '@/store/settings';
+import Game from './components/Game';
 
 function App() {
   useEffect(() => {
@@ -19,13 +11,7 @@ function App() {
 
   return (
     <>
-      <div className="game">
-        <Header />
-        <Board />
-        <SelectLevel />
-        <WinOverlay />
-        <SelectDigFlag />
-      </div>
+      <Game />
     </>
   );
 }

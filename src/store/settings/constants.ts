@@ -1,4 +1,4 @@
-import { ControlModes, DigFlag } from './types';
+import { ControlModes } from './types';
 
 export const MOBILE_CONTROL_MODES = new Set<ControlModes>([
   ControlModes.Toggle,
@@ -11,11 +11,6 @@ export const MOBILE_CONTROL_MODES_OPTIONS = Array.from(
   value: mode as ControlModes,
   label: String(mode),
 }));
-
-export const DIG_FLAG_OPTIONS = [
-  { value: DigFlag.Dig, label: String(DigFlag.Dig) },
-  { value: DigFlag.Flag, label: String(DigFlag.Flag) },
-];
 
 export const ZOOM_OPTIONS = [
   { value: 0.8, label: 'S' },

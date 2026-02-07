@@ -1,0 +1,103 @@
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: calc(var(--cell-size) * 0.75);
+  font-weight: 700;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border: solid 1px var(--cell-border-color);
+  user-select: none;
+  cursor: default;
+  position: relative;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.cellImage {
+  width: 70%;
+  height: 70%;
+}
+
+.image {
+  -webkit-touch-callout: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.red {
+  background-color: var(--red);
+}
+
+.green {
+  background-color: var(--green);
+}
+
+.one {
+  color: var(--one);
+}
+
+.two {
+  color: var(--two);
+}
+
+.three {
+  color: var(--three);
+}
+
+.four {
+  color: var(--four);
+}
+
+.five {
+  color: var(--five);
+}
+
+.six {
+  color: var(--six);
+}
+
+.seven {
+  color: var(--seven);
+}
+
+.eight {
+  color: var(--eight);
+}
+
+.overlay {
+  --overlay-light: #fff;
+  --overlay-mid: #ccc;
+  --overlay-dark: #aaa;
+  width: 100%;
+  height: 100%;
+  background-color: var(--overlay-mid);
+  border-style: solid;
+  border-width: 2.25px;
+  border-top-color: var(--overlay-light);
+  border-left-color: var(--overlay-light);
+  border-bottom-color: var(--overlay-dark);
+  border-right-color: var(--overlay-dark);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 3px 3px 8px #33333366;
+  position: absolute;
+}
+
+.questionMark {
+  color: var(--btn-active);
+  font-size: calc(var(--cell-size) * 0.8);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.crossFlag {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: absolute;
+  top: 0;
+  left: 0;
+}

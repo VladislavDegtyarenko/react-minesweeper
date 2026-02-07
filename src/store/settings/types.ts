@@ -7,8 +7,8 @@ export enum ControlModes {
 }
 
 export enum DigFlag {
-  Dig = 'dig',
-  Flag = 'flag',
+  Dig = 'Dig',
+  Flag = 'Flag',
 }
 
 export type SettingsState = {

@@ -33,6 +33,13 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-user-callout: none;
+  -webkit-touch-callout: none;
+  -webkit-user-callout: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-modify: none;
+  -webkit-highlight: none;
 }
 
 html,
@@ -53,6 +60,18 @@ body {
   overflow: hidden;
 }
 
+#root {
+  height: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0.5rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 button {
   font-family: inherit;
+  font-size: inherit;
 }

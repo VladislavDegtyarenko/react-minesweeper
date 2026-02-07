@@ -1,0 +1,12 @@
+.footer {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--surface);
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+
+  a {
+    color: var(--surface);
+  }
+}

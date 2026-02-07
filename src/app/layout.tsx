@@ -1,6 +1,5 @@
 // Styles
 import '@/index.css';
-import '@/App.css';
 
 import { generateMetadata } from '../utils/seo';
 /**
