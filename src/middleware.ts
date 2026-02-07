@@ -1,19 +1,19 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import ROUTES from '@/config/routes.json';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // 🚨 List the paths that should be hidden/inaccessible
 const HIDDEN_ROUTES: string[] = [
-  "/blog",
-  "/how-to",
-  "/privacy",
-  "/terms-of-service",
+  ROUTES.BLOG,
+  ROUTES.PRIVACY,
+  ROUTES.TERMS_OF_SERVICE,
 ];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (HIDDEN_ROUTES.includes(pathname)) {
-    const url = new URL("/", request.url);
+    const url = new URL('/', request.url);
 
     return NextResponse.redirect(url);
   }
@@ -33,6 +33,6 @@ export const config = {
      * - /_next/image (image optimization files)
      * - /favicon.ico (or any other static files like .png, .jpg)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg)$).*)",
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg)$).*)',
   ],
 };

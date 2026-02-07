@@ -9,11 +9,7 @@ function App() {
     return cleanup;
   }, []);
 
-  return (
-    <>
-      <Game />
-    </>
-  );
+  return <Game />;
 }
 
 export default App;

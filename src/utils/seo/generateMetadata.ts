@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 import {
-  SITE_URL,
-  SITE_NAME,
   DEFAULT_DESCRIPTION,
   DEFAULT_KEYWORDS,
-} from "./config";
+  SITE_NAME,
+  SITE_URL,
+} from './config';
 
 type MetadataOptions = {
   title?: string;
@@ -36,7 +36,7 @@ type MetadataOptions = {
  * export const metadata = generateMetadata({
  *   title: "How to Play",
  *   description: "Learn Minesweeper rules and strategies",
- *   path: "/how-to",
+ *   path: "/how-to-play",
  *   noIndex: true,
  * });
  */
@@ -44,7 +44,7 @@ export function generateMetadata({
   title,
   description = DEFAULT_DESCRIPTION,
   keywords = [],
-  path = "/",
+  path = '/',
   noIndex = false,
   isRootLayout = false,
 }: MetadataOptions = {}): Metadata {
@@ -56,7 +56,7 @@ export function generateMetadata({
     description,
     keywords: mergedKeywords,
     alternates: {
-      canonical: isRootLayout ? "/" : url,
+      canonical: isRootLayout ? '/' : url,
     },
     robots: noIndex
       ? { index: false, follow: false }
@@ -75,11 +75,11 @@ export function generateMetadata({
       description,
       url: isRootLayout ? SITE_URL : url,
       siteName: SITE_NAME,
-      type: "website",
-      locale: "en_US",
+      type: 'website',
+      locale: 'en_US',
     },
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       title: displayTitle,
       description,
     },
