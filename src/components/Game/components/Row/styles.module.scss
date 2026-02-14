@@ -1,6 +1,11 @@
 .row {
   display: flex;
-  flex-shrink: 0;
+  width: max-content;
   font-size: 0;
   line-height: 0;
+  gap: 2px;
+}
+
+.row + .row {
+  margin-top: 2px;
 }

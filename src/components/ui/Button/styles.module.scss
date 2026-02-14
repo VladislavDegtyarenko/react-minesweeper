@@ -1,17 +1,50 @@
 .button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
   border: none;
+  background-color: transparent;
+  color: var(--text-primary);
   font-size: 0.75rem;
-  border-radius: 0.25rem;
-  font-weight: 700;
+  border-radius: var(--radius-button);
+  font-weight: 600;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  transition:
+    transform var(--duration-hover) var(--easing-standard),
+    border-color var(--duration-hover) var(--easing-standard),
+    box-shadow var(--duration-hover) var(--easing-standard),
+    background-color var(--duration-hover) var(--easing-standard);
+}
+
+.button:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.16),
+    0 0 0 1px rgba(77, 163, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+  background-color: var(--surface-3);
+  transition-duration: var(--duration-press);
+  box-shadow: none;
+}
+
+.button:focus-visible {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.16),
+    0 0 0 2px var(--accent-glow);
 }
 
 .solid {
-  padding: 0.5rem;
-  background-color: var(--btn-color);
-  color: var(--surface);
+  background-color: inherit;
+  color: inherit;
 }
 
 .icon {
@@ -21,26 +54,19 @@
 }
 
 .disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
 .active {
-  background-color: var(--btn-active);
+  background-color: var(--accent-tint);
 }
 
 .button img {
-  width: 1.125em;
-  height: 1.125em;
+  width: 2rem;
+  aspect-ratio: 1/1;
   flex-shrink: 0;
   -webkit-touch-callout: none;
   user-select: none;
   pointer-events: none;
-}
-
-@media screen and (max-width: 768px) {
-  .button img {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
 }

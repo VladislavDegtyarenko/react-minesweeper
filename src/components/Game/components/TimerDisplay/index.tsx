@@ -10,11 +10,7 @@ const TimerDisplay = () => {
 
   return (
     <>
-      <img
-        src="/icons/timer.svg"
-        className={cx('image', 'headerIcon')}
-        alt="timer"
-      />
+      <img src="/icons/timer.svg" className={cx('headerIcon')} alt="timer" />
       {timeDiff}
     </>
   );

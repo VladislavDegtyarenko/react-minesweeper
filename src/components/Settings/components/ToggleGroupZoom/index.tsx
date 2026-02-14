@@ -6,6 +6,10 @@ import { ZOOM_OPTIONS } from '@/store/settings/constants';
 
 import ToggleGroup from '@/components/ui/ToggleGroup';
 import ToggleGroupItem from '@/components/ui/ToggleGroupItem';
+import classNames from 'classnames/bind';
+import styles from '../styles.module.scss';
+
+const cx = classNames.bind(styles);
 
 const ToggleGroupZoom = () => {
   const zoom = useSettingsStore(selectZoom);
@@ -25,6 +29,9 @@ const ToggleGroupZoom = () => {
       aria-label="Zoom"
       onValueChange={handleZoomChange}
       loop={true}
+      wrapperClassName={cx('zoomWrapper')}
+      labelClassName={cx('zoomLabel')}
+      className={cx('zoomGroup')}
     >
       {ZOOM_OPTIONS.map((option) => {
         return (
@@ -32,6 +39,7 @@ const ToggleGroupZoom = () => {
             key={option.value}
             value={option.value}
             label={option.label}
+            className={cx('zoomItem')}
           />
         );
       })}

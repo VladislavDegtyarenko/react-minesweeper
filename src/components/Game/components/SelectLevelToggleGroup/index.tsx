@@ -10,8 +10,7 @@ import styles from './styles.module.scss';
 
 const cx = classNames.bind(styles);
 
-const LEVEL_TOGGLE_LABEL = 'Level';
-const LEVEL_TOGGLE_ARIA_LABEL = 'Level';
+const LEVEL_TOGGLE_LABEL = 'Difficulty';
 const LEVEL_OPTIONS = LEVELS_CONFIG.map((level) => ({
   value: level.id,
   label: level.label,
@@ -34,7 +33,7 @@ const SelectLevelToggleGroup = memo(() => {
       type="single"
       value={selectedLevelId}
       defaultValue={selectedLevelId}
-      aria-label={LEVEL_TOGGLE_ARIA_LABEL}
+      aria-label={LEVEL_TOGGLE_LABEL}
       onValueChange={handleLevelChange}
       loop={true}
       className={cx('group')}

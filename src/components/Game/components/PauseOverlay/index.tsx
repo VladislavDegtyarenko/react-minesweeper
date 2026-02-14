@@ -13,13 +13,9 @@ const PauseOverlay = () => {
     <div className={cx('pauseOverlay')} role="button" onClick={togglePause}>
       <div className={cx('pauseOverlayContent')}>
         <div className={cx('pauseOverlayIcon')}>
-          <img
-            src="/icons/pause.svg"
-            alt="pause"
-            className={cx('image', 'pauseOverlayIconImage')}
-          />
+          <img src="/icons/pause.svg" alt="pause" />
         </div>
-        <h2 className={cx('pauseOverlayTitle')}>Paused</h2>
+        <h2 className={cx('title')}>Paused</h2>
         <p>{isTouchScreen ? 'Tap' : 'Click'} to resume</p>
       </div>
     </div>

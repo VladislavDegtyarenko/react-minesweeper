@@ -1,27 +1,20 @@
-import ToggleGroup from '@/components/ui/ToggleGroup';
-import ToggleGroupItem from '@/components/ui/ToggleGroupItem';
 import LabelWithInfoDialog from '@/components/ui/LabelWithInfoDialog';
+import Switch from '@/components/ui/Switch';
 import { useSettingsStore } from '@/store/settings';
 import { setIsQuestionMarkEnabled } from '@/store/settings/actions';
 import {
   selectIsQuestionMarkEnabled,
   selectIsTouchScreen,
 } from '@/store/settings/selectors';
+import classNames from 'classnames/bind';
+import styles from '../styles.module.scss';
 
-const QUESTION_MARK_TOGGLE_VALUES = {
-  On: 'on',
-  Off: 'off',
-} as const;
+const cx = classNames.bind(styles);
 
 const QUESTION_MARK_OPTION_LABELS = {
   On: 'On',
   Off: 'Off',
 } as const;
-
-const QUESTION_MARK_TOGGLE_OPTIONS = [
-  { value: QUESTION_MARK_TOGGLE_VALUES.On, label: QUESTION_MARK_OPTION_LABELS.On },
-  { value: QUESTION_MARK_TOGGLE_VALUES.Off, label: QUESTION_MARK_OPTION_LABELS.Off },
-] as const;
 
 const QUESTION_MARK_LABEL = 'Question Marks';
 const QUESTION_MARK_ARIA_LABEL = 'Question marks';
@@ -55,42 +48,22 @@ const ToggleQuestionMark = () => {
   const questionMarkInfoItems = getQuestionMarkInfoItems(
     questionMarkInputLabel,
   );
-  const questionMarkValue = isQuestionMarkEnabled
-    ? QUESTION_MARK_TOGGLE_VALUES.On
-    : QUESTION_MARK_TOGGLE_VALUES.Off;
-
-  const handleQuestionMarkChange = (value: string) => {
-    if (!value) {
-      return undefined;
-    }
-
-    setIsQuestionMarkEnabled(value === QUESTION_MARK_TOGGLE_VALUES.On);
-  };
 
   return (
-    <ToggleGroup
-      label={
+    <div className={cx('row')}>
+      <span className={cx('label')}>
         <LabelWithInfoDialog
           label={QUESTION_MARK_LABEL}
           dialogTitle={QUESTION_MARK_DIALOG_TITLE}
           items={questionMarkInfoItems}
         />
-      }
-      type="single"
-      value={questionMarkValue}
-      defaultValue={questionMarkValue}
-      aria-label={QUESTION_MARK_ARIA_LABEL}
-      onValueChange={handleQuestionMarkChange}
-      loop={true}
-    >
-      {QUESTION_MARK_TOGGLE_OPTIONS.map((option) => (
-        <ToggleGroupItem
-          key={option.value}
-          value={option.value}
-          label={option.label}
-        />
-      ))}
-    </ToggleGroup>
+      </span>
+      <Switch
+        checked={isQuestionMarkEnabled}
+        onCheckedChange={setIsQuestionMarkEnabled}
+        ariaLabel={QUESTION_MARK_ARIA_LABEL}
+      />
+    </div>
   );
 };
 
