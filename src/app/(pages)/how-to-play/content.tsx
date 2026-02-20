@@ -33,7 +33,7 @@ const HowToPlayContent = () => {
         </p>
         <p className={cx('note')}>
           First move protection is enabled, so your opening click or tap will
-          not lose the game.
+          not lose the game unless it is a restarted game.
         </p>
         <nav className={cx('toc')} aria-label="How to play sections">
           <p className={cx('tocTitle')}>On this page</p>
