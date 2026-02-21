@@ -9,6 +9,7 @@ import styles from './styles.module.scss';
 import { AnimatePresence, motion } from 'framer-motion';
 import { selectZoom } from '@/store/settings/selectors';
 import { useSettingsStore } from '@/store/settings';
+import { BombIcon, FlagIcon, QuestionIcon } from '@/assets/themes/classic/icons';
 
 const cx = classNames.bind(styles);
 
@@ -58,11 +59,7 @@ const Cell = (props: Props) => {
       data-cell={cellIndex}
     >
       {value === 'mine' && isOpened && (
-        <img
-          src="/themes/blue-graphite/icons/Bomb.png"
-          alt="mine"
-          className={cx('image', 'cellImage')}
-        />
+        <BombIcon aria-hidden="true" className={cx('image', 'cellImage')} />
       )}
 
       {typeof value === 'number' && isOpened && <>{value || ''}</>}
@@ -76,28 +73,34 @@ const Cell = (props: Props) => {
           >
             <AnimatePresence key="flag">
               {isFlagged && (
-                <motion.img
-                  src="/themes/blue-graphite/icons/Flag.svg"
-                  alt="flag"
-                  className={cx('image', 'cellImage')}
+                <motion.div
+                  className={cx('cellImage')}
                   initial={{ opacity: 0, y: -50 * zoom }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 25 * zoom }}
                   transition={{ duration: 0.15 }}
-                />
+                >
+                  <FlagIcon
+                    aria-hidden="true"
+                    className={cx('image', 'innerCellImage')}
+                  />
+                </motion.div>
               )}
             </AnimatePresence>
             <AnimatePresence key="question">
               {isQuestionMarked && (
-                <motion.img
-                  src="/themes/blue-graphite/icons/Question.png"
-                  alt="question"
-                  className={cx('image', 'cellImage')}
+                <motion.div
+                  className={cx('cellImage')}
                   initial={{ opacity: 0, y: -50 * zoom }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 25 * zoom }}
                   transition={{ duration: 0.15 }}
-                />
+                >
+                  <QuestionIcon
+                    aria-hidden="true"
+                    className={cx('image', 'innerCellImage')}
+                  />
+                </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
@@ -106,11 +109,7 @@ const Cell = (props: Props) => {
 
       {isFlagNotCorrect && (
         <>
-          <img
-            src="/themes/blue-graphite/icons/Bomb.png"
-            alt="mine"
-            className={cx('image', 'cellImage')}
-          />
+          <BombIcon aria-hidden="true" className={cx('image', 'cellImage')} />
           <img
             src="/icons/cross.svg"
             alt="cross"

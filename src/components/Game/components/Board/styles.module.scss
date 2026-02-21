@@ -11,15 +11,20 @@
   box-sizing: border-box;
   --cell-size: 2rem;
   background-color: var(--surface-1);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: var(--radius-card);
-  padding: 16px;
+  padding: 10px;
   overflow: auto;
   position: relative;
   margin: 0 auto;
   max-width: 100%;
   max-height: calc(100dvh - 260px);
-  transition: border-color var(--duration-hover) var(--easing-standard);
+  transition: box-shadow var(--duration-hover) var(--easing-standard);
+  box-shadow:
+    inset -1px -1px 0 var(--bevel-light),
+    inset 1px 1px 0 var(--bevel-darker),
+    inset -2px -2px 0 var(--bevel-mid),
+    inset 2px 2px 0 var(--bevel-dark);
 }
 
 .board::-webkit-scrollbar {
@@ -38,7 +43,7 @@
 
 @media screen and (max-width: 768px) {
   .board {
-    padding: 14px;
+    padding: 8px;
     max-height: calc(100dvh - 232px);
   }
 }

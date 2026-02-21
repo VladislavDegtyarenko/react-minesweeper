@@ -10,17 +10,22 @@
 }
 
 .infoButton {
-  border: 1px solid var(--border);
+  border: none;
   padding: 0;
   background: var(--surface-3);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 1.15rem;
   height: 1.15rem;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
+  box-shadow:
+    inset -1px -1px 0 var(--bevel-darker),
+    inset 1px 1px 0 var(--bevel-light),
+    inset -2px -2px 0 var(--bevel-dark),
+    inset 2px 2px 0 var(--bevel-mid);
   transition:
     color var(--duration-hover) var(--easing-standard),
     border-color var(--duration-hover) var(--easing-standard),
@@ -28,15 +33,12 @@
 }
 
 .infoButton:hover {
-  color: var(--text-primary);
-  border-color: var(--border-strong);
-  box-shadow: 0 0 0 2px var(--accent-glow);
+  background-color: #dcdcdc;
 }
 
 .infoButton:focus-visible {
-  outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 2px var(--accent-glow);
+  outline: 1px dotted var(--accent-blue);
+  outline-offset: 2px;
 }
 
 .infoIcon {
@@ -47,12 +49,16 @@
 .content {
   width: min(280px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
-  background-color: rgba(33, 43, 64, 0.96);
+  background-color: var(--surface-elevated);
   color: var(--text-secondary);
-  border-radius: 12px;
-  border: 1px solid var(--border);
+  border-radius: var(--radius-popover);
+  border: none;
   padding: 12px;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    inset -1px -1px 0 var(--bevel-darker),
+    inset 1px 1px 0 var(--bevel-light),
+    inset -2px -2px 0 var(--bevel-dark),
+    inset 2px 2px 0 var(--bevel-mid);
   animation: tooltipEnter 140ms ease;
   transform-origin: top left;
   z-index: 70;

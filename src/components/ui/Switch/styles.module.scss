@@ -1,14 +1,19 @@
 .switch {
   width: 44px;
   height: 26px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background-color: var(--surface-3);
+  border-radius: var(--radius-button);
+  border: none;
+  background-color: #c0c0c0;
   padding: 3px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
+  box-shadow:
+    inset -1px -1px 0 var(--bevel-light),
+    inset 1px 1px 0 var(--bevel-darker),
+    inset -2px -2px 0 var(--bevel-mid),
+    inset 2px 2px 0 var(--bevel-dark);
   transition:
     background-color var(--duration-hover) var(--easing-standard),
     border-color var(--duration-hover) var(--easing-standard),
@@ -16,26 +21,26 @@
 }
 
 .switch:hover:not(:disabled) {
-  border-color: var(--border-strong);
-  box-shadow: 0 0 0 2px var(--accent-glow);
+  background-color: #d6d6d6;
 }
 
 .switch:focus-visible {
-  outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 2px var(--accent-glow);
+  outline: 1px dotted var(--accent-blue);
+  outline-offset: 2px;
 }
 
 .checked {
-  background-color: rgba(77, 163, 255, 0.18);
-  border-color: rgba(77, 163, 255, 0.48);
+  background-color: #cfcfcf;
 }
 
 .thumb {
   width: 18px;
   height: 18px;
-  border-radius: 999px;
-  background-color: var(--text-primary);
+  border-radius: var(--radius-button);
+  background-color: #d4d0c8;
+  box-shadow:
+    inset -1px -1px 0 var(--bevel-darker),
+    inset 1px 1px 0 var(--bevel-light);
   transform: translateX(0);
   transition: transform var(--duration-hover) var(--easing-standard);
 }

@@ -13,6 +13,7 @@ import {
   selectIsTouchScreen,
 } from '@/store/settings/selectors';
 import Button from '../ui/Button';
+import { SettingsIcon } from '@/assets/themes/classic/icons';
 
 import styles from './styles.module.scss';
 import classNames from 'classnames/bind';
@@ -26,10 +27,7 @@ const Settings = () => {
 
   const triggerButton = (
     <Button isIcon aria-label="Open settings">
-      <img
-        src="/themes/blue-graphite/icons/Settings.png"
-        alt={SETTINGS_LABEL}
-      />
+      <SettingsIcon aria-hidden="true" />
     </Button>
   );
 

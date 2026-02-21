@@ -6,6 +6,12 @@ import Button from '@/components/ui/Button';
 import Settings from '@/components/Settings';
 import GameStatus from '../GameStatus';
 import TimerDisplay from '../TimerDisplay';
+import {
+  BombIcon,
+  PauseIcon,
+  PlayIcon,
+  RestartIcon,
+} from '@/assets/themes/classic/icons';
 import styles from './styles.module.scss';
 
 const cx = classNames.bind(styles);
@@ -30,9 +36,9 @@ const GameHeader = () => {
           className={cx('controlButton')}
         >
           {gameStatus === 'paused' ? (
-            <img src="/themes/blue-graphite/icons/Play.svg" alt="Play" />
+            <PlayIcon aria-hidden="true" />
           ) : (
-            <img src="/themes/blue-graphite/icons/Pause.png" alt="Pause" />
+            <PauseIcon aria-hidden="true" />
           )}
         </Button>
         <Button
@@ -40,7 +46,7 @@ const GameHeader = () => {
           title="Start new game"
           className={cx('controlButton')}
         >
-          <img src="/themes/blue-graphite/icons/Bomb.png" alt="New game" />
+          <BombIcon aria-hidden="true" />
         </Button>
         <Button
           onClick={restartGame}
@@ -48,10 +54,7 @@ const GameHeader = () => {
           title="Restart"
           className={cx('controlButton')}
         >
-          <img
-            src="/themes/blue-graphite/icons/Restart.png"
-            alt="Restart current game"
-          />
+          <RestartIcon aria-hidden="true" />
         </Button>
       </div>
       <div className={cx('toolbarRight')}>

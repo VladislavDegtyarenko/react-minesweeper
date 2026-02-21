@@ -14,7 +14,7 @@ export const metadata = generateMetadata({ isRootLayout: true });
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="classic">
       <body>
         <div id="root">
           <Header />

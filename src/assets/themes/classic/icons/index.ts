@@ -1,0 +1,10 @@
+export { default as BombIcon } from './Bomb';
+export { default as FlagIcon } from './Flag';
+export { default as LossIcon } from './Loss';
+export { default as PauseIcon } from './Pause';
+export { default as PlayIcon } from './Play';
+export { default as QuestionIcon } from './Question';
+export { default as RestartIcon } from './Restart';
+export { default as SettingsIcon } from './Settings';
+export { default as TimeIcon } from './Time';
+export { default as WinIcon } from './Win';

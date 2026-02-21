@@ -26,10 +26,15 @@
 
 .zoomGroup {
   background-color: var(--surface-3);
-  border: 1px solid var(--border);
+  border: none;
   border-radius: var(--radius-button);
   padding: 4px;
   gap: 4px;
+  box-shadow:
+    inset -1px -1px 0 var(--bevel-light),
+    inset 1px 1px 0 var(--bevel-darker),
+    inset -2px -2px 0 var(--bevel-mid),
+    inset 2px 2px 0 var(--bevel-dark);
 }
 
 .zoomItem {

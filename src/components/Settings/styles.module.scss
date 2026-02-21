@@ -6,12 +6,17 @@
   background-color: var(--surface-elevated);
   color: var(--text-primary);
   border-radius: var(--radius-popover);
-  border: 1px solid var(--border-strong);
+  border: none;
   box-shadow: var(--shadow-popover);
   padding: var(--space-2);
   transform-origin: top right;
   animation: popoverEnter 150ms ease forwards;
   z-index: 60;
+  box-shadow:
+    inset -1px -1px 0 var(--bevel-darker),
+    inset 1px 1px 0 var(--bevel-light),
+    inset -2px -2px 0 var(--bevel-dark),
+    inset 2px 2px 0 var(--bevel-mid);
 }
 
 .popoverArrow {
@@ -45,7 +50,7 @@
   right: 0;
   bottom: 0;
   background-color: var(--surface-elevated);
-  border-top: 1px solid var(--border-strong);
+  border-top: none;
   border-top-left-radius: var(--radius-popover);
   border-top-right-radius: var(--radius-popover);
   box-shadow: var(--shadow-popover);
@@ -53,6 +58,11 @@
     calc(var(--space-2) + env(safe-area-inset-bottom));
   animation: sheetUp 160ms ease;
   z-index: 59;
+  box-shadow:
+    inset -1px 0 0 var(--bevel-darker),
+    inset 1px 0 0 var(--bevel-light),
+    inset -2px 0 0 var(--bevel-dark),
+    inset 2px 0 0 var(--bevel-mid);
 }
 
 @keyframes popoverEnter {

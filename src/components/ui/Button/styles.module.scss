@@ -3,47 +3,45 @@
   height: 40px;
   padding: 0;
   border: none;
-  background-color: transparent;
+  background-color: var(--surface-3);
   color: var(--text-primary);
   font-size: 0.75rem;
   border-radius: var(--radius-button);
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  box-shadow:
+    inset -1px -1px 0 var(--bevel-darker),
+    inset 1px 1px 0 var(--bevel-light),
+    inset -2px -2px 0 var(--bevel-dark),
+    inset 2px 2px 0 var(--bevel-mid);
   transition:
-    transform var(--duration-hover) var(--easing-standard),
     border-color var(--duration-hover) var(--easing-standard),
     box-shadow var(--duration-hover) var(--easing-standard),
     background-color var(--duration-hover) var(--easing-standard);
 }
 
 .button:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.06);
-  box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.16),
-    0 0 0 1px rgba(77, 163, 255, 0.2);
-  transform: translateY(-1px);
+  background-color: #dcdcdc;
 }
 
 .button:active:not(:disabled) {
-  transform: translateY(1px);
-  background-color: var(--surface-3);
-  transition-duration: var(--duration-press);
-  box-shadow: none;
+  background-color: #b8b8b8;
+  box-shadow:
+    inset -1px -1px 0 var(--bevel-light),
+    inset 1px 1px 0 var(--bevel-darker),
+    inset -2px -2px 0 var(--bevel-mid),
+    inset 2px 2px 0 var(--bevel-dark);
 }
 
 .button:focus-visible {
-  outline: none;
-  background-color: rgba(255, 255, 255, 0.05);
-  box-shadow:
-    0 6px 16px rgba(0, 0, 0, 0.16),
-    0 0 0 2px var(--accent-glow);
+  outline: 1px dotted var(--accent-blue);
+  outline-offset: -4px;
 }
 
 .solid {
-  background-color: inherit;
   color: inherit;
 }
 
@@ -62,7 +60,8 @@
   background-color: var(--accent-tint);
 }
 
-.button img {
+.button img,
+.button svg {
   width: 2rem;
   aspect-ratio: 1/1;
   flex-shrink: 0;

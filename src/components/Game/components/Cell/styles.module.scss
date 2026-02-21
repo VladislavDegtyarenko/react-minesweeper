@@ -19,11 +19,13 @@
     transform var(--duration-press) var(--easing-standard),
     background-color var(--duration-hover) var(--easing-standard),
     box-shadow var(--duration-hover) var(--easing-standard);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  box-shadow:
+    inset -1px -1px 0 #9b9b9b,
+    inset 1px 1px 0 #e6e6e6;
 }
 
 .cellImage {
-  --cell-image-size: 68%;
+  --cell-image-size: 72%;
   width: var(--cell-image-size);
   height: var(--cell-image-size);
   position: absolute;
@@ -38,19 +40,24 @@
   pointer-events: none;
 }
 
+.innerCellImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 .red {
-  background-color: rgba(255, 92, 122, 0.18);
+  background-color: #ffaeae;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 0 2px rgba(255, 92, 122, 0.6),
-    0 0 20px rgba(255, 92, 122, 0.35);
+    inset -1px -1px 0 #9b9b9b,
+    inset 1px 1px 0 #e6e6e6;
 }
 
 .green {
-  background-color: rgba(51, 214, 159, 0.2);
+  background-color: #adf3ad;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 0 1px rgba(51, 214, 159, 0.26);
+    inset -1px -1px 0 #9b9b9b,
+    inset 1px 1px 0 #e6e6e6;
 }
 
 .one {
@@ -97,7 +104,11 @@
   align-items: center;
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 0 1px var(--cell-border);
+  box-shadow:
+    inset -1px -1px 0 var(--bevel-darker),
+    inset 1px 1px 0 var(--bevel-light),
+    inset -2px -2px 0 var(--bevel-dark),
+    inset 2px 2px 0 var(--bevel-mid);
   transition:
     background-color var(--duration-hover) var(--easing-standard),
     transform var(--duration-press) var(--easing-standard),
@@ -105,30 +116,34 @@
 
   &:hover {
     background-color: var(--cell-closed-hover);
-    box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-      0 4px 12px rgba(0, 0, 0, 0.28);
   }
 
   &:active {
-    transform: scale(0.96);
-    transition-duration: var(--duration-press);
+    transform: scale(0.98);
+    box-shadow:
+      inset -1px -1px 0 var(--bevel-light),
+      inset 1px 1px 0 var(--bevel-darker),
+      inset -2px -2px 0 var(--bevel-mid),
+      inset 2px 2px 0 var(--bevel-dark);
   }
 }
 
 .overlay.red {
-  background-color: rgba(255, 92, 122, 0.22);
+  background-color: #ff9f9f;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 0 1px rgba(255, 92, 122, 0.45),
-    0 0 12px rgba(255, 92, 122, 0.3);
+    inset -1px -1px 0 var(--bevel-darker),
+    inset 1px 1px 0 var(--bevel-light),
+    inset -2px -2px 0 var(--bevel-dark),
+    inset 2px 2px 0 var(--bevel-mid);
 }
 
 .overlay.green {
-  background-color: rgba(51, 214, 159, 0.22);
+  background-color: #abefab;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 0 1px rgba(51, 214, 159, 0.32);
+    inset -1px -1px 0 var(--bevel-darker),
+    inset 1px 1px 0 var(--bevel-light),
+    inset -2px -2px 0 var(--bevel-dark),
+    inset 2px 2px 0 var(--bevel-mid);
 }
 
 .crossFlag {

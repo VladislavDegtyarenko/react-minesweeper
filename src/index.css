@@ -1,12 +1,91 @@
 :root {
   font-family:
+    Tahoma,
+    'MS Sans Serif',
+    'Segoe UI',
+    sans-serif;
+  line-height: 1.4;
+  font-weight: 400;
+
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+
+  --duration-hover: 80ms;
+  --duration-press: 50ms;
+  --easing-standard: linear;
+
+  --bevel-light: #ffffff;
+  --bevel-mid: #dfdfdf;
+  --bevel-dark: #808080;
+  --bevel-darker: #404040;
+
+  --counter-bg: #000000;
+  --counter-red: #ff0000;
+
+  --app-bg-image: linear-gradient(180deg, #f6f3e8 0%, #e5e1d2 100%);
+
+  /* Classic default theme */
+  --app-bg: #ece9d8;
+  --surface-1: #c0c0c0;
+  --surface-2: #c0c0c0;
+  --surface-3: #d4d0c8;
+  --surface-elevated: #d4d0c8;
+  --border: #808080;
+  --border-strong: #404040;
+  --text-primary: #000000;
+  --text-secondary: #1e1e1e;
+  --text-muted: #3c3c3c;
+  --accent-blue: #000080;
+  --accent-tint: #b9c6dd;
+  --accent-glow: rgba(0, 0, 128, 0.24);
+  --danger: #b00000;
+  --danger-glow: rgba(176, 0, 0, 0.25);
+
+  --radius-card: 0;
+  --radius-popover: 0;
+  --radius-button: 0;
+  --radius-cell: 0;
+  --radius-segment: 0;
+
+  --shadow-card: none;
+  --shadow-popover: none;
+  --shadow-button-hover: none;
+
+  --cell-closed: #c0c0c0;
+  --cell-closed-hover: #c7c7c7;
+  --cell-revealed: #c0c0c0;
+  --cell-border: #7b7b7b;
+
+  --one: #0000ff;
+  --two: #008000;
+  --three: #ff0000;
+  --four: #000080;
+  --five: #800000;
+  --six: #008080;
+  --seven: #000000;
+  --eight: #808080;
+  --red: #ff0000;
+  --green: #008000;
+
+  background-color: var(--app-bg);
+  color: var(--text-primary);
+
+  overscroll-behavior-x: none;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html[data-theme='blue-graphite'] {
+  font-family:
     Inter,
     -apple-system,
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
   line-height: 1.5;
-  font-weight: 400;
 
   --app-bg: #101622;
   --surface-1: #1a2233;
@@ -34,10 +113,6 @@
   --shadow-popover: 0 10px 30px rgba(0, 0, 0, 0.34);
   --shadow-button-hover: 0 6px 16px rgba(0, 0, 0, 0.24);
 
-  --space-1: 8px;
-  --space-2: 16px;
-  --space-3: 24px;
-
   --duration-hover: 120ms;
   --duration-press: 80ms;
   --easing-standard: ease;
@@ -58,14 +133,13 @@
   --red: #ff5c7a;
   --green: #33d69f;
 
-  background-color: var(--app-bg);
-  color: var(--text-primary);
-
-  overscroll-behavior-x: none;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --app-bg-image:
+    radial-gradient(
+      200vmax circle at 50% -20%,
+      rgba(77, 163, 255, 0.18),
+      transparent 58%
+    ),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.015), transparent 60%);
 }
 
 * {
@@ -85,13 +159,8 @@ body {
   max-width: 100dvw;
   height: 100dvh;
   overflow: hidden;
-  background-image:
-    radial-gradient(
-      200vmax circle at 50% -20%,
-      rgba(77, 163, 255, 0.18),
-      transparent 58%
-    ),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.015), transparent 60%);
+  background-color: var(--app-bg);
+  background-image: var(--app-bg-image);
   color: var(--text-primary);
 }
 

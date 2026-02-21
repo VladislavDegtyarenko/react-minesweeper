@@ -3,10 +3,8 @@ import classNames from 'classnames/bind';
 import { useGameStore } from '@/store/game';
 import { selectGameStatus, selectMinesLeft } from '@/store/game/selectors';
 import styles from './styles.module.scss';
-
-import Win from '@/assets/themes/blue-graphite/icons/Win';
 import { useIsMobileViewport } from '@/hooks';
-import Loss from '@/assets/themes/blue-graphite/icons/Loss';
+import { BombIcon, LossIcon, WinIcon } from '@/assets/themes/classic/icons';
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +16,7 @@ const GameStatus = memo(() => {
   if (gameStatus === 'won') {
     return isMobileViewport ? (
       <span className={cx('win')}>
-        <Win />
+        <WinIcon />
       </span>
     ) : (
       <span className={cx('statusPill', 'win')}>You Win</span>
@@ -28,7 +26,7 @@ const GameStatus = memo(() => {
   if (gameStatus === 'lost') {
     return isMobileViewport ? (
       <span className={cx('gameOver')}>
-        <Loss />
+        <LossIcon />
       </span>
     ) : (
       <span className={cx('statusPill', 'gameOver')}>Game Over</span>
@@ -37,11 +35,7 @@ const GameStatus = memo(() => {
 
   return (
     <>
-      <img
-        src="/themes/blue-graphite/icons/Bomb.png"
-        className={cx('image', 'headerIcon')}
-        alt="mines left"
-      />
+      <BombIcon className={cx('image', 'headerIcon')} aria-hidden="true" />
       {minesLeft}
     </>
   );
