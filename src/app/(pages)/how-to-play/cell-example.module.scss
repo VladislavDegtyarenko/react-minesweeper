@@ -1,0 +1,45 @@
+.cellWrap {
+  display: inline-flex;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+}
+
+.cell {
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1px solid var(--cell-border-color);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.opened {
+  background-color: var(--surface);
+}
+
+.closed {
+  --overlay-light: #fff;
+  --overlay-mid: #ccc;
+  --overlay-dark: #aaa;
+  background-color: var(--overlay-mid);
+  border-style: solid;
+  border-width: 2px;
+  border-top-color: var(--overlay-light);
+  border-left-color: var(--overlay-light);
+  border-bottom-color: var(--overlay-dark);
+  border-right-color: var(--overlay-dark);
+  box-shadow: 3px 3px 8px #33333366;
+}
+
+.icon {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.two {
+  color: var(--two);
+}
