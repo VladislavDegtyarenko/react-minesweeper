@@ -2,6 +2,9 @@
   width: 100%;
   height: 100%;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .gameAbsoluteContainer {
@@ -16,13 +19,16 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: var(--space-1) 0;
 }
 
 .game {
   width: fit-content;
   max-width: 100%;
   max-height: 100%;
-  background-color: var(--surface-1);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), transparent 24%),
+    linear-gradient(180deg, var(--surface-2), var(--surface-1) 58%, #0f1829);
   border-radius: var(--radius-card);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-card);
@@ -30,6 +36,28 @@
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        120% 60% at 50% -20%,
+        rgba(100, 180, 255, 0.2),
+        transparent 70%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.06),
+        transparent 24%,
+        rgba(255, 255, 255, 0.02)
+      );
+  }
 }
 
 .boardArea {
@@ -37,6 +65,11 @@
   padding-bottom: var(--space-1);
   display: flex;
   justify-content: center;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 18, 31, 0.24),
+    rgba(12, 18, 31, 0.58)
+  );
   --game-header-height: 67px;
   --game-footer-height: 0px; // changed in JSX if Dig/Flag buttons are visible
   max-height: calc(
@@ -53,4 +86,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  border-top: 1px solid var(--border-soft);
+  background: linear-gradient(
+    180deg,
+    rgba(8, 13, 24, 0.22),
+    rgba(8, 13, 24, 0.48)
+  );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }

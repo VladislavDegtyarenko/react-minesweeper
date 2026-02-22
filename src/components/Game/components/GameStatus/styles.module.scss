@@ -7,7 +7,8 @@
 .headerIcon {
   width: 2rem;
   aspect-ratio: 1/1;
-  opacity: 0.88;
+  opacity: 0.94;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
 
 .statusPill {
@@ -23,16 +24,29 @@
   flex-grow: 1;
   border-style: solid;
   border-width: 1px;
-
-  @media screen and (max-width: 768px) {
-  }
+  border-color: var(--border-soft);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 4px 10px rgba(0, 0, 0, 0.2);
 
   &.win {
-    background-color: rgba(51, 214, 159, 0.14);
+    color: var(--green);
+    border-color: rgba(87, 235, 185, 0.46);
+    background-color: rgba(87, 235, 185, 0.18);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 0 0 1px rgba(87, 235, 185, 0.2),
+      0 0 14px rgba(87, 235, 185, 0.16);
   }
 
   &.gameOver {
-    background-color: rgba(255, 92, 122, 0.14);
+    color: var(--danger);
+    border-color: rgba(255, 112, 143, 0.46);
+    background-color: rgba(255, 112, 143, 0.18);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 0 0 1px rgba(255, 112, 143, 0.2),
+      0 0 14px rgba(255, 112, 143, 0.14);
   }
 }
 
@@ -41,11 +55,13 @@
   align-items: center;
   color: var(--green);
   font-weight: 700;
+  filter: drop-shadow(0 0 8px rgba(87, 235, 185, 0.28));
 }
 
 .gameOver {
   display: flex;
   align-items: center;
   color: var(--danger);
-  border-color: rgba(255, 92, 122, 0.35);
+  border-color: rgba(255, 112, 143, 0.35);
+  filter: drop-shadow(0 0 8px rgba(255, 112, 143, 0.26));
 }

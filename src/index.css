@@ -1,62 +1,76 @@
 :root {
   font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
+    'Manrope',
+    'Space Grotesk',
+    'Avenir Next',
     'Segoe UI',
     sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  --app-bg: #101622;
-  --surface-1: #1a2233;
-  --surface-2: #212b40;
-  --surface-3: #151c2b;
-  --surface-elevated: #26324a;
-  --border: rgba(255, 255, 255, 0.085);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --text-primary: rgba(255, 255, 255, 0.92);
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-muted: rgba(255, 255, 255, 0.5);
-  --accent-blue: #4da3ff;
-  --accent-tint: rgba(77, 163, 255, 0.14);
-  --accent-glow: rgba(77, 163, 255, 0.25);
-  --danger: #ff5c7a;
-  --danger-glow: rgba(255, 92, 122, 0.35);
+  --app-bg: #070d18;
+  --surface-1: #121c2d;
+  --surface-2: #1a2940;
+  --surface-3: #0f1727;
+  --surface-elevated: #223352;
+  --surface-overlay: rgba(8, 13, 24, 0.74);
+  --border: rgba(198, 220, 255, 0.18);
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(198, 220, 255, 0.34);
+  --outline-highlight: rgba(255, 255, 255, 0.12);
+  --text-primary: #f3f8ff;
+  --text-secondary: rgba(230, 241, 255, 0.78);
+  --text-muted: rgba(210, 225, 246, 0.58);
+  --accent-blue: #64b4ff;
+  --accent-cyan: #4de4cf;
+  --accent-tint: rgba(100, 180, 255, 0.22);
+  --accent-glow: rgba(100, 180, 255, 0.38);
+  --danger: #ff708f;
+  --danger-glow: rgba(255, 112, 143, 0.36);
 
-  --radius-card: 20px;
-  --radius-popover: 16px;
-  --radius-button: 12px;
-  --radius-cell: 10px;
-  --radius-segment: 14px;
+  --radius-card: 22px;
+  --radius-popover: 18px;
+  --radius-button: 13px;
+  --radius-cell: 11px;
+  --radius-segment: 15px;
 
-  --shadow-card: 0 14px 42px rgba(0, 0, 0, 0.38);
-  --shadow-popover: 0 10px 30px rgba(0, 0, 0, 0.34);
-  --shadow-button-hover: 0 6px 16px rgba(0, 0, 0, 0.24);
+  --shadow-card:
+    0 24px 56px rgba(3, 9, 20, 0.56),
+    0 8px 24px rgba(0, 0, 0, 0.34);
+  --shadow-popover:
+    0 18px 42px rgba(3, 9, 20, 0.54),
+    0 8px 16px rgba(0, 0, 0, 0.24);
+  --shadow-soft: 0 10px 24px rgba(3, 9, 20, 0.36);
+  --shadow-button-hover:
+    0 10px 24px rgba(3, 9, 20, 0.42),
+    0 2px 8px rgba(0, 0, 0, 0.22);
+  --shadow-glow:
+    0 0 0 1px rgba(100, 180, 255, 0.34),
+    0 0 22px rgba(100, 180, 255, 0.24);
 
   --space-1: 8px;
   --space-2: 16px;
   --space-3: 24px;
 
-  --duration-hover: 120ms;
-  --duration-press: 80ms;
+  --duration-hover: 140ms;
+  --duration-press: 90ms;
   --easing-standard: ease;
 
-  --cell-closed: #2b3954;
-  --cell-closed-hover: #344362;
-  --cell-revealed: #182234;
-  --cell-border: rgba(255, 255, 255, 0.05);
+  --cell-closed: #2a3c5f;
+  --cell-closed-hover: #35537f;
+  --cell-revealed: #101b2d;
+  --cell-border: rgba(200, 222, 255, 0.14);
 
-  --one: #4da3ff;
-  --two: #33d69f;
-  --three: #ff5c7a;
-  --four: #b48cff;
-  --five: #ffb74d;
-  --six: #40c4ff;
-  --seven: rgba(255, 255, 255, 0.92);
-  --eight: rgba(255, 255, 255, 0.55);
-  --red: #ff5c7a;
-  --green: #33d69f;
+  --one: #78c4ff;
+  --two: #54f0b9;
+  --three: #ff879f;
+  --four: #bf9aff;
+  --five: #ffc26c;
+  --six: #64dbff;
+  --seven: rgba(247, 252, 255, 0.95);
+  --eight: rgba(230, 240, 255, 0.62);
+  --red: #ff7d9a;
+  --green: #57ebb9;
 
   background-color: var(--app-bg);
   color: var(--text-primary);
@@ -87,11 +101,22 @@ body {
   overflow: hidden;
   background-image:
     radial-gradient(
-      200vmax circle at 50% -20%,
-      rgba(77, 163, 255, 0.18),
+      120vmax circle at 12% -24%,
+      rgba(100, 180, 255, 0.34),
       transparent 58%
     ),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.015), transparent 60%);
+    radial-gradient(
+      95vmax circle at 86% -18%,
+      rgba(77, 228, 207, 0.16),
+      transparent 60%
+    ),
+    radial-gradient(
+      130vmax circle at 50% 120%,
+      rgba(31, 49, 79, 0.58),
+      transparent 62%
+    ),
+    linear-gradient(170deg, rgba(255, 255, 255, 0.04), transparent 32%),
+    linear-gradient(180deg, var(--app-bg), var(--app-bg));
   color: var(--text-primary);
 }
 
@@ -99,7 +124,8 @@ body {
   height: 100%;
   width: 100%;
   margin: 0 auto;
-  padding: 0 var(--space-2);
+  max-width: 1280px;
+  padding: 0 clamp(10px, 2vw, var(--space-2));
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -1,23 +1,31 @@
 .header {
-  background-color: var(--surface-2);
-  border-bottom: 1px solid var(--border);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 30%),
+    linear-gradient(165deg, rgba(28, 43, 66, 0.95), rgba(18, 28, 45, 0.95));
+  border-bottom: 1px solid var(--border-soft);
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  gap: var(--space-1);
-  padding: var(--space-1) var(--space-2);
+  gap: 8px;
+  padding: 10px var(--space-2);
   font-weight: 600;
   font-size: 0.9rem;
   white-space: nowrap;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .headerButtons {
   display: flex;
   gap: 4px;
   padding: 4px;
-  background-color: var(--surface-1);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 34%),
+    rgba(10, 16, 29, 0.56);
   border: 1px solid var(--border);
   border-radius: var(--radius-button);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 6px 14px rgba(0, 0, 0, 0.2);
   justify-self: center;
 }
 
@@ -27,13 +35,18 @@
   align-items: center;
   gap: 4px;
   padding: 4px;
-  background-color: var(--surface-1);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 34%),
+    rgba(10, 16, 29, 0.56);
   border: 1px solid var(--border);
   border-radius: var(--radius-button);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 6px 14px rgba(0, 0, 0, 0.2);
 }
 
 .controlButton {
-  border-radius: 10px;
+  border-radius: 11px;
 }
 
 .headerLabel {
@@ -42,12 +55,16 @@
   gap: 6px;
   justify-content: center;
   padding: 0 12px;
-  background-color: var(--surface-1);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 36%),
+    rgba(11, 18, 31, 0.58);
   border-radius: var(--radius-button);
+  border: 1px solid var(--border-soft);
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
   font-weight: 600;
   letter-spacing: 0.01em;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .minesLeft {
@@ -61,7 +78,10 @@ div.timer {
   min-width: 90px;
   height: 32px;
   padding: 0 8px;
-  background-color: transparent;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 40%),
+    rgba(8, 13, 24, 0.56);
+  border-color: var(--border-soft);
   justify-content: center;
 
   @media screen and (max-width: 768px) {
@@ -79,7 +99,7 @@ div.timer {
 @media screen and (max-width: 768px) {
   .header {
     gap: 6px;
-    padding: 8px;
+    padding: 8px 10px;
   }
 
   .headerLabel {

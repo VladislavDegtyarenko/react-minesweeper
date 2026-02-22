@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import ROUTES from '@/config/routes.json';
 
 import classNames from 'classnames/bind';
@@ -17,13 +20,20 @@ const NAV_ITEMS = [
 ];
 
 const Header = () => {
+  const pathname = usePathname();
+
   return (
     <header className={cx('header')}>
       <nav>
         <ul>
           {NAV_ITEMS.map((item) => (
             <li key={item.href}>
-              <Link href={item.href}>{item.label}</Link>
+              <Link
+                href={item.href}
+                className={cx(pathname === item.href && 'activeLink')}
+              >
+                {item.label}
+              </Link>
             </li>
           ))}
         </ul>
