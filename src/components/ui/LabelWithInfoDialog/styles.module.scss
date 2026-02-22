@@ -10,9 +10,13 @@
 }
 
 .infoButton {
-  border: 1px solid var(--border);
+  border: 1px solid var(--field-border);
   padding: 0;
-  background: var(--surface-3);
+  background: linear-gradient(
+    160deg,
+    rgba(25, 39, 62, 0.9),
+    rgba(10, 18, 31, 0.94)
+  );
   color: var(--text-secondary);
   cursor: pointer;
   display: inline-flex;
@@ -30,13 +34,17 @@
 .infoButton:hover {
   color: var(--text-primary);
   border-color: var(--border-strong);
-  box-shadow: 0 0 0 2px var(--accent-glow);
+  box-shadow:
+    0 0 0 2px var(--accent-glow),
+    0 8px 14px rgba(2, 8, 18, 0.22);
 }
 
 .infoButton:focus-visible {
   outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 2px var(--accent-glow);
+  border-color: var(--accent-blue-strong);
+  box-shadow:
+    0 0 0 2px var(--accent-glow),
+    0 8px 14px rgba(2, 8, 18, 0.22);
 }
 
 .infoIcon {
@@ -47,12 +55,18 @@
 .content {
   width: min(280px, calc(100vw - 32px));
   max-width: calc(100vw - 32px);
-  background-color: rgba(33, 43, 64, 0.96);
+  background: linear-gradient(
+    165deg,
+    rgba(37, 57, 88, 0.96),
+    rgba(15, 25, 41, 0.98)
+  );
   color: var(--text-secondary);
-  border-radius: 12px;
-  border: 1px solid var(--border);
+  border-radius: 14px;
+  border: 1px solid var(--field-border);
   padding: 12px;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.4),
+    0 0 0 1px var(--outline-soft);
   animation: tooltipEnter 140ms ease;
   transform-origin: top left;
   z-index: 70;
@@ -107,7 +121,7 @@
 }
 
 .arrow {
-  fill: var(--surface-2);
+  fill: rgba(26, 40, 62, 0.98);
 }
 
 @keyframes tooltipEnter {

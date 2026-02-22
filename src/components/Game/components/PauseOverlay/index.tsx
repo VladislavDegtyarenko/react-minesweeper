@@ -10,7 +10,12 @@ const PauseOverlay = () => {
   const isTouchScreen = useSettingsStore(selectIsTouchScreen);
 
   return (
-    <div className={cx('pauseOverlay')} role="button" onClick={togglePause}>
+    <button
+      type="button"
+      className={cx('pauseOverlay')}
+      onClick={togglePause}
+      aria-label="Resume game"
+    >
       <div className={cx('pauseOverlayContent')}>
         <div className={cx('pauseOverlayIcon')}>
           <img src="/icons/pause.svg" alt="pause" />
@@ -18,7 +23,7 @@ const PauseOverlay = () => {
         <h2 className={cx('title')}>Paused</h2>
         <p>{isTouchScreen ? 'Tap' : 'Click'} to resume</p>
       </div>
-    </div>
+    </button>
   );
 };
 

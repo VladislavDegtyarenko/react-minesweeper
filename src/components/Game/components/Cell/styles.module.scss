@@ -7,7 +7,11 @@
   width: var(--cell-size);
   height: var(--cell-size);
   border: none;
-  background-color: var(--cell-revealed);
+  background: linear-gradient(
+    165deg,
+    rgba(27, 42, 67, 0.94) 0%,
+    rgba(13, 24, 40, 0.98) 100%
+  );
   color: var(--text-primary);
   border-radius: var(--radius-cell);
   user-select: none;
@@ -19,7 +23,11 @@
     transform var(--duration-press) var(--easing-standard),
     background-color var(--duration-hover) var(--easing-standard),
     box-shadow var(--duration-hover) var(--easing-standard);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  box-shadow:
+    inset 0 0 0 1px var(--cell-border),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.42);
+  text-shadow: 0 1px 4px rgba(6, 10, 20, 0.65);
 }
 
 .cellImage {
@@ -39,18 +47,26 @@
 }
 
 .red {
-  background-color: rgba(255, 92, 122, 0.18);
+  background: linear-gradient(
+    160deg,
+    rgba(255, 102, 126, 0.28),
+    rgba(122, 34, 63, 0.5)
+  );
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 0 2px rgba(255, 92, 122, 0.6),
-    0 0 20px rgba(255, 92, 122, 0.35);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(255, 102, 126, 0.48),
+    0 0 16px rgba(255, 102, 126, 0.32);
 }
 
 .green {
-  background-color: rgba(51, 214, 159, 0.2);
+  background: linear-gradient(
+    160deg,
+    rgba(93, 226, 181, 0.24),
+    rgba(16, 84, 65, 0.46)
+  );
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 0 1px rgba(51, 214, 159, 0.26);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(93, 226, 181, 0.35);
 }
 
 .one {
@@ -88,7 +104,11 @@
 .overlay {
   width: 100%;
   height: 100%;
-  background-color: var(--cell-closed);
+  background: linear-gradient(
+    168deg,
+    var(--cell-closed) 0%,
+    rgba(34, 53, 84, 0.98) 100%
+  );
   border: none;
   border-radius: inherit;
   box-sizing: border-box;
@@ -97,38 +117,55 @@
   align-items: center;
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 0 1px var(--cell-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.11),
+    inset 0 0 0 1px var(--cell-border),
+    0 1px 0 rgba(0, 0, 0, 0.45);
   transition:
     background-color var(--duration-hover) var(--easing-standard),
     transform var(--duration-press) var(--easing-standard),
     box-shadow var(--duration-hover) var(--easing-standard);
 
   &:hover {
-    background-color: var(--cell-closed-hover);
+    background: linear-gradient(
+      168deg,
+      var(--cell-closed-hover) 0%,
+      rgba(46, 73, 114, 0.98) 100%
+    );
+    transform: translateY(-1px);
     box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-      0 4px 12px rgba(0, 0, 0, 0.28);
+      inset 0 1px 0 rgba(255, 255, 255, 0.13),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+      0 8px 15px rgba(2, 8, 20, 0.36);
   }
 
   &:active {
-    transform: scale(0.96);
+    transform: translateY(1px) scale(0.97);
     transition-duration: var(--duration-press);
   }
 }
 
 .overlay.red {
-  background-color: rgba(255, 92, 122, 0.22);
+  background: linear-gradient(
+    160deg,
+    rgba(255, 102, 126, 0.36),
+    rgba(127, 35, 68, 0.56)
+  );
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 0 1px rgba(255, 92, 122, 0.45),
-    0 0 12px rgba(255, 92, 122, 0.3);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(255, 102, 126, 0.52),
+    0 0 12px rgba(255, 102, 126, 0.3);
 }
 
 .overlay.green {
-  background-color: rgba(51, 214, 159, 0.22);
+  background: linear-gradient(
+    160deg,
+    rgba(93, 226, 181, 0.32),
+    rgba(17, 83, 65, 0.52)
+  );
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 0 0 1px rgba(51, 214, 159, 0.32);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.09),
+    0 0 0 1px rgba(93, 226, 181, 0.36);
 }
 
 .crossFlag {

@@ -4,19 +4,40 @@
   left: 0;
   width: 100%;
   height: 100%;
+  border: 1px solid var(--field-border);
+  border-radius: var(--radius-card);
   background: radial-gradient(
-    circle,
-    rgba(16, 22, 34, 0.78) 0%,
-    rgba(16, 22, 34, 0.5) 100%
+    circle at center,
+    rgba(20, 33, 54, 0.82) 0%,
+    rgba(9, 15, 27, 0.64) 100%
   );
   color: var(--text-primary);
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   font-size: 1rem;
-  backdrop-filter: blur(8px);
-  border-radius: var(--radius-card);
+  backdrop-filter: blur(10px);
   overflow: hidden;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 12px 24px rgba(0, 0, 0, 0.3);
+  transition:
+    border-color var(--duration-hover) var(--easing-standard),
+    box-shadow var(--duration-hover) var(--easing-standard);
+  padding: 0;
+  margin: 0;
+  appearance: none;
+}
+
+.pauseOverlay:hover {
+  border-color: var(--border-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.13),
+    0 0 0 1px rgba(98, 181, 255, 0.24),
+    0 14px 30px rgba(0, 0, 0, 0.34);
 }
 
 .pauseOverlayContent {
@@ -29,8 +50,12 @@
 .pauseOverlayIcon {
   width: 2.5rem;
   height: 2.5rem;
-  border: solid 2px var(--border-strong);
-  background-color: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  background: linear-gradient(
+    165deg,
+    rgba(38, 60, 93, 0.88),
+    rgba(18, 29, 46, 0.96)
+  );
   border-radius: 50%;
   flex-shrink: 0;
   margin-bottom: 0.5rem;
@@ -46,8 +71,10 @@
 .title {
   line-height: 1.25;
   margin: 0;
+  letter-spacing: 0.03em;
 }
 
 .pauseOverlayContent p {
   color: var(--text-secondary);
+  margin: 0.45rem 0 0;
 }

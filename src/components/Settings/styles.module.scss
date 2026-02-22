@@ -3,19 +3,24 @@
   flex-direction: column;
   gap: var(--space-2);
   width: min(320px, calc(100vw - 32px));
-  background-color: var(--surface-elevated);
+  background: linear-gradient(
+    165deg,
+    rgba(39, 60, 94, 0.94),
+    rgba(17, 28, 45, 0.98)
+  );
   color: var(--text-primary);
   border-radius: var(--radius-popover);
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--field-border);
   box-shadow: var(--shadow-popover);
   padding: var(--space-2);
   transform-origin: top right;
   animation: popoverEnter 150ms ease forwards;
   z-index: 60;
+  backdrop-filter: blur(10px);
 }
 
 .popoverArrow {
-  fill: var(--surface-elevated);
+  fill: rgba(31, 48, 76, 0.96);
 }
 
 .panelBody {
@@ -26,17 +31,20 @@
 
 .title {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .sheetOverlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.58);
+  background-color: var(--panel-backdrop);
   animation: fadeIn 150ms ease;
   z-index: 58;
+  backdrop-filter: blur(4px);
 }
 
 .sheetContent {
@@ -44,8 +52,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--surface-elevated);
-  border-top: 1px solid var(--border-strong);
+  background: linear-gradient(
+    180deg,
+    rgba(33, 51, 80, 0.96) 0%,
+    rgba(14, 23, 38, 0.98) 100%
+  );
+  border-top: 1px solid var(--field-border);
   border-top-left-radius: var(--radius-popover);
   border-top-right-radius: var(--radius-popover);
   box-shadow: var(--shadow-popover);
