@@ -19,6 +19,7 @@ const NAV_ITEMS = [
 const Header = () => {
   return (
     <header className={cx('header')}>
+      <div className={cx('logo')}>Minesweeper</div>
       <nav>
         <ul>
           {NAV_ITEMS.map((item) => (
