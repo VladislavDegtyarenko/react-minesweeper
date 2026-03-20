@@ -1,0 +1,38 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 36px;
+}
+
+.label {
+  color: var(--text-primary);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.zoomWrapper {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-1);
+  align-items: stretch;
+}
+
+.zoomLabel {
+  font-size: 0.76rem;
+}
+
+.zoomGroup {
+  background-color: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-button);
+  padding: 4px;
+  gap: 4px;
+}
+
+.zoomItem {
+  min-width: 0;
+  flex: 1;
+}

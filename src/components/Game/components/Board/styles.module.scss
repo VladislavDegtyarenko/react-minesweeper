@@ -3,15 +3,42 @@
   overflow-y: auto;
   max-height: 100%;
   max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
 }
 
 .board {
   box-sizing: border-box;
   --cell-size: 2rem;
+  background-color: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px;
   overflow: auto;
   position: relative;
-  border-radius: 0.5rem;
-  overflow: scroll;
   margin: 0 auto;
   max-width: 100%;
+  max-height: calc(100dvh - 260px);
+  transition: border-color var(--duration-hover) var(--easing-standard);
+}
+
+.board::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.board::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+
+.board::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+@media screen and (max-width: 768px) {
+  .board {
+    padding: 14px;
+    max-height: calc(100dvh - 232px);
+  }
 }

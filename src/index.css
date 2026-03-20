@@ -1,28 +1,65 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  --app-bg: #151515;
-  --text: #1a1a1a;
-  --surface: #ccc;
-  --surface-light: #dedede;
+  --app-bg: #101622;
+  --surface-1: #1a2233;
+  --surface-2: #212b40;
+  --surface-3: #151c2b;
+  --surface-elevated: #26324a;
+  --border: rgba(255, 255, 255, 0.085);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text-primary: rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  --accent-blue: #4da3ff;
+  --accent-tint: rgba(77, 163, 255, 0.14);
+  --accent-glow: rgba(77, 163, 255, 0.25);
+  --danger: #ff5c7a;
+  --danger-glow: rgba(255, 92, 122, 0.35);
 
-  --btn-color: #151515;
-  --btn-active: #555;
-  --cell-border-color: #bbbbbb;
-  --one: blue;
-  --two: green;
-  --three: tomato;
-  --four: darkviolet;
-  --five: darkred;
-  --six: steelblue;
-  --seven: black;
-  --eight: black;
-  --red: firebrick;
-  --green: forestgreen;
+  --radius-card: 20px;
+  --radius-popover: 16px;
+  --radius-button: 12px;
+  --radius-cell: 10px;
+  --radius-segment: 14px;
+
+  --shadow-card: 0 14px 42px rgba(0, 0, 0, 0.38);
+  --shadow-popover: 0 10px 30px rgba(0, 0, 0, 0.34);
+  --shadow-button-hover: 0 6px 16px rgba(0, 0, 0, 0.24);
+
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+
+  --duration-hover: 120ms;
+  --duration-press: 80ms;
+  --easing-standard: ease;
+
+  --cell-closed: #2b3954;
+  --cell-closed-hover: #344362;
+  --cell-revealed: #182234;
+  --cell-border: rgba(255, 255, 255, 0.05);
+
+  --one: #4da3ff;
+  --two: #33d69f;
+  --three: #ff5c7a;
+  --four: #b48cff;
+  --five: #ffb74d;
+  --six: #40c4ff;
+  --seven: rgba(255, 255, 255, 0.92);
+  --eight: rgba(255, 255, 255, 0.55);
+  --red: #ff5c7a;
+  --green: #33d69f;
+
   background-color: var(--app-bg);
-  color: var(--text);
+  color: var(--text-primary);
 
   overscroll-behavior-x: none;
   font-synthesis: none;
@@ -33,44 +70,54 @@
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-user-callout: none;
-  -webkit-touch-callout: none;
-  -webkit-user-callout: none;
-  -webkit-user-select: none;
-  -webkit-user-drag: none;
-  -webkit-user-modify: none;
-  -webkit-highlight: none;
 }
 
 html,
 body {
-  -webkit-user-select: none; /* Safari / iOS */
-  -ms-user-select: none; /* Old Edge */
-  user-select: none; /* Modern browsers */
-  -webkit-touch-callout: none; /* Disable callout on long press (iOS) */
+  user-select: none;
 }
 
 body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 380px;
+  min-width: 360px;
   max-width: 100dvw;
   height: 100dvh;
   overflow: hidden;
+  background-image:
+    radial-gradient(
+      200vmax circle at 50% -20%,
+      rgba(77, 163, 255, 0.18),
+      transparent 58%
+    ),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.015), transparent 60%);
+  color: var(--text-primary);
 }
 
 #root {
   height: 100%;
-  max-width: 100%;
+  width: 100%;
   margin: 0 auto;
-  padding: 0.5rem;
-  text-align: center;
+  padding: 0 var(--space-2);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--space-2);
+}
+
+@media screen and (max-width: 768px) {
+  #root {
+    justify-content: center;
+    gap: var(--space-1);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #root {
+    padding: 0 var(--space-1);
+  }
 }
 
 button {
@@ -82,9 +129,4 @@ a {
   color: inherit;
   text-decoration: none;
   cursor: pointer;
-}
-
-.app {
-  display: flex;
-  flex-direction: column;
 }

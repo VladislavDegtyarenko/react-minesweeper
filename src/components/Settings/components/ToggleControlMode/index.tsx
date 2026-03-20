@@ -10,6 +10,10 @@ import { MOBILE_CONTROL_MODES_OPTIONS } from '@/store/settings/constants';
 import ToggleGroup from '@/components/ui/ToggleGroup';
 import ToggleGroupItem from '@/components/ui/ToggleGroupItem';
 import LabelWithInfoDialog from '@/components/ui/LabelWithInfoDialog';
+import classNames from 'classnames/bind';
+import styles from '../styles.module.scss';
+
+const cx = classNames.bind(styles);
 
 const CONTROL_MODE_LABEL = 'Control Mode';
 const CONTROL_MODE_ARIA_LABEL = 'Control mode';
@@ -55,12 +59,16 @@ const ToggleControlMode = () => {
       aria-label={CONTROL_MODE_ARIA_LABEL}
       onValueChange={handleControlModeChange}
       loop={true}
+      wrapperClassName={cx('zoomWrapper')}
+      labelClassName={cx('zoomLabel')}
+      className={cx('zoomGroup')}
     >
       {MOBILE_CONTROL_MODES_OPTIONS.map((option) => (
         <ToggleGroupItem
           key={option.value}
           value={option.value}
           label={option.label}
+          className={cx('zoomItem')}
         />
       ))}
     </ToggleGroup>

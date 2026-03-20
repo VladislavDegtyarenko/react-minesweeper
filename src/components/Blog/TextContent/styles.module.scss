@@ -1,23 +1,35 @@
 .textContent {
-  color: var(--surface-light);
+  position: relative;
+  isolation: isolate;
+  color: var(--text-secondary);
   text-align: left;
-  width: min(860px, calc(100dvw - 1rem));
-  max-height: calc(100dvh - 5rem);
-  margin-top: 2.8rem;
-  padding: clamp(1rem, 2.3vw, 1.45rem);
+  width: min(1040px, calc(100dvw - 1rem));
+  max-height: calc(100dvh - 6.5rem);
+  padding: clamp(1rem, 2.6vw, 1.75rem);
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.38) 0%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
-  border: 1px solid rgba(222, 222, 222, 0.24);
-  border-radius: 1rem;
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.2);
+  background:
+    linear-gradient(180deg, rgba(33, 43, 64, 0.96) 0%, rgba(21, 28, 43, 0.98) 100%),
+    linear-gradient(135deg, rgba(77, 163, 255, 0.08), transparent 48%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
   line-height: 1.68;
   scrollbar-width: thin;
-  scrollbar-color: rgba(222, 222, 222, 0.35) transparent;
+  scrollbar-color: rgba(77, 163, 255, 0.36) transparent;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -5rem;
+    right: -3rem;
+    width: 16rem;
+    height: 16rem;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(77, 163, 255, 0.22), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
 
   &,
   * {
@@ -31,7 +43,7 @@
 
   &::-webkit-scrollbar-thumb {
     border-radius: 999px;
-    background: rgba(222, 222, 222, 0.35);
+    background: rgba(77, 163, 255, 0.36);
     border: 2px solid transparent;
     background-clip: content-box;
   }
@@ -43,7 +55,7 @@
   h1,
   h2,
   h3 {
-    color: var(--surface);
+    color: var(--text-primary);
     line-height: 1.2;
     margin: 0 0 0.65rem;
   }
@@ -77,16 +89,18 @@
   }
 
   strong {
-    color: var(--surface);
+    color: var(--text-primary);
   }
 
   a {
+    color: var(--accent-blue);
     text-decoration: underline;
-    text-underline-offset: 0.15rem;
+    text-decoration-color: rgba(77, 163, 255, 0.42);
+    text-underline-offset: 0.18rem;
   }
 
   a:focus-visible {
-    outline: 2px solid #ffd57a;
+    outline: 2px solid var(--accent-blue);
     outline-offset: 3px;
     border-radius: 0.25rem;
   }
@@ -94,12 +108,11 @@
   hr {
     margin: 1rem 0;
     border: 0;
-    border-top: 1px solid rgba(222, 222, 222, 0.2);
+    border-top: 1px solid var(--border);
   }
 
   @media (max-width: 640px) {
-    max-height: calc(100dvh - 4.7rem);
-    margin-top: 2.45rem;
+    max-height: calc(100dvh - 5rem);
     padding: 1rem;
 
     h1 {

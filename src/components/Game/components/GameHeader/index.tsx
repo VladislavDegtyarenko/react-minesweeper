@@ -2,8 +2,6 @@ import classNames from 'classnames/bind';
 import { useGameStore } from '@/store/game';
 import { startNewGame, restartGame, togglePause } from '@/store/game/actions';
 import { selectGameStatus } from '@/store/game/selectors';
-import { useSFXStore } from '@/store/sfx';
-import { toggleMuteSFX } from '@/store/sfx/actions';
 import Button from '@/components/ui/Button';
 import Settings from '@/components/Settings';
 import GameStatus from '../GameStatus';
@@ -13,7 +11,6 @@ import styles from './styles.module.scss';
 const cx = classNames.bind(styles);
 
 const GameHeader = () => {
-  const isMuted = useSFXStore((state) => state.isMuted);
   const gameStatus = useGameStore(selectGameStatus);
 
   return (
@@ -30,38 +27,38 @@ const GameHeader = () => {
             gameStatus === 'lost'
           }
           title={gameStatus === 'paused' ? 'Play' : 'Pause'}
+          className={cx('controlButton')}
         >
           {gameStatus === 'paused' ? (
-            <img src="/icons/play.svg" alt="Play" />
+            <img src="/themes/blue-graphite/icons/Play.svg" alt="Play" />
           ) : (
-            <img src="/icons/pause.svg" alt="Pause" />
+            <img src="/themes/blue-graphite/icons/Pause.png" alt="Pause" />
           )}
         </Button>
-        <Button onClick={startNewGame} title="Start new game">
-          <img src="/icons/bomb-inv.svg" />
+        <Button
+          onClick={startNewGame}
+          title="Start new game"
+          className={cx('controlButton')}
+        >
+          <img src="/themes/blue-graphite/icons/Bomb.png" alt="New game" />
         </Button>
         <Button
           onClick={restartGame}
           isDisabled={gameStatus === 'idle'}
           title="Restart"
-        >
-          <img src="/icons/restart.svg" alt="Restart current game" />
-        </Button>
-        <Button
-          isIcon
-          onClick={toggleMuteSFX}
-          title={isMuted ? 'Unmute' : 'Mute'}
+          className={cx('controlButton')}
         >
           <img
-            src={isMuted ? '/icons/sound-muted.svg' : '/icons/sound.svg'}
-            alt={isMuted ? 'Unmute' : 'Mute'}
+            src="/themes/blue-graphite/icons/Restart.png"
+            alt="Restart current game"
           />
         </Button>
-
-        <Settings />
       </div>
-      <div className={cx('headerLabel', 'timer')}>
-        <TimerDisplay />
+      <div className={cx('toolbarRight')}>
+        <div className={cx('headerLabel', 'timer')}>
+          <TimerDisplay />
+        </div>
+        <Settings />
       </div>
     </header>
   );

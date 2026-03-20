@@ -1,12 +1,23 @@
 .footer {
   font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--surface);
+  font-weight: 600;
+  color: var(--text-muted);
   margin-top: 0.5rem;
   display: flex;
   justify-content: center;
+  padding: var(--space-1) 0;
 
   a {
-    color: var(--surface);
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .externalLinkIcon {
+    flex-shrink: 0;
+    > svg {
+      vertical-align: text-bottom;
+    }
   }
 }

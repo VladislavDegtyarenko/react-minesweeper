@@ -1,50 +1,26 @@
-import ToggleGroup from '@/components/ui/ToggleGroup';
-import ToggleGroupItem from '@/components/ui/ToggleGroupItem';
+import Switch from '@/components/ui/Switch';
 import { useSFXStore } from '@/store/sfx';
 import { setMuteSFX } from '@/store/sfx/actions';
+import classNames from 'classnames/bind';
+import styles from '../styles.module.scss';
 
-const SOUND_TOGGLE_VALUES = {
-  On: 'on',
-  Off: 'off',
-} as const;
-
-const SOUND_TOGGLE_OPTIONS = [
-  { value: SOUND_TOGGLE_VALUES.On, label: 'On' },
-  { value: SOUND_TOGGLE_VALUES.Off, label: 'Off' },
-] as const;
+const cx = classNames.bind(styles);
 
 const SOUND_LABEL = 'Sound';
+const SOUND_SWITCH_ARIA_LABEL = 'Sound';
 
 const ToggleSound = () => {
   const isMuted = useSFXStore((state) => state.isMuted);
-  const soundValue = isMuted ? SOUND_TOGGLE_VALUES.Off : SOUND_TOGGLE_VALUES.On;
-
-  const handleSoundChange = (value: string) => {
-    if (!value) {
-      return undefined;
-    }
-
-    setMuteSFX(value === SOUND_TOGGLE_VALUES.Off);
-  };
 
   return (
-    <ToggleGroup
-      label={SOUND_LABEL}
-      type="single"
-      value={soundValue}
-      defaultValue={soundValue}
-      aria-label={SOUND_LABEL}
-      onValueChange={handleSoundChange}
-      loop={true}
-    >
-      {SOUND_TOGGLE_OPTIONS.map((option) => (
-        <ToggleGroupItem
-          key={option.value}
-          value={option.value}
-          label={option.label}
-        />
-      ))}
-    </ToggleGroup>
+    <div className={cx('row')}>
+      <span className={cx('label')}>{SOUND_LABEL}</span>
+      <Switch
+        checked={!isMuted}
+        onCheckedChange={(checked) => setMuteSFX(!checked)}
+        ariaLabel={SOUND_SWITCH_ARIA_LABEL}
+      />
+    </div>
   );
 };
 
