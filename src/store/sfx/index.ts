@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 import { LOCAL_STORAGE_KEYS } from "@/constants";
 import { localStorageService } from "@/utils";
 
@@ -20,13 +21,18 @@ type SFXState = {
   audioBuffers: Map<SoundName, AudioBuffer>;
 };
 
-export const useSFXStore = create<SFXState>()(() => ({
-  isMuted:
-    localStorageService.get<boolean>(LOCAL_STORAGE_KEYS.isMutedSFX) ?? false,
-  isLoaded: false,
-  audioContext: null,
-  audioBuffers: new Map(),
-}));
+export const useSFXStore = create<SFXState>()(
+  devtools(
+    () => ({
+      isMuted:
+        localStorageService.get<boolean>(LOCAL_STORAGE_KEYS.isMutedSFX) ?? false,
+      isLoaded: false,
+      audioContext: null,
+      audioBuffers: new Map(),
+    }),
+    { name: "sfx" }
+  )
+);
 
 useSFXStore.subscribe((state, prevState) => {
   if (state.isMuted !== prevState.isMuted) {

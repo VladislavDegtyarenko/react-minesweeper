@@ -1,6 +1,8 @@
+import Game from './components/Game';
 import { useEffect } from 'react';
 import { initTouchScreenListener } from '@/store/settings';
-import Game from './components/Game';
+// Initialize stats store subscriptions on app startup.
+import '@/store/stats';
 
 function App() {
   useEffect(() => {
