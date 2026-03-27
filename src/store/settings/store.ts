@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
+import { devtools, subscribeWithSelector } from 'zustand/middleware';
 import { type SettingsState } from './types';
 import {
   getIsTouchScreen,
@@ -21,5 +21,7 @@ const initialState: SettingsState = {
 };
 
 export const useSettingsStore = create<SettingsState>()(
-  subscribeWithSelector(() => initialState),
+  subscribeWithSelector(
+    devtools(() => initialState, { name: 'settings' }),
+  ),
 );

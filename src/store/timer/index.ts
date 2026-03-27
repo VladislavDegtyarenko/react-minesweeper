@@ -5,11 +5,14 @@ import { devtools, subscribeWithSelector } from "zustand/middleware";
 
 export const useTimerStore = create<TimerState>()(
   subscribeWithSelector(
-    devtools(() => ({
-      status: "idle",
-      elapsedMs: 0,
-      startedAtMs: null,
-      rafId: null,
-    }))
+    devtools(
+      () => ({
+        status: "idle",
+        elapsedMs: 0,
+        startedAtMs: null,
+        rafId: null,
+      }),
+      { name: "timer" }
+    )
   )
 );

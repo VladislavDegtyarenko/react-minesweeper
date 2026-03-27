@@ -16,15 +16,18 @@ export type GameState = {
 
 export const useGameStore = create<GameState>()(
   subscribeWithSelector(
-    devtools(() => {
-      const gameState = {
-        board: initGame(DEFAULT_LEVEL),
-        level: DEFAULT_LEVEL,
-        totalFlags: 0,
-        gameStatus: 'idle',
-      };
+    devtools(
+      () => {
+        const gameState = {
+          board: initGame(DEFAULT_LEVEL),
+          level: DEFAULT_LEVEL,
+          totalFlags: 0,
+          gameStatus: 'idle',
+        };
 
-      return { ...gameState };
-    }),
+        return { ...gameState };
+      },
+      { name: 'game' },
+    ),
   ),
 );

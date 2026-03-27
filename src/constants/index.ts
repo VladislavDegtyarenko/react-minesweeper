@@ -2,6 +2,7 @@ import { getLevelById } from '@/utils/getLevelById';
 import type { Level, LevelId, LevelsConfig } from '../types';
 
 export const LOCAL_STORAGE_KEYS = {
+  bestTimes: 'BEST_TIMES',
   gameBoard: 'GAME_BOARD',
   isMutedSFX: 'IS_MUTED_SFX',
   preferredControlMode: 'PREFERRED_CONTROL_MODE',
