@@ -1,7 +1,255 @@
-.confetti {
-  position: absolute;
-  top: 0;
-  left: 0;
+.confettiCanvas {
+  position: fixed;
+  inset: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
+  z-index: 57;
+}
+
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(8, 12, 20, 0.62);
+  animation: fadeIn 150ms ease;
+  z-index: 58;
+}
+
+.dialogContent {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: min(420px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-popover);
+  border: 1px solid var(--border-strong);
+  background:
+    linear-gradient(180deg, rgba(38, 50, 74, 0.98) 0%, rgba(21, 28, 43, 0.98) 100%);
+  box-shadow: var(--shadow-popover);
+  padding: var(--space-2);
+  z-index: 59;
+  animation: dialogEnter 180ms ease;
+  overflow-y: auto;
+}
+
+.bestDialogContent {
+  border-color: rgba(72, 201, 134, 0.72);
+  box-shadow:
+    0 0 0 1px rgba(72, 201, 134, 0.24),
+    0 16px 48px rgba(10, 18, 28, 0.56),
+    0 0 28px rgba(72, 201, 134, 0.18);
+}
+
+.dialogBody {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.subtitle {
+  margin: -0.5rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.statsList {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.95rem 1rem;
+  background-color: rgba(16, 22, 34, 0.54);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-segment);
+}
+
+.statsRow dt {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.statsRow dd {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.actionButton,
+.shareActionButton {
+  min-height: 2.85rem;
+  border-radius: var(--radius-button);
+  border: 1px solid var(--border);
+  background-color: rgba(16, 22, 34, 0.48);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition:
+    transform var(--duration-hover) var(--easing-standard),
+    border-color var(--duration-hover) var(--easing-standard),
+    background-color var(--duration-hover) var(--easing-standard),
+    box-shadow var(--duration-hover) var(--easing-standard);
+}
+
+.actionButton:hover,
+.shareActionButton:hover {
+  border-color: rgba(77, 163, 255, 0.42);
+  background-color: rgba(33, 43, 64, 0.98);
+  box-shadow: 0 0 0 2px rgba(77, 163, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.actionButton:active,
+.shareActionButton:active {
+  transform: translateY(1px);
+  transition-duration: var(--duration-press);
+}
+
+.actionButton:focus-visible,
+.shareActionButton:focus-visible,
+.copyFallbackField:focus-visible {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.primaryAction {
+  background:
+    linear-gradient(180deg, rgba(77, 163, 255, 0.24) 0%, rgba(77, 163, 255, 0.12) 100%);
+  border-color: rgba(77, 163, 255, 0.32);
+}
+
+.secondaryAction {
+  background-color: rgba(16, 22, 34, 0.54);
+}
+
+.shareSheet {
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.shareSheetTitle {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.shareSheetGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.shareActionButton {
+  min-height: 2.6rem;
+  padding: 0 0.85rem;
+}
+
+.copyButton {
+  font-variant-numeric: tabular-nums;
+}
+
+.shareFeedback {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+}
+
+.copyFallback {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.copyFallbackField {
+  width: 100%;
+  min-height: 2.7rem;
+  border-radius: var(--radius-button);
+  border: 1px solid var(--border);
+  background-color: rgba(16, 22, 34, 0.54);
+  color: var(--text-primary);
+  padding: 0 0.85rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialogEnter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 12px)) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes sheetEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .dialogContent {
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    width: auto;
+    max-height: calc(100dvh - 24px);
+    transform: none;
+    border-top-left-radius: var(--radius-popover);
+    border-top-right-radius: var(--radius-popover);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: var(--space-2) var(--space-2)
+      calc(var(--space-2) + env(safe-area-inset-bottom));
+    animation: sheetEnter 180ms ease;
+  }
+
+  .actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

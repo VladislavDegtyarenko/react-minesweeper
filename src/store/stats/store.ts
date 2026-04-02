@@ -5,6 +5,7 @@ import { createEmptyBestTimes, getStoredBestTimes } from './utils';
 
 const initialState: StatsState = {
   bestTimesByLevel: getStoredBestTimes(),
+  isWinDialogOpen: false,
   lastWinSummary: null,
 };
 
@@ -22,6 +23,7 @@ export const useStatsStore = create<StatsState>()(
 export const resetStatsStore = () => {
   useStatsStore.setState({
     bestTimesByLevel: createEmptyBestTimes(),
+    isWinDialogOpen: false,
     lastWinSummary: null,
   });
 };

@@ -7,6 +7,8 @@ import WinOverlay from './components/WinOverlay';
 import styles from './styles.module.scss';
 import { CSSProperties, useLayoutEffect, useRef, useState } from 'react';
 import { selectIsToggleMode } from '@/store/settings/selectors';
+import { selectIsWinDialogOpen, useStatsStore } from '@/store/stats';
+import { setIsWinDialogOpen } from '@/store/stats/actions';
 import { useSettingsStore } from '@/store/settings';
 import { useGameStore } from '@/store/game';
 import { selectIsGameLost, selectIsGameWon } from '@/store/game/selectors';
@@ -16,6 +18,7 @@ const cx = classNames.bind(styles);
 const Game = () => {
   const isGameWon = useGameStore(selectIsGameWon);
   const isGameLost = useGameStore(selectIsGameLost);
+  const isWinDialogOpen = useStatsStore(selectIsWinDialogOpen);
 
   // Temporary fix to make the game board fit into the screen
   const isToggleMode = useSettingsStore(selectIsToggleMode);
@@ -30,6 +33,14 @@ const Game = () => {
     setGameFooterHeight(footerAreaRef.current.clientHeight);
   }, [isToggleMode]);
 
+  const handleBoardAreaClick = () => {
+    if (!isGameWon || isWinDialogOpen) {
+      return;
+    }
+
+    setIsWinDialogOpen(true);
+  };
+
   return (
     <div className={cx('gameWrapper')}>
       <div className={cx('gameAbsoluteContainer')}>
@@ -38,8 +49,9 @@ const Game = () => {
           <div
             className={cx(
               'boardArea',
-              isGameWon || isGameLost ? 'no-pointer-events' : '',
+              isGameLost ? 'no-pointer-events' : '',
             )}
+            onClick={handleBoardAreaClick}
             style={
               {
                 '--game-footer-height': gameFooterHeight + 'px',

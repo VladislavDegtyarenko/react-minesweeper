@@ -7,4 +7,7 @@ export const selectBestTimesByLevel = (state: StatsState) =>
 export const selectBestTimeByLevel =
   (levelId: LevelId) => (state: StatsState) => state.bestTimesByLevel[levelId];
 
+export const selectIsWinDialogOpen = (state: StatsState) =>
+  state.isWinDialogOpen;
+
 export const selectLastWinSummary = (state: StatsState) => state.lastWinSummary;
