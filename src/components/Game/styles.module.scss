@@ -54,3 +54,30 @@
   flex-direction: column;
   gap: var(--space-1);
 }
+
+@media screen and (max-width: 768px) {
+  .gameAbsoluteContainer {
+    padding-top: var(--space-1);
+  }
+
+  .game {
+    width: 100%;
+  }
+
+  .boardArea {
+    padding: 0;
+    --game-header-height: 57px;
+  }
+
+  .footerArea {
+    padding: 4px 6px 6px;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 6px;
+
+    > * {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+}

@@ -1,22 +1,31 @@
 import { ToggleGroup } from 'radix-ui';
-
 import classNames from 'classnames/bind';
+import type { ReactNode } from 'react';
 import styles from './styles.module.scss';
-const cx = classNames.bind(styles);
 
 type Props = {
   value: number | string;
-  label: string;
+  label: ReactNode;
+  ariaLabel?: string;
+  title?: string;
   className?: string;
 };
 
-const ToggleGroupItem = ({ value, label, className }: Props) => {
+const cx = classNames.bind(styles);
+
+const ToggleGroupItem = ({
+  value,
+  label,
+  ariaLabel,
+  title,
+  className,
+}: Props) => {
   return (
     <ToggleGroup.Item
       className={cx('toggleGroupItem', className)}
       value={String(value)}
-      aria-label={label}
-      title={label}
+      aria-label={ariaLabel ?? String(value)}
+      title={title ?? ariaLabel ?? String(value)}
     >
       {label || value}
     </ToggleGroup.Item>
