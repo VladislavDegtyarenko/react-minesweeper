@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { LEVELS_CONFIG } from '@/constants';
 import type { LevelId } from '@/types';
 import { useGameStore } from '@/store/game';
-import { changeLevel } from '@/store/game/actions';
+import { requestLevelChange } from '@/store/game/actions';
 import ToggleGroup from '@/components/ui/ToggleGroup';
 import ToggleGroupItem from '@/components/ui/ToggleGroupItem';
 import styles from './styles.module.scss';
@@ -24,7 +24,7 @@ const SelectLevelToggleGroup = memo(() => {
       return undefined;
     }
 
-    changeLevel(value as LevelId);
+    requestLevelChange(value as LevelId);
   };
 
   return (

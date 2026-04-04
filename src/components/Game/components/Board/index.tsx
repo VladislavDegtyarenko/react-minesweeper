@@ -2,6 +2,10 @@ import { CSSProperties, memo, PointerEvent, MouseEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import classNames from 'classnames/bind';
 import { useGameStore } from '@/store/game';
+import {
+  selectIsLevelChangeDialogOpen,
+  selectGameStatusBeforeLevelChange,
+} from '@/store/game/selectors';
 import { selectZoom } from '@/store/settings/selectors';
 import { useSettingsStore } from '@/store/settings';
 import { handleCellInteraction } from '@/utils/board';
@@ -20,8 +24,14 @@ const Board = () => {
       gameStatus: state.gameStatus,
     })),
   );
-
+  const isLevelChangeDialogOpen = useGameStore(selectIsLevelChangeDialogOpen);
+  const gameStatusBeforeLevelChange = useGameStore(
+    selectGameStatusBeforeLevelChange,
+  );
   const zoom = useSettingsStore(selectZoom);
+  const shouldShowPauseOverlay =
+    gameStatus === 'paused' &&
+    !(isLevelChangeDialogOpen && gameStatusBeforeLevelChange === 'playing');
 
   const getRowAndCellIndex = (
     e: PointerEvent<HTMLDivElement>,
@@ -104,7 +114,7 @@ const Board = () => {
         <Row rowIndex={rowIndex} key={rowIndex} />
       ))}
 
-      {gameStatus === 'paused' && <PauseOverlay />}
+      {shouldShowPauseOverlay && <PauseOverlay />}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
 import Board from './components/Board';
 import GameHeader from './components/GameHeader';
+import LevelChangeDialog from './components/LevelChangeDialog';
 import SelectLevelToggleGroup from './components/SelectLevelToggleGroup';
 import SelectDigFlag from './components/SelectDigFlag';
 import WinOverlay from './components/WinOverlay';
@@ -65,6 +66,7 @@ const Game = () => {
             <SelectDigFlag />
           </div>
         </div>
+        <LevelChangeDialog />
         <WinOverlay />
       </div>
     </div>
