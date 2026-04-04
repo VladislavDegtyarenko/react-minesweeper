@@ -1,14 +1,23 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
 import ROUTES from '@/config/routes.json';
 import { startNewGame } from '@/store/game/actions';
 import { selectGameStatus } from '@/store/game/selectors';
 import { useGameStore } from '@/store/game/store';
-import { setIsWinDialogOpen } from '@/store/stats/actions';
+import {
+  setHasPresentedWinDialog,
+  setIsWinDialogOpen,
+} from '@/store/stats/actions';
 import {
   selectIsWinDialogOpen,
   selectLastWinSummary,
 } from '@/store/stats/selectors';
 import { useStatsStore } from '@/store/stats/store';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type {
+  ConfettiInstance,
+  CopyState,
+  ShareChannel,
+  WinOverlayPresentation,
+} from '../types';
 import {
   buildNativeSharePayload,
   buildShareActionItems,
@@ -16,13 +25,7 @@ import {
   createConfettiInstance,
   fireWinConfetti,
   getConfettiColors,
-} from './utils';
-import type {
-  ConfettiInstance,
-  CopyState,
-  ShareChannel,
-  WinOverlayPresentation,
-} from './types';
+} from '../utils';
 
 const WIN_DIALOG_DELAY_MS = 700;
 const COPY_RESET_DELAY_MS = 2000;
@@ -148,6 +151,7 @@ export const useWinOverlay = () => {
     }
 
     openDialogTimeoutRef.current = window.setTimeout(() => {
+      setHasPresentedWinDialog(true);
       setIsWinDialogOpen(true);
     }, WIN_DIALOG_DELAY_MS);
 
@@ -216,7 +220,9 @@ export const useWinOverlay = () => {
       return;
     }
 
-    const actionItem = shareActionItems.find((item) => item.channel === channel);
+    const actionItem = shareActionItems.find(
+      (item) => item.channel === channel,
+    );
 
     if (!actionItem) {
       return;

@@ -7,18 +7,16 @@ import WinOverlay from './components/WinOverlay';
 import styles from './styles.module.scss';
 import { CSSProperties, useLayoutEffect, useRef, useState } from 'react';
 import { selectIsToggleMode } from '@/store/settings/selectors';
-import { selectIsWinDialogOpen, useStatsStore } from '@/store/stats';
+import { useStatsStore } from '@/store/stats';
 import { setIsWinDialogOpen } from '@/store/stats/actions';
 import { useSettingsStore } from '@/store/settings';
 import { useGameStore } from '@/store/game';
-import { selectIsGameLost, selectIsGameWon } from '@/store/game/selectors';
+import { selectIsGameLost } from '@/store/game/selectors';
 
 const cx = classNames.bind(styles);
 
 const Game = () => {
-  const isGameWon = useGameStore(selectIsGameWon);
   const isGameLost = useGameStore(selectIsGameLost);
-  const isWinDialogOpen = useStatsStore(selectIsWinDialogOpen);
 
   // Temporary fix to make the game board fit into the screen
   const isToggleMode = useSettingsStore(selectIsToggleMode);
@@ -34,10 +32,14 @@ const Game = () => {
   }, [isToggleMode]);
 
   const handleBoardAreaClick = () => {
-    if (!isGameWon || isWinDialogOpen) {
-      return;
+    const { gameStatus } = useGameStore.getState();
+    const { hasPresentedWinDialog, isWinDialogOpen } = useStatsStore.getState();
+
+    if (gameStatus !== 'won' || !hasPresentedWinDialog || isWinDialogOpen) {
+      return undefined;
     }
 
+    // Open the win dialog
     setIsWinDialogOpen(true);
   };
 
@@ -46,11 +48,9 @@ const Game = () => {
       <div className={cx('gameAbsoluteContainer')}>
         <div className={cx('game')}>
           <GameHeader />
+          {/* TODO: Extract into a separate component <BoardScrollableWrapper /> */}
           <div
-            className={cx(
-              'boardArea',
-              isGameLost ? 'no-pointer-events' : '',
-            )}
+            className={cx('boardArea', isGameLost ? 'no-pointer-events' : '')}
             onClick={handleBoardAreaClick}
             style={
               {

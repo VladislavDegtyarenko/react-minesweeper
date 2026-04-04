@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import styles from './styles.module.scss';
 import WinDialog from './components/WinDialog';
-import { useWinOverlay } from './useWinOverlay';
+import { useWinOverlay } from './hooks/useWinOverlay';
 
 const cx = classNames.bind(styles);
 

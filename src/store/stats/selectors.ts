@@ -10,4 +10,7 @@ export const selectBestTimeByLevel =
 export const selectIsWinDialogOpen = (state: StatsState) =>
   state.isWinDialogOpen;
 
+export const selectHasPresentedWinDialog = (state: StatsState) =>
+  state.hasPresentedWinDialog;
+
 export const selectLastWinSummary = (state: StatsState) => state.lastWinSummary;

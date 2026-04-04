@@ -18,6 +18,7 @@ export const createEmptyBestTimes = (): BestTimesByLevel => ({
 
 export const clearLastWinSummary = () => {
   useStatsStore.setState({
+    hasPresentedWinDialog: false,
     isWinDialogOpen: false,
     lastWinSummary: null,
   });

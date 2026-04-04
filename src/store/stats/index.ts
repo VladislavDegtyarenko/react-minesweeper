@@ -2,6 +2,7 @@ export { useStatsStore } from './store';
 export {
   selectBestTimeByLevel,
   selectBestTimesByLevel,
+  selectHasPresentedWinDialog,
   selectIsWinDialogOpen,
   selectLastWinSummary,
 } from './selectors';
