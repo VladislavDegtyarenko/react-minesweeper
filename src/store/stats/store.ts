@@ -5,6 +5,8 @@ import { createEmptyBestTimes, getStoredBestTimes } from './utils';
 
 const initialState: StatsState = {
   bestTimesByLevel: getStoredBestTimes(),
+  hasPresentedWinDialog: false, // whether the win dialog has been opened first time
+  isWinDialogOpen: false, // whether the win dialog is currently open
   lastWinSummary: null,
 };
 
@@ -22,6 +24,8 @@ export const useStatsStore = create<StatsState>()(
 export const resetStatsStore = () => {
   useStatsStore.setState({
     bestTimesByLevel: createEmptyBestTimes(),
+    hasPresentedWinDialog: false,
+    isWinDialogOpen: false,
     lastWinSummary: null,
   });
 };

@@ -17,7 +17,11 @@ export const createEmptyBestTimes = (): BestTimesByLevel => ({
 });
 
 export const clearLastWinSummary = () => {
-  useStatsStore.setState({ lastWinSummary: null });
+  useStatsStore.setState({
+    hasPresentedWinDialog: false,
+    isWinDialogOpen: false,
+    lastWinSummary: null,
+  });
 };
 
 const isValidBestTime = (value: unknown): value is number => {

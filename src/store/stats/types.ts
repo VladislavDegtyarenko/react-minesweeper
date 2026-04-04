@@ -12,5 +12,7 @@ export type LastWinSummary = {
 
 export type StatsState = {
   bestTimesByLevel: BestTimesByLevel;
+  hasPresentedWinDialog: boolean;
+  isWinDialogOpen: boolean;
   lastWinSummary: LastWinSummary | null;
 };

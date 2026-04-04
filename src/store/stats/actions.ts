@@ -17,6 +17,8 @@ export const recordBestTime = (levelId: LevelId, elapsedMs: number) => {
       ...bestTimesByLevel,
       [levelId]: bestTimeMs,
     },
+    hasPresentedWinDialog: false,
+    isWinDialogOpen: false,
     lastWinSummary: {
       levelId,
       elapsedMs: normalizedElapsedMs,
@@ -25,4 +27,12 @@ export const recordBestTime = (levelId: LevelId, elapsedMs: number) => {
       isNewBest,
     },
   });
+};
+
+export const setIsWinDialogOpen = (isWinDialogOpen: boolean) => {
+  useStatsStore.setState({ isWinDialogOpen });
+};
+
+export const setHasPresentedWinDialog = (hasPresentedWinDialog: boolean) => {
+  useStatsStore.setState({ hasPresentedWinDialog });
 };
