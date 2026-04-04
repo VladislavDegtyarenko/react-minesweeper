@@ -1,8 +1,8 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import classNames from 'classnames/bind';
-import styles from '../styles.module.scss';
-import ShareSheet from './ShareSheet';
-import type { WinOverlayPresentation } from '../types';
+import ShareSheet from '../ShareSheet';
+import styles from './styles.module.scss';
+import type { WinOverlayPresentation } from '../../types';
 
 const cx = classNames.bind(styles);
 

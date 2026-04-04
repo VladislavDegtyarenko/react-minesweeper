@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
-import styles from '../styles.module.scss';
-import { getShareSheetHeading } from '../utils';
-import type { ShareActionItem, WinOverlayPresentation } from '../types';
+import { getShareSheetHeading } from '../../utils';
+import styles from './styles.module.scss';
+import type { ShareActionItem, WinOverlayPresentation } from '../../types';
 
 const cx = classNames.bind(styles);
 
