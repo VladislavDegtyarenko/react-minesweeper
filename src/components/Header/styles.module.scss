@@ -20,6 +20,10 @@
 
   @media screen and (max-width: 768px) {
     padding: var(--space-1) 0;
+
+    .logo {
+      font-size: 1.2rem;
+    }
   }
 
   ul {

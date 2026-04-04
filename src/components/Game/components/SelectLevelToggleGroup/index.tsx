@@ -6,6 +6,7 @@ import { useGameStore } from '@/store/game';
 import { requestLevelChange } from '@/store/game/actions';
 import ToggleGroup from '@/components/ui/ToggleGroup';
 import ToggleGroupItem from '@/components/ui/ToggleGroupItem';
+import { useIsMobileViewport } from '@/hooks';
 import styles from './styles.module.scss';
 
 const cx = classNames.bind(styles);
@@ -18,6 +19,7 @@ const LEVEL_OPTIONS = LEVELS_CONFIG.map((level) => ({
 
 const SelectLevelToggleGroup = memo(() => {
   const selectedLevelId = useGameStore((state) => state.level).id;
+  const isMobileViewport = useIsMobileViewport();
 
   const handleLevelChange = (value: string) => {
     if (!value) {
@@ -29,7 +31,7 @@ const SelectLevelToggleGroup = memo(() => {
 
   return (
     <ToggleGroup
-      label={LEVEL_TOGGLE_LABEL}
+      label={isMobileViewport ? undefined : LEVEL_TOGGLE_LABEL}
       type="single"
       value={selectedLevelId}
       defaultValue={selectedLevelId}

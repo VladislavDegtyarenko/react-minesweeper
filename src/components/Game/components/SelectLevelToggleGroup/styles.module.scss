@@ -7,6 +7,8 @@
   background-color: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-segment);
+  width: 100%;
+  min-width: 0;
 }
 
 .group {
@@ -33,8 +35,17 @@
 
 @media screen and (max-width: 768px) {
   .wrapper {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
+    gap: 0;
+    padding: 4px;
+  }
+
+  .group {
+    gap: 4px;
+    padding: 3px;
+  }
+
+  .item {
+    min-width: 0;
+    padding-inline: 0.55rem;
   }
 }

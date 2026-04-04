@@ -3,21 +3,45 @@ import { setDigFlag } from '@/store/settings/actions';
 import { selectControlMode, selectDigFlag } from '@/store/settings/selectors';
 import ToggleGroup from '@/components/ui/ToggleGroup';
 import ToggleGroupItem from '@/components/ui/ToggleGroupItem';
-
 import classNames from 'classnames/bind';
-const cx = classNames.bind(styles);
+import { useIsMobileViewport } from '@/hooks';
+import type { ReactNode } from 'react';
 import styles from './styles.module.scss';
 
-const DIG_FLAG_LABEL = 'Mode';
+const cx = classNames.bind(styles);
 
-export const DIG_FLAG_OPTIONS = [
-  { value: DigFlag.Dig, label: String(DigFlag.Dig) },
-  { value: DigFlag.Flag, label: String(DigFlag.Flag) },
+const DIG_FLAG_LABEL = 'Mode';
+const DIG_FLAG_OPTIONS: { value: DigFlag; label: string; icon: ReactNode }[] = [
+  {
+    value: DigFlag.Dig,
+    label: String(DigFlag.Dig),
+    icon: (
+      <img
+        src="/themes/blue-graphite/icons/shovel.png"
+        alt=""
+        aria-hidden="true"
+        className={cx('itemIcon', 'digIcon')}
+      />
+    ),
+  },
+  {
+    value: DigFlag.Flag,
+    label: String(DigFlag.Flag),
+    icon: (
+      <img
+        src="/themes/blue-graphite/icons/Flag.svg"
+        alt=""
+        aria-hidden="true"
+        className={cx('itemIcon', 'flagIcon')}
+      />
+    ),
+  },
 ];
 
 const SelectDigFlag = () => {
   const controlMode = useSettingsStore(selectControlMode);
   const digFlag = useSettingsStore(selectDigFlag);
+  const isMobileViewport = useIsMobileViewport();
 
   if (controlMode !== ControlModes.Toggle) {
     return null;
@@ -33,7 +57,7 @@ const SelectDigFlag = () => {
 
   return (
     <ToggleGroup
-      label={DIG_FLAG_LABEL}
+      label={isMobileViewport ? undefined : DIG_FLAG_LABEL}
       type="single"
       value={digFlag}
       defaultValue={digFlag}
@@ -49,7 +73,8 @@ const SelectDigFlag = () => {
           <ToggleGroupItem
             key={option.value}
             value={option.value}
-            label={option.label}
+            label={isMobileViewport ? option.icon : option.label}
+            ariaLabel={option.label}
             className={cx('item')}
           />
         );
