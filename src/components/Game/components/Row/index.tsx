@@ -4,8 +4,9 @@ import { useShallow } from 'zustand/react/shallow';
 import { memo } from 'react';
 
 import styles from './styles.module.scss';
-import classNames from 'classnames/bind';
-const cx = classNames.bind(styles);
+import { createCx } from '@/utils';
+
+const cx = createCx(styles);
 
 const Row = ({ rowIndex }: { rowIndex: number }) => {
   const { cols } = useGameStore(

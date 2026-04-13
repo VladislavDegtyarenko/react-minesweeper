@@ -1,5 +1,11 @@
+import { isBrowser } from '../isBrowser';
+
 export const get = (key: string) => {
   try {
+    if (!isBrowser()) {
+      return null;
+    }
+
     const data = localStorage.getItem(key);
 
     return data ? JSON.parse(data) : null;

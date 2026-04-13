@@ -1,7 +1,7 @@
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 type Props = {
   checked: boolean;

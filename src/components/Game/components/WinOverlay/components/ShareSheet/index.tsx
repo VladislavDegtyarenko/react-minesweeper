@@ -1,9 +1,9 @@
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import { getShareSheetHeading } from '../../utils';
 import styles from './styles.module.scss';
 import type { ShareActionItem, WinOverlayPresentation } from '../../types';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 type ShareSheetProps = Pick<
   WinOverlayPresentation,

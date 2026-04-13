@@ -1,8 +1,10 @@
-import classNames from 'classnames/bind';
 import { ButtonHTMLAttributes, PropsWithChildren } from 'react';
 import styles from './styles.module.scss';
+import { createCx } from '@/utils';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
+
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 
 type ButtonProps = PropsWithChildren<
   Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'disabled'> & {
@@ -10,6 +12,7 @@ type ButtonProps = PropsWithChildren<
     isIcon?: boolean;
     isActive?: boolean;
     isDisabled?: boolean;
+    variant?: ButtonVariant;
   }
 >;
 
@@ -19,6 +22,7 @@ const Button = (props: ButtonProps) => {
     isIcon,
     isActive,
     isDisabled,
+    variant,
     onClick,
     children,
     ...buttonProps
@@ -29,10 +33,11 @@ const Button = (props: ButtonProps) => {
       {...buttonProps}
       className={cx(
         'button',
-        'solid',
+        !variant && 'solid',
         isIcon && 'icon',
         isActive && 'active',
         !isActive && isDisabled && 'disabled',
+        variant,
         className,
       )}
       onClick={!isDisabled ? onClick : undefined}

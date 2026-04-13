@@ -1,9 +1,9 @@
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 import WinDialog from './components/WinDialog';
 import { useWinOverlay } from './hooks/useWinOverlay';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const WinOverlay = () => {
   const { gameStatus, presentation, setConfettiCanvas } = useWinOverlay();

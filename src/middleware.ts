@@ -1,6 +1,9 @@
 import ROUTES from '@/config/routes.json';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
+import type { Database } from '@/types/supabase';
+import { getSupabaseAnonKey, getSupabaseUrl } from '@/utils/supabase/env';
 
 // 🚨 List the paths that should be hidden/inaccessible
 const HIDDEN_ROUTES: string[] = [
@@ -9,7 +12,9 @@ const HIDDEN_ROUTES: string[] = [
   ROUTES.TERMS_OF_SERVICE,
 ];
 
-export function middleware(request: NextRequest) {
+const PROTECTED_ROUTES: string[] = [ROUTES.ACCOUNT];
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (HIDDEN_ROUTES.includes(pathname)) {
@@ -18,7 +23,49 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  return NextResponse.next();
+  const supabaseUrl = getSupabaseUrl();
+  const supabaseAnonKey = getSupabaseAnonKey();
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return NextResponse.next();
+  }
+
+  let response = NextResponse.next({
+    request,
+  });
+
+  const supabase = createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) => {
+          request.cookies.set(name, value);
+        });
+
+        response = NextResponse.next({
+          request,
+        });
+
+        cookiesToSet.forEach(({ name, value, options }) => {
+          response.cookies.set(name, value, options);
+        });
+      },
+    },
+  });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user && PROTECTED_ROUTES.includes(pathname)) {
+    const loginUrl = new URL(ROUTES.LOGIN, request.url);
+
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return response;
 }
 
 // 🌐 Configuration: Define which paths the middleware should run on.

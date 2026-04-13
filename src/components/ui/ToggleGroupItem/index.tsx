@@ -1,6 +1,6 @@
 import { ToggleGroup } from 'radix-ui';
-import classNames from 'classnames/bind';
 import type { ReactNode } from 'react';
+import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
   className?: string;
 };
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const ToggleGroupItem = ({
   value,

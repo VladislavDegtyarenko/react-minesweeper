@@ -1,8 +1,8 @@
 import styles from './styles.module.scss';
-import classNames from 'classnames/bind';
 import ExternalLinkIcon from '@/assets/ExternalLinkIcon';
+import { createCx } from '@/utils';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const Footer = () => {
   return (

@@ -1,10 +1,10 @@
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import { togglePause } from '@/store/game/actions';
 import { useSettingsStore } from '@/store/settings';
 import { selectIsTouchScreen } from '@/store/settings/selectors';
 import styles from './styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const PauseOverlay = () => {
   const isTouchScreen = useSettingsStore(selectIsTouchScreen);

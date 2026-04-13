@@ -1,0 +1,43 @@
+// Shared form field mixins — used by AccountPage and AuthPage.
+// Output properties only (no selector wrapper), so each module
+// controls its own scoped class name.
+
+@mixin field($input-bg: var(--surface-1)) {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  span {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+  }
+
+  input,
+  select {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-button);
+    background-color: $input-bg;
+    color: var(--text-primary);
+    font-size: 1rem;
+    outline: none;
+  }
+
+  input:focus,
+  select:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px var(--accent-tint);
+  }
+
+  input:disabled {
+    color: var(--text-muted);
+  }
+}
+
+@mixin field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}

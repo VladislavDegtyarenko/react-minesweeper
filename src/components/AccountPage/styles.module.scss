@@ -1,0 +1,53 @@
+@use '../../styles/form' as form;
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: var(--space-2);
+}
+
+.section {
+  background-color: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-popover);
+  padding: var(--space-2);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fieldGrid {
+  @include form.field-grid;
+}
+
+.field {
+  @include form.field(var(--surface-1));
+}
+
+.notice,
+.errorText,
+.successText {
+  margin: 0;
+}
+
+.notice {
+  color: var(--text-secondary);
+}
+
+.errorText {
+  color: var(--danger);
+}
+
+.successText {
+  color: var(--green);
+}
+
+@media screen and (max-width: 900px) {
+  .layout,
+  .fieldGrid {
+    grid-template-columns: 1fr;
+  }
+}

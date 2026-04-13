@@ -1,4 +1,4 @@
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import { Popover } from 'radix-ui';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import styles from './styles.module.scss';
@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useSettingsStore } from '@/store/settings';
 import { selectIsTouchScreen } from '@/store/settings/selectors';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 type InfoItem = {
   title: string;

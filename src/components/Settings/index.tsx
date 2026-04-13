@@ -14,9 +14,10 @@ import {
 } from '@/store/settings/selectors';
 import Button from '../ui/Button';
 
+import { createCx } from '@/utils';
 import styles from './styles.module.scss';
-import classNames from 'classnames/bind';
-const cx = classNames.bind(styles);
+
+const cx = createCx(styles);
 
 const SETTINGS_LABEL = 'Settings';
 

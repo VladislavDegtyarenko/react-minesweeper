@@ -1,0 +1,46 @@
+@use '../../styles/form' as form;
+
+.setupNotice,
+.footerText,
+.errorText,
+.successText {
+  margin: 0;
+}
+
+.setupNotice,
+.errorText {
+  color: var(--danger);
+}
+
+.successText {
+  color: var(--green);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fieldGrid {
+  @include form.field-grid;
+}
+
+.field {
+  @include form.field(var(--surface-3));
+}
+
+.footerText {
+  margin-top: var(--space-2);
+  color: var(--text-secondary);
+
+  a {
+    color: var(--text-primary);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .fieldGrid {
+    grid-template-columns: 1fr;
+  }
+}

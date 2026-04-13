@@ -1,0 +1,146 @@
+.drawerOverlay {
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(16, 22, 34, 0.22), rgba(16, 22, 34, 0.7)),
+    rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 160ms ease;
+  z-index: 72;
+}
+
+.drawerContent {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  bottom: 10px;
+  width: min(360px, calc(100vw - 20px));
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(77, 163, 255, 0.12),
+      transparent 34%
+    ),
+    rgba(21, 28, 43, 0.98);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+  animation: drawerEnter 190ms ease forwards;
+  z-index: 73;
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title,
+.subtitle,
+.sectionLabel {
+  margin: 0;
+}
+
+.title {
+  font-size: 1.2rem;
+}
+
+.subtitle {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.closeButton {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background-color: rgba(26, 34, 51, 0.84);
+  cursor: pointer;
+
+  span {
+    position: absolute;
+    top: 18px;
+    left: 9px;
+    width: 20px;
+    height: 2px;
+    border-radius: 999px;
+    background-color: var(--text-primary);
+  }
+
+  span:first-child {
+    transform: rotate(45deg);
+  }
+
+  span:last-child {
+    transform: rotate(-45deg);
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.authSection {
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  // margin-top: auto;
+}
+
+.sectionLabel {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listLink {
+  min-height: 48px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 18px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background-color: rgba(26, 34, 51, 0.82);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drawerEnter {
+  from {
+    opacity: 0;
+    transform: translateX(18px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}

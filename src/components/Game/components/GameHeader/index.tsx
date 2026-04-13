@@ -1,4 +1,4 @@
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import { useGameStore } from '@/store/game';
 import { startNewGame, restartGame, togglePause } from '@/store/game/actions';
 import { selectGameStatus } from '@/store/game/selectors';
@@ -8,7 +8,7 @@ import GameStatus from '../GameStatus';
 import TimerDisplay from '../TimerDisplay';
 import styles from './styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const GameHeader = () => {
   const gameStatus = useGameStore(selectGameStatus);

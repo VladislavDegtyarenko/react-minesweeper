@@ -1,4 +1,3 @@
-import classNames from 'classnames/bind';
 import Board from './components/Board';
 import GameHeader from './components/GameHeader';
 import LevelChangeDialog from './components/LevelChangeDialog';
@@ -13,8 +12,9 @@ import { setIsWinDialogOpen } from '@/store/stats/actions';
 import { useSettingsStore } from '@/store/settings';
 import { useGameStore } from '@/store/game';
 import { selectIsGameLost } from '@/store/game/selectors';
+import { createCx } from '@/utils';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const Game = () => {
   const isGameLost = useGameStore(selectIsGameLost);

@@ -1,9 +1,9 @@
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import { useTimerStore } from '@/store/timer';
 import { selectTimeDiff } from '@/store/timer/selectors';
 import styles from './styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const TimerDisplay = () => {
   const timeDiff = useTimerStore(selectTimeDiff);

@@ -3,12 +3,12 @@ import { setDigFlag } from '@/store/settings/actions';
 import { selectControlMode, selectDigFlag } from '@/store/settings/selectors';
 import ToggleGroup from '@/components/ui/ToggleGroup';
 import ToggleGroupItem from '@/components/ui/ToggleGroupItem';
-import classNames from 'classnames/bind';
 import { useIsMobileViewport } from '@/hooks';
 import type { ReactNode } from 'react';
+import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const DIG_FLAG_LABEL = 'Mode';
 const DIG_FLAG_OPTIONS: { value: DigFlag; label: string; icon: ReactNode }[] = [

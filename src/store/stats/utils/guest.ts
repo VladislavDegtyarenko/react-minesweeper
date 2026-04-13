@@ -1,8 +1,7 @@
 import { LOCAL_STORAGE_KEYS } from '@/constants';
 import type { LevelId } from '@/types';
 import { localStorageService } from '@/utils';
-import type { BestTimesByLevel } from './types';
-import { useStatsStore } from './store';
+import type { BestTimesByLevel } from '../types';
 
 const BEST_TIME_LEVEL_IDS: ReadonlyArray<LevelId> = [
   'easy',
@@ -10,29 +9,17 @@ const BEST_TIME_LEVEL_IDS: ReadonlyArray<LevelId> = [
   'expert',
 ];
 
+const isValidBestTime = (value: unknown): value is number => {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
+};
+
 export const createEmptyBestTimes = (): BestTimesByLevel => ({
   easy: null,
   medium: null,
   expert: null,
 });
 
-export const clearLastWinSummary = () => {
-  useStatsStore.setState({
-    hasPresentedWinDialog: false,
-    isWinDialogOpen: false,
-    lastWinSummary: null,
-  });
-};
-
-const isValidBestTime = (value: unknown): value is number => {
-  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
-};
-
-export const normalizeElapsedMs = (elapsedMs: number) => {
-  return Math.max(0, Math.round(elapsedMs));
-};
-
-export const getStoredBestTimes = (): BestTimesByLevel => {
+export const getStoredGuestBestTimes = (): BestTimesByLevel => {
   const storedBestTimes = localStorageService.get<unknown>(
     LOCAL_STORAGE_KEYS.bestTimes,
   );
@@ -51,4 +38,8 @@ export const getStoredBestTimes = (): BestTimesByLevel => {
   }
 
   return bestTimes;
+};
+
+export const persistGuestBestTimes = (bestTimesByLevel: BestTimesByLevel) => {
+  localStorageService.set(LOCAL_STORAGE_KEYS.bestTimes, bestTimesByLevel);
 };

@@ -1,6 +1,5 @@
 // Core
 import { memo } from 'react';
-import classNames from 'classnames/bind';
 import { useShallow } from 'zustand/react/shallow';
 import { CELL_NUMBERS_COLORS, CELL_MARKERS } from '@/constants';
 import type { OpenedMineCell } from '@/types';
@@ -9,8 +8,9 @@ import styles from './styles.module.scss';
 import { AnimatePresence, motion } from 'framer-motion';
 import { selectZoom } from '@/store/settings/selectors';
 import { useSettingsStore } from '@/store/settings';
+import { createCx } from '@/utils';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 type Props = {
   rowIndex: number;

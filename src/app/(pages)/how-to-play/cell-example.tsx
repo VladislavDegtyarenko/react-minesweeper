@@ -1,7 +1,7 @@
-import classNames from 'classnames/bind';
 import styles from './cell-example.module.scss';
+import { createCx } from '@/utils';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 type Props = {
   variant: 'safe' | 'mine' | 'flag' | 'question';

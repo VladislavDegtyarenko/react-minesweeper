@@ -1,5 +1,4 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import classNames from 'classnames/bind';
 import Button from '@/components/ui/Button';
 import { useGameStore } from '@/store/game';
 import {
@@ -7,9 +6,10 @@ import {
   confirmLevelChange,
 } from '@/store/game/actions';
 import { LEVELS_CONFIG } from '@/constants';
+import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const TITLE = 'Change difficulty?';
 const DESCRIPTION =
