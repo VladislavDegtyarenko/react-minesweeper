@@ -1,7 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
 import ROUTES from '@/config/routes.json';
 import { useAuthStore } from '@/store/auth';
 import {
@@ -10,8 +8,14 @@ import {
   signUpWithEmail,
   updatePassword,
 } from '@/utils/supabase';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useEffect, useState } from 'react';
 
-export type AuthPageMode = 'login' | 'signup' | 'forgot-password' | 'reset-password';
+export type AuthPageMode =
+  | 'login'
+  | 'signup'
+  | 'forgot-password'
+  | 'reset-password';
 
 export const AUTH_PAGE_COPY: Record<
   AuthPageMode,
@@ -70,6 +74,7 @@ export function useAuthPage(mode: AuthPageMode) {
         await signInWithEmail({ email, password });
         router.push(ROUTES.ACCOUNT);
         router.refresh();
+
         return;
       }
 
@@ -85,24 +90,29 @@ export function useAuthPage(mode: AuthPageMode) {
         setSubmitMessage(
           'Check your email to verify your account. You are not logged in yet — come back after confirming.',
         );
+        setIsSubmitting(false);
+
         return;
       }
 
       if (mode === 'forgot-password') {
         await requestPasswordReset(email);
         setSubmitMessage('Password reset email sent.');
+        setIsSubmitting(false);
+
         return;
       }
 
       await updatePassword(password);
-      setSubmitMessage('Password updated. You can continue using your account.');
+      setSubmitMessage(
+        'Password updated. You can continue using your account.',
+      );
       router.push(ROUTES.ACCOUNT);
       router.refresh();
     } catch (error) {
       setSubmitError(
         error instanceof Error ? error.message : 'Something went wrong.',
       );
-    } finally {
       setIsSubmitting(false);
     }
   };
