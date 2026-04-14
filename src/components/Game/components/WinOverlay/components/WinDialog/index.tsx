@@ -1,10 +1,10 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import ShareSheet from '../ShareSheet';
 import styles from './styles.module.scss';
 import type { WinOverlayPresentation } from '../../types';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 type WinDialogProps = Pick<
   WinOverlayPresentation,

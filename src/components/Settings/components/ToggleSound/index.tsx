@@ -1,10 +1,10 @@
 import Switch from '@/components/ui/Switch';
 import { useSFXStore } from '@/store/sfx';
 import { setMuteSFX } from '@/store/sfx/actions';
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import styles from '../styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const SOUND_LABEL = 'Sound';
 const SOUND_SWITCH_ARIA_LABEL = 'Sound';

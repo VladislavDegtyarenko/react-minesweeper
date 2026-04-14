@@ -1,8 +1,10 @@
 export { revealBoard } from './board/revealBoard';
 export { revealEmptyCells } from './board/revealEmptyCells';
 export { checkGameWin } from './checkGameWin';
+export { createCx } from './createCx';
 export { debounce } from './debounce';
 export { deepClone } from './deepClone';
+export { formatDate } from './formatDate';
 export { getTimeDiff } from './getTimeDiff';
 export { initBoard, initGame } from './init';
 export { isBrowser } from './isBrowser';

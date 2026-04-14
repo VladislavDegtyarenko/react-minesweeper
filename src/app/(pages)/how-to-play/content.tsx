@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import classNames from 'classnames/bind';
 import ROUTES from '@/config/routes.json';
+import { createCx } from '@/utils';
 import CellExample from './cell-example';
 import NumberClueDemo from './number-clue-demo';
 import styles from './content.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const DIFFICULTY_ROWS = [
   { name: 'Easy', board: '9 x 9', mines: '10', recommendedFor: 'New players' },

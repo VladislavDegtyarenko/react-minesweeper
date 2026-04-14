@@ -1,5 +1,11 @@
 {
   "GAME": "/",
+  "LEADERBOARD": "/leaderboard",
+  "LOGIN": "/login",
+  "SIGNUP": "/signup",
+  "FORGOT_PASSWORD": "/forgot-password",
+  "RESET_PASSWORD": "/reset-password",
+  "ACCOUNT": "/account",
   "HOW_TO_PLAY": "/how-to-play",
   "PRIVACY": "/privacy",
   "TERMS_OF_SERVICE": "/terms-of-service",

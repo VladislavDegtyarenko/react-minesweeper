@@ -1,7 +1,7 @@
-import classNames from 'classnames/bind';
 import styles from './number-clue-demo.module.scss';
+import { createCx } from '@/utils';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const CELLS = [
   { kind: 'mine' },

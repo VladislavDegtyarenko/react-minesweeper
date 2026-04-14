@@ -1,4 +1,3 @@
-import classNames from 'classnames/bind';
 import { memo } from 'react';
 import { LEVELS_CONFIG } from '@/constants';
 import type { LevelId } from '@/types';
@@ -7,9 +6,10 @@ import { requestLevelChange } from '@/store/game/actions';
 import ToggleGroup from '@/components/ui/ToggleGroup';
 import ToggleGroupItem from '@/components/ui/ToggleGroupItem';
 import { useIsMobileViewport } from '@/hooks';
+import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const LEVEL_TOGGLE_LABEL = 'Difficulty';
 const LEVEL_OPTIONS = LEVELS_CONFIG.map((level) => ({

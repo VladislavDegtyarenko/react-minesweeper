@@ -2,6 +2,7 @@
 import '@/index.css';
 
 import { generateMetadata } from '../utils/seo';
+import AuthProvider from '@/components/AuthProvider';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { PropsWithChildren } from 'react';
@@ -17,11 +18,13 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html lang="en">
       <body>
         <div id="root">
-          <Header />
+          <AuthProvider>
+            <Header />
 
-          {children}
+            {children}
 
-          <Footer />
+            <Footer />
+          </AuthProvider>
         </div>
       </body>
     </html>

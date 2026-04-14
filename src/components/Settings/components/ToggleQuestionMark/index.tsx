@@ -6,10 +6,10 @@ import {
   selectIsQuestionMarkEnabled,
   selectIsTouchScreen,
 } from '@/store/settings/selectors';
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import styles from '../styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const QUESTION_MARK_OPTION_LABELS = {
   On: 'On',

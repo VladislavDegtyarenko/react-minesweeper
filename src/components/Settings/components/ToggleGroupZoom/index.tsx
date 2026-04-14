@@ -6,10 +6,10 @@ import { ZOOM_OPTIONS } from '@/store/settings/constants';
 
 import ToggleGroup from '@/components/ui/ToggleGroup';
 import ToggleGroupItem from '@/components/ui/ToggleGroupItem';
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import styles from '../styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const ToggleGroupZoom = () => {
   const zoom = useSettingsStore(selectZoom);

@@ -1,4 +1,3 @@
-import classNames from 'classnames/bind';
 import styles from './styles.module.scss';
 import type {
   ComponentPropsWithoutRef,
@@ -6,7 +5,9 @@ import type {
   ReactNode,
 } from 'react';
 import ToggleGroupRoot from '../ToggleGroupRoot';
-const cx = classNames.bind(styles);
+import { createCx } from '@/utils';
+
+const cx = createCx(styles);
 
 type RootProps = ComponentPropsWithoutRef<typeof ToggleGroupRoot>;
 

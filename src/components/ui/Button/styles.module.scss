@@ -70,3 +70,35 @@
   user-select: none;
   pointer-events: none;
 }
+
+// Text button variants — override the default icon-button sizing
+.primary,
+.secondary,
+.ghost,
+.danger {
+  width: auto;
+  height: auto;
+  min-height: 44px;
+  padding: 0 14px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.primary {
+  border: 0;
+  background: linear-gradient(135deg, var(--accent-blue), #7bc1ff);
+  color: #08111d;
+}
+
+.secondary,
+.ghost {
+  border: 1px solid var(--border);
+  background-color: var(--surface-1);
+  color: var(--text-primary);
+}
+
+.danger {
+  background: linear-gradient(180deg, rgba(225, 87, 89, 0.24) 0%, rgba(225, 87, 89, 0.14) 100%);
+  border: 1px solid rgba(225, 87, 89, 0.44);
+  color: #ffdede;
+}

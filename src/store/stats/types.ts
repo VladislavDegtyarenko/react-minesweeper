@@ -10,9 +10,13 @@ export type LastWinSummary = {
   isNewBest: boolean;
 };
 
+export type ScoreSource = 'guest' | 'account';
+
 export type StatsState = {
   bestTimesByLevel: BestTimesByLevel;
+  guestBestTimesByLevel: BestTimesByLevel;
   hasPresentedWinDialog: boolean;
   isWinDialogOpen: boolean;
   lastWinSummary: LastWinSummary | null;
+  scoreSource: ScoreSource;
 };

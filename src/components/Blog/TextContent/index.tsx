@@ -1,6 +1,7 @@
 import styles from './styles.module.scss';
-import classNames from 'classnames/bind';
-const cx = classNames.bind(styles);
+import { createCx } from '@/utils';
+
+const cx = createCx(styles);
 
 const TextContent = ({ children }: { children: React.ReactNode }) => {
   return <div className={cx('textContent')}>{children}</div>;

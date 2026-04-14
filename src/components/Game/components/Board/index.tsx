@@ -1,6 +1,5 @@
 import { CSSProperties, memo, PointerEvent, MouseEvent } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import classNames from 'classnames/bind';
 import { useGameStore } from '@/store/game';
 import {
   selectIsLevelChangeDialogOpen,
@@ -9,12 +8,12 @@ import {
 import { selectZoom } from '@/store/settings/selectors';
 import { useSettingsStore } from '@/store/settings';
 import { handleCellInteraction } from '@/utils/board';
-import { throttle } from '@/utils';
+import { createCx, throttle } from '@/utils';
 import Row from '../Row';
 import PauseOverlay from '../PauseOverlay';
 import styles from './styles.module.scss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 const CELL_SELECTOR = '[data-cell]';
 
 const Board = () => {

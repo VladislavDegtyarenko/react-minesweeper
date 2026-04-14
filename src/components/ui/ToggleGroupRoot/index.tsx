@@ -1,9 +1,9 @@
 import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
-import classNames from 'classnames/bind';
 import styles from './styles.module.scss';
+import { createCx } from '@/utils';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 type RootProps = ComponentPropsWithoutRef<typeof RadixToggleGroup.Root>;
 

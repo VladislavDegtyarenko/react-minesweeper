@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import classNames from 'classnames/bind';
+import { createCx } from '@/utils';
 import { useGameStore } from '@/store/game';
 import { selectGameStatus, selectMinesLeft } from '@/store/game/selectors';
 import styles from './styles.module.scss';
@@ -8,7 +8,7 @@ import Win from '@/assets/themes/blue-graphite/icons/Win';
 import { useIsMobileViewport } from '@/hooks';
 import Loss from '@/assets/themes/blue-graphite/icons/Loss';
 
-const cx = classNames.bind(styles);
+const cx = createCx(styles);
 
 const GameStatus = memo(() => {
   const gameStatus = useGameStore(selectGameStatus);
