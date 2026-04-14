@@ -7,7 +7,11 @@ import {
 import { useAuthStore } from '@/store/auth';
 import { resetLeaderboardStore } from '@/store/leaderboard';
 import type { LevelId } from '@/types';
-import { fetchUserBestScores, upsertBestScore } from '@/utils/supabase';
+import {
+  fetchUserBestScores,
+  getCurrentSession,
+  upsertBestScore,
+} from '@/utils/supabase';
 import { useStatsStore } from './store';
 import {
   createEmptyBestTimes,
@@ -183,9 +187,11 @@ export const handleCompletedGameWin = async (
   elapsedMs: number,
 ) => {
   const { user } = useAuthStore.getState();
+  const session = await getCurrentSession();
 
-  if (!user) {
+  if (!user || !session) {
     recordGuestBestTime(levelId, elapsedMs);
+
     return;
   }
 
