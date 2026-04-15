@@ -124,7 +124,7 @@ export const uploadAccountAvatar = async (
   });
 
   try {
-    const nextAvatarPath = await uploadAvatar(userId, file);
+    const nextAvatarPath = await uploadAvatar(file);
     const nextProfile = await upsertOwnProfile(userId, {
       avatar_path: nextAvatarPath,
     });

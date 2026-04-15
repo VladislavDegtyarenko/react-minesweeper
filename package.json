@@ -23,7 +23,9 @@
     "radix-ui": "^1.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^5.5.7",
     "sass": "^1.97.2",
+    "sharp": "^0.34.5",
     "zustand": "^5.0.9"
   },
   "devDependencies": {
