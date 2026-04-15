@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import { MAX_IMAGE_FILE_SIZE_BYTES } from '@/utils/image';
 import { createCx } from '@/utils';
 import styles from './styles.module.scss';
+import { useSettingsStore } from '@/store/settings';
+import { selectIsTouchScreen } from '@/store/settings/selectors';
 
 const cx = createCx(styles);
 
@@ -14,6 +16,7 @@ const DropZone = ({ onFileSelect, error }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [sizeError, setSizeError] = useState<string | null>(null);
+  const isTouchScreen = useSettingsStore(selectIsTouchScreen);
 
   const handleFiles = (files: FileList | null) => {
     const file = files?.[0];
@@ -73,7 +76,9 @@ const DropZone = ({ onFileSelect, error }: Props) => {
         <polyline points="17 8 12 3 7 8" />
         <line x1="12" y1="3" x2="12" y2="15" />
       </svg>
-      <p className={cx('label')}>Click to upload or drag and drop</p>
+      <p className={cx('label')}>
+        {isTouchScreen ? 'Tap to upload' : 'Click to upload or drag and drop'}
+      </p>
       <p className={cx('hint')}>JPEG, PNG or WebP · Max 4 MB</p>
       {sizeError ? <p className={cx('error')}>{sizeError}</p> : null}
       {!sizeError && error ? <p className={cx('error')}>{error}</p> : null}
