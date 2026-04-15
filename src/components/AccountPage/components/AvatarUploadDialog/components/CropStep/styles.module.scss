@@ -1,0 +1,11 @@
+.cropContainer {
+  position: relative;
+  height: 300px;
+  border-radius: var(--radius-popover);
+  overflow: hidden;
+  background-color: #000;
+
+  @media screen and (max-width: 600px) {
+    height: 50vh;
+  }
+}

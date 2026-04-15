@@ -14,21 +14,12 @@
 
 .avatarActions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
 }
 
-// Label wrapping a hidden file input — visually matches the secondary Button variant
-.uploadLabel {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0 14px;
-  border-radius: var(--radius-button);
-  border: 1px solid var(--border);
-  background-color: var(--surface-1);
-  color: var(--text-primary);
-  font-weight: 600;
-  cursor: pointer;
+.avatarButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }

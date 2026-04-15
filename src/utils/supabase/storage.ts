@@ -1,3 +1,4 @@
+import { validateImage } from '../image';
 import { SUPABASE_AVATAR_BUCKET } from './constants';
 import { getSupabaseBrowserClient } from './client';
 
@@ -19,26 +20,23 @@ export const getAvatarPublicUrl = (avatarPath: string | null) => {
   return publicUrl;
 };
 
-export const uploadAvatar = async (userId: string, file: File) => {
-  const supabase = getSupabaseBrowserClient();
+export const uploadAvatar = async (file: File): Promise<string> => {
+  validateImage(file);
 
-  if (!supabase) {
-    throw new Error('Supabase is not configured.');
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch('/api/account/avatar', {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    throw new Error((body as { error?: string }).error ?? 'Failed to upload avatar.');
   }
 
-  const extension = file.name.split('.').pop()?.toLowerCase() || 'png';
-  const avatarPath = `${userId}/avatar-${Date.now()}.${extension}`;
-
-  const { error } = await supabase.storage
-    .from(SUPABASE_AVATAR_BUCKET)
-    .upload(avatarPath, file, {
-      cacheControl: '3600',
-      upsert: true,
-    });
-
-  if (error) {
-    throw error;
-  }
+  const { avatarPath } = (await response.json()) as { avatarPath: string };
 
   return avatarPath;
 };

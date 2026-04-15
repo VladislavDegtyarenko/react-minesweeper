@@ -104,11 +104,8 @@ export function useAccountPage() {
     }
 
     setSuccessMessage(null);
-
-    try {
-      await uploadAccountAvatar(user.id, file, profile?.avatar_path ?? null);
-      setSuccessMessage('Avatar updated.');
-    } catch {}
+    await uploadAccountAvatar(user.id, file, profile?.avatar_path ?? null);
+    setSuccessMessage('Avatar updated.');
   };
 
   const handleAvatarRemove = async () => {

@@ -124,7 +124,7 @@ export const uploadAccountAvatar = async (
   });
 
   try {
-    const nextAvatarPath = await uploadAvatar(userId, file);
+    const nextAvatarPath = await uploadAvatar(file);
     const nextProfile = await upsertOwnProfile(userId, {
       avatar_path: nextAvatarPath,
     });
@@ -142,11 +142,7 @@ export const uploadAccountAvatar = async (
 
     return nextProfile;
   } catch (error) {
-    useAccountStore.setState({
-      errorMessage:
-        error instanceof Error ? error.message : 'Failed to update avatar.',
-      updateProfileLoadingState: 'error',
-    });
+    useAccountStore.setState({ updateProfileLoadingState: 'error' });
     throw error;
   }
 };
@@ -176,11 +172,7 @@ export const removeAccountAvatar = async (
 
     return nextProfile;
   } catch (error) {
-    useAccountStore.setState({
-      errorMessage:
-        error instanceof Error ? error.message : 'Failed to remove avatar.',
-      updateProfileLoadingState: 'error',
-    });
+    useAccountStore.setState({ updateProfileLoadingState: 'error' });
     throw error;
   }
 };

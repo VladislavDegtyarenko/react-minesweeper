@@ -4,13 +4,14 @@ import Button from '@/components/ui/Button';
 import { getAvatarPublicUrl } from '@/utils/supabase';
 import { createCx } from '@/utils';
 import styles from './styles.module.scss';
+import AvatarUploadDialog from '../AvatarUploadDialog';
 
 const cx = createCx(styles);
 
 type Props = {
   nickname: string;
   isSaving: boolean;
-  onAvatarUpload: (file: File) => void;
+  onAvatarUpload: (file: File) => Promise<void>;
   onAvatarRemove: () => void;
 };
 
@@ -28,29 +29,17 @@ const AvatarManagement = ({ nickname, isSaving, onAvatarUpload, onAvatarRemove }
         label={nickname || user?.email || 'A'}
       />
       <div className={cx('avatarActions')}>
-        <label className={cx('uploadLabel')}>
-          Upload Avatar
-          <input
-            accept="image/*"
-            hidden
-            type="file"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                onAvatarUpload(file);
-              }
-              e.target.value = '';
-            }}
-          />
-        </label>
-        <Button
-          variant="ghost"
-          isDisabled={!profile?.avatar_path || isSaving}
-          type="button"
-          onClick={onAvatarRemove}
-        >
-          Remove
-        </Button>
+        <div className={cx('avatarButtons')}>
+          <AvatarUploadDialog onUpload={onAvatarUpload} isSaving={isSaving} />
+          <Button
+            variant="ghost"
+            isDisabled={!profile?.avatar_path || isSaving}
+            type="button"
+            onClick={onAvatarRemove}
+          >
+            Remove
+          </Button>
+        </div>
       </div>
     </div>
   );
