@@ -1,5 +1,4 @@
 import { createCx } from '@/utils';
-import { startNewGame } from '@/store/game/actions';
 import Button from '@/components/ui/Button';
 import Settings from '@/components/Settings';
 import GameStatus from '../GameStatus';
@@ -7,6 +6,7 @@ import TimerDisplay from '../TimerDisplay';
 import styles from './styles.module.scss';
 import TogglePauseButton from './components/TogglePauseButton';
 import RestartButton from './components/RestartButton';
+import StartNewGameButton from './components/StartNewGameButton';
 
 const cx = createCx(styles);
 
@@ -18,13 +18,7 @@ const GameHeader = () => {
       </div>
       <div className={cx('headerButtons')}>
         <TogglePauseButton />
-        <Button
-          onClick={startNewGame}
-          title="Start new game"
-          className={cx('controlButton')}
-        >
-          <img src="/themes/blue-graphite/icons/Bomb.png" alt="New game" />
-        </Button>
+        <StartNewGameButton />
         <RestartButton />
       </div>
       <div className={cx('toolbarRight')}>

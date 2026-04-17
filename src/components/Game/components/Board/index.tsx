@@ -12,11 +12,12 @@ import { createCx, throttle } from '@/utils';
 import Row from '../Row';
 import PauseOverlay from '../PauseOverlay';
 import styles from './styles.module.scss';
+import BoardWrapper from './BoardWrapper';
 
 const cx = createCx(styles);
 const CELL_SELECTOR = '[data-cell]';
 
-const Board = () => {
+const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
   const { rows, gameStatus } = useGameStore(
     useShallow((state) => ({
       rows: state.level.rows,
@@ -93,28 +94,30 @@ const Board = () => {
   };
 
   return (
-    <div
-      className={cx('boardScrollable', 'board')}
-      style={
-        {
-          '--cell-size': `${2.125 * zoom}rem`,
-        } as CSSProperties
-      }
-      onPointerDown={onPointerEvent}
-      onPointerUp={onPointerEvent}
-      onPointerMove={
-        gameStatus === 'playing' || gameStatus === 'idle'
-          ? throttledPointerMove
-          : undefined
-      }
-      onContextMenu={onContextMenu}
-    >
-      {Array.from({ length: rows }, (_, rowIndex) => (
-        <Row rowIndex={rowIndex} key={rowIndex} />
-      ))}
+    <BoardWrapper gameFooterHeight={gameFooterHeight}>
+      <div
+        className={cx('boardScrollable', 'board')}
+        style={
+          {
+            '--cell-size': `${2.125 * zoom}rem`,
+          } as CSSProperties
+        }
+        onPointerDown={onPointerEvent}
+        onPointerUp={onPointerEvent}
+        onPointerMove={
+          gameStatus === 'playing' || gameStatus === 'idle'
+            ? throttledPointerMove
+            : undefined
+        }
+        onContextMenu={onContextMenu}
+      >
+        {Array.from({ length: rows }, (_, rowIndex) => (
+          <Row rowIndex={rowIndex} key={rowIndex} />
+        ))}
 
-      {shouldShowPauseOverlay && <PauseOverlay />}
-    </div>
+        {shouldShowPauseOverlay && <PauseOverlay />}
+      </div>
+    </BoardWrapper>
   );
 };
 

@@ -32,22 +32,6 @@
   overflow: hidden;
 }
 
-.boardArea {
-  padding: var(--space-2);
-  padding-bottom: var(--space-1);
-  display: flex;
-  justify-content: center;
-  --game-header-height: 67px;
-  --game-footer-height: 0px; // changed in JSX if Dig/Flag buttons are visible
-  max-height: calc(
-    100% - var(--game-footer-height) - var(--game-header-height)
-  );
-
-  &.no-pointer-events {
-    pointer-events: none;
-  }
-}
-
 .footerArea {
   padding: var(--space-1) var(--space-2) var(--space-2);
   display: flex;
