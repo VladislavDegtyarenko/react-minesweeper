@@ -1,21 +1,41 @@
 import { CELL_MARKERS } from '@/constants';
-import { type TBoard } from '../../types';
+import type { BoardState } from './types';
 
-export const revealBoard = (board: TBoard, highlightWin?: boolean) => {
-  board.forEach((row) => {
-    row.forEach((cell) => {
-      if (cell.value === 'mine') {
-        // Open non-flagged mines
+type RevealBoardBoard = Pick<
+  BoardState,
+  'highlights' | 'incorrectFlags' | 'markers' | 'mines' | 'opened'
+>;
 
-        if (cell.marker !== CELL_MARKERS.FLAG) {
-          cell.isOpened = true;
-        }
+export const revealBoard = (
+  board: RevealBoardBoard,
+  options?: {
+    highlightWin?: boolean;
+    markIncorrectFlags?: boolean;
+  },
+) => {
+  const touchedIndexes: number[] = [];
+  const { highlightWin = false, markIncorrectFlags = false } = options ?? {};
 
-        if (highlightWin) {
-          // Highlight all mines on win
-          cell.highlight = 'green';
-        }
+  for (let index = 0; index < board.mines.length; index++) {
+    if (board.mines[index]) {
+      if (board.markers[index] !== CELL_MARKERS.FLAG) {
+        board.opened[index] = true;
       }
-    });
-  });
+
+      if (highlightWin) {
+        board.highlights[index] = 'green';
+      }
+
+      touchedIndexes.push(index);
+
+      continue;
+    }
+
+    if (markIncorrectFlags && board.markers[index] === CELL_MARKERS.FLAG) {
+      board.incorrectFlags[index] = true;
+      touchedIndexes.push(index);
+    }
+  }
+
+  return touchedIndexes;
 };

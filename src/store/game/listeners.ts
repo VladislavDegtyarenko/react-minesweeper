@@ -1,7 +1,8 @@
 import { isBrowser } from '@/utils';
 import { togglePause } from './actions';
 import { selectGameStatus } from './selectors';
-import { useGameStore, type GameState } from './store';
+import { useGameStore } from './store';
+import type { GameState } from './types';
 
 const VISIBILITY_STATE_HIDDEN = 'hidden';
 const GAME_STATUS_PLAYING = 'playing';

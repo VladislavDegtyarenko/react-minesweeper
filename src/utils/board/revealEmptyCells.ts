@@ -1,41 +1,54 @@
 import { CELL_MARKERS } from '@/constants';
-import { DIRECTIONS } from '../../constants';
-import { type TBoard } from '../../types';
+import type { BoardState } from './types';
+import { getNeighborIndexes } from './utils';
+
+type RevealEmptyCellsBoard = Pick<
+  BoardState,
+  'cols' | 'markers' | 'mines' | 'numbers' | 'opened' | 'rows'
+>;
 
 export const revealEmptyCells = (
-  board: TBoard,
-  rows: number,
-  cols: number,
-  row: number,
-  col: number,
+  board: RevealEmptyCellsBoard,
+  startIndex: number,
 ) => {
-  const queue: [number, number][] = [[row, col]]; // Queue of cell coordinates
+  const queue = [startIndex];
+  const touchedIndexes: number[] = [];
+  let headIndex = 0;
 
-  while (queue.length > 0) {
-    const [currentRow, currentCol] = queue.shift()!; // Dequeue the next cell
+  board.opened[startIndex] = true;
+  board.markers[startIndex] = null;
+  touchedIndexes.push(startIndex);
 
-    const cell = board[currentRow][currentCol];
-    cell.isOpened = true;
-    cell.marker = null;
+  while (headIndex < queue.length) {
+    const currentIndex = queue[headIndex];
+    headIndex++;
 
-    if (cell.value === 0) {
-      for (const [dRow, dCol] of DIRECTIONS) {
-        const newRow = currentRow + dRow;
-        const newCol = currentCol + dCol;
+    if (board.numbers[currentIndex] !== 0) {
+      continue;
+    }
 
-        if (
-          newRow >= 0 &&
-          newRow < rows &&
-          newCol >= 0 &&
-          newCol < cols &&
-          !board[newRow][newCol].isOpened &&
-          board[newRow][newCol].marker !== CELL_MARKERS.FLAG
-        ) {
-          queue.push([newRow, newCol]); // Add adjacent empty cells to queue
-        }
+    for (const neighborIndex of getNeighborIndexes(
+      currentIndex,
+      board.rows,
+      board.cols,
+    )) {
+      if (
+        board.mines[neighborIndex] ||
+        board.opened[neighborIndex] ||
+        board.markers[neighborIndex] === CELL_MARKERS.FLAG
+      ) {
+        continue;
+      }
+
+      board.opened[neighborIndex] = true;
+      board.markers[neighborIndex] = null;
+      touchedIndexes.push(neighborIndex);
+
+      if (board.numbers[neighborIndex] === 0) {
+        queue.push(neighborIndex);
       }
     }
   }
 
-  return board;
+  return touchedIndexes;
 };

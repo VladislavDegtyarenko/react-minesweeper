@@ -18,9 +18,10 @@ const cx = createCx(styles);
 const CELL_SELECTOR = '[data-cell]';
 
 const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
-  const { rows, gameStatus } = useGameStore(
+  const { cols, rows, gameStatus } = useGameStore(
     useShallow((state) => ({
-      rows: state.level.rows,
+      cols: state.board.cols,
+      rows: state.board.rows,
       gameStatus: state.gameStatus,
     })),
   );
@@ -112,7 +113,7 @@ const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
         onContextMenu={onContextMenu}
       >
         {Array.from({ length: rows }, (_, rowIndex) => (
-          <Row rowIndex={rowIndex} key={rowIndex} />
+          <Row rowIndex={rowIndex} cols={cols} key={rowIndex} />
         ))}
 
         {shouldShowPauseOverlay && <PauseOverlay />}

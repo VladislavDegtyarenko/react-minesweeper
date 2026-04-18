@@ -1,103 +1,88 @@
-import { DIRECTIONS } from '../constants';
-import type { GameCell, Level, TBoard } from '../types';
+import type { Level } from '@/types';
+import type { BoardLayout, BoardState } from './board/types';
+import { createCellViews, getNeighborIndexes } from './board/utils';
 
-const createBoard = (rows: number, cols: number) => {
-  const board: TBoard = [];
+const getCellCount = (rows: number, cols: number) => {
+  return rows * cols;
+};
 
-  for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
-    board[rowIndex] = [];
+const createEmptyLayout = (cellCount: number): BoardLayout => {
+  return {
+    mines: Array.from({ length: cellCount }, () => false),
+    numbers: Array.from({ length: cellCount }, () => 0),
+  };
+};
 
-    for (let cellIndex = 0; cellIndex < cols; cellIndex++) {
-      board[rowIndex][cellIndex] = {
-        value: null,
-        marker: null,
-        isOpened: false,
-      };
+export const createBoardLayout = (
+  level: Omit<Level, 'id' | 'label'>,
+  excludedIndex: number,
+): BoardLayout => {
+  const { rows, cols, totalMines } = level;
+  const cellCount = getCellCount(rows, cols);
+  const layout = createEmptyLayout(cellCount);
+  const candidates: number[] = [];
+
+  for (let index = 0; index < cellCount; index++) {
+    if (index !== excludedIndex) {
+      candidates.push(index);
     }
   }
 
-  return board;
-};
+  for (let index = 0; index < totalMines; index++) {
+    const remainingIndex =
+      index + Math.floor(Math.random() * (candidates.length - index));
+    const candidate = candidates[remainingIndex];
+    candidates[remainingIndex] = candidates[index];
+    candidates[index] = candidate;
 
-const fillBoardWithMines = (
-  board: TBoard,
-  rows: number,
-  cols: number,
-  totalMines: number,
-) => {
-  let mines = 0;
-
-  while (mines < totalMines) {
-    const row = Math.floor(Math.random() * rows);
-    const column = Math.floor(Math.random() * cols);
-
-    if (board[row][column].value !== 'mine') {
-      (board[row][column] as GameCell).value = 'mine';
-      mines++;
-    }
+    layout.mines[candidate] = true;
   }
 
-  return board;
-};
+  for (let index = 0; index < cellCount; index++) {
+    if (!layout.mines[index]) {
+      continue;
+    }
 
-const fillBoardWithNumbers = (board: TBoard) => {
-  // const finalBoard: TBoard = JSON.parse(JSON.stringify(boardWithMines));
-
-  board.forEach((row, rowIndex) => {
-    row.forEach((cell, colIndex) => {
-      if (cell.value !== 'mine') {
-        let minesAround = 0;
-
-        DIRECTIONS.forEach(([dRow, dCol]) => {
-          const newRow = rowIndex + dRow;
-          const newCol = colIndex + dCol;
-
-          if (newRow in board && newCol in board[newRow]) {
-            if (board[newRow][newCol].value === 'mine') {
-              minesAround++;
-            }
-          }
-        });
-
-        cell.value = minesAround;
+    for (const neighborIndex of getNeighborIndexes(index, rows, cols)) {
+      if (!layout.mines[neighborIndex]) {
+        layout.numbers[neighborIndex]++;
       }
-    });
-  });
+    }
+  }
 
-  return board;
+  return layout;
 };
 
-export const initBoard = (level: Omit<Level, 'id' | 'label'>) => {
-  const { rows, cols, totalMines } = level;
-
-  const emptyBoard = createBoard(rows, cols);
-  const boardWithMines = fillBoardWithMines(emptyBoard, rows, cols, totalMines);
-  const gameBoard = fillBoardWithNumbers(boardWithMines);
-
-  return gameBoard;
+type CreateBoardStateOptions = {
+  layout?: BoardLayout | null;
 };
 
-export const initGame = (level: Omit<Level, 'id' | 'label'>) => {
-  // const boardInStorage = localStorage.getItem(LOCAL_STORAGE_KEYS.gameBoard);
-  // console.log("boardInStorage: ", boardInStorage);
-
-  // if (boardInStorage) {
-  //   return JSON.parse(boardInStorage) as TBoard;
-  // }
-
-  // const screenOrientation = window.screen.orientation.type;
-  // const isPortrait = screenOrientation.includes("portrait");
-
+export const createBoardState = (
+  level: Omit<Level, 'id' | 'label'>,
+  options: CreateBoardStateOptions = {},
+): BoardState => {
   const { rows, cols, totalMines } = level;
-
-  // const totalRows = isPortrait && rows !== cols ? cols : rows;
-  // const totalCols = isPortrait && rows !== cols ? rows : cols;
-
-  return initBoard({
-    // rows: totalRows,
-    // cols: totalCols,
+  const cellCount = getCellCount(rows, cols);
+  const layout = options.layout ?? null;
+  const emptyLayout = layout ?? createEmptyLayout(cellCount);
+  const board: BoardState = {
     rows,
     cols,
     totalMines,
-  });
+    isLayoutReady: Boolean(layout),
+    mines: emptyLayout.mines,
+    numbers: emptyLayout.numbers,
+    opened: Array.from({ length: cellCount }, () => false),
+    markers: Array.from({ length: cellCount }, () => null),
+    highlights: Array.from({ length: cellCount }, () => null),
+    incorrectFlags: Array.from({ length: cellCount }, () => false),
+    openedSafeCount: 0,
+    correctFlagCount: 0,
+    flagsPlaced: 0,
+    cellViews: [],
+  };
+
+  board.cellViews = createCellViews(board);
+
+  return board;
 };

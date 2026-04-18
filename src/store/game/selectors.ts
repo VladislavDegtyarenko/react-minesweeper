@@ -1,7 +1,7 @@
-import type { GameState } from "./store";
+import type { GameState } from './types';
 
 export const selectMinesLeft = (state: GameState) =>
-  state.level.totalMines - state.totalFlags;
+  state.board.totalMines - state.board.flagsPlaced;
 
 export const selectGameStatus = (state: GameState) => state.gameStatus;
 export const selectIsLevelChangeDialogOpen = (state: GameState) =>
@@ -9,11 +9,11 @@ export const selectIsLevelChangeDialogOpen = (state: GameState) =>
 export const selectGameStatusBeforeLevelChange = (state: GameState) =>
   state.gameStatusBeforeLevelChange;
 export const selectIsGameIdle = (state: GameState) =>
-  state.gameStatus === "idle";
+  state.gameStatus === 'idle';
 export const selectIsGamePlaying = (state: GameState) =>
-  state.gameStatus === "playing";
+  state.gameStatus === 'playing';
 export const selectIsGamePaused = (state: GameState) =>
-  state.gameStatus === "paused";
-export const selectIsGameWon = (state: GameState) => state.gameStatus === "won";
+  state.gameStatus === 'paused';
+export const selectIsGameWon = (state: GameState) => state.gameStatus === 'won';
 export const selectIsGameLost = (state: GameState) =>
-  state.gameStatus === "lost";
+  state.gameStatus === 'lost';

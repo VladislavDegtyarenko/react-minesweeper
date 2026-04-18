@@ -6,7 +6,7 @@ const cx = createCx(styles);
 
 type Props = PropsWithChildren<{
   isMine: boolean;
-  highlight: 'red' | 'green' | undefined;
+  highlight: 'red' | 'green' | null;
 }>;
 
 const Overlay = ({ children, isMine, highlight }: Props) => {

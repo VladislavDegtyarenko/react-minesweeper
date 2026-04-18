@@ -1,22 +1,20 @@
-import { CELL_MARKERS } from '@/constants';
-import { TBoard } from '../types';
+import type { BoardState } from './board/types';
 
-export const checkGameWin = (board: TBoard, totalMines: number) => {
-  let unopenedCells = 0;
-  let correctlyFlaggedMines = 0;
+export const checkGameWin = (
+  board: Pick<
+    BoardState,
+    | 'cols'
+    | 'correctFlagCount'
+    | 'isLayoutReady'
+    | 'openedSafeCount'
+    | 'rows'
+    | 'totalMines'
+  >,
+) => {
+  const totalSafeCells = board.rows * board.cols - board.totalMines;
 
-  board.forEach((row) => {
-    row.forEach((cell) => {
-      if (!cell.isOpened) {
-        unopenedCells++;
-      }
-
-      if (cell.marker === CELL_MARKERS.FLAG && cell.value === 'mine') {
-        correctlyFlaggedMines++;
-      }
-    });
-  });
-
-  // Win condition: All non-mine cells are opened, or all mines are flagged.
-  return unopenedCells === totalMines || correctlyFlaggedMines === totalMines;
+  return (
+    board.openedSafeCount === totalSafeCells ||
+    (board.isLayoutReady && board.correctFlagCount === board.totalMines)
+  );
 };

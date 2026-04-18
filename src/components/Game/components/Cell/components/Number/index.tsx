@@ -1,5 +1,5 @@
 type Props = {
-  value: number | null;
+  value: number;
 };
 
 const Number = ({ value }: Props) => {
