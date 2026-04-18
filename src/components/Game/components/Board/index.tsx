@@ -1,4 +1,4 @@
-import { CSSProperties, memo, PointerEvent, MouseEvent } from 'react';
+import { CSSProperties, memo, PointerEvent, MouseEvent, useRef, useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/store/game';
 import {
@@ -73,9 +73,17 @@ const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
     });
   };
 
-  const throttledPointerMove = throttle((e: PointerEvent<HTMLDivElement>) => {
-    onPointerEvent(e);
-  }, 100);
+  // Keep a ref to the latest onPointerEvent so the throttled handler always
+  // calls the current closure without being recreated on every render.
+  const onPointerEventRef = useRef(onPointerEvent);
+  useEffect(() => {
+    onPointerEventRef.current = onPointerEvent;
+  });
+
+  // Created once; never re-instantiated, so throttle state survives re-renders.
+  const throttledPointerMove = useRef(
+    throttle((e: PointerEvent<HTMLDivElement>) => onPointerEventRef.current(e), 100),
+  ).current;
 
   const onContextMenu = (e: MouseEvent<HTMLDivElement>) => {
     const indexes = getRowAndCellIndex(
