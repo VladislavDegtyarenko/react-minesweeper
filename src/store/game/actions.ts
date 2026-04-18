@@ -99,6 +99,8 @@ export const resetBoard = (isRestart?: boolean) => {
     pendingLevelId: null,
     gameStatusBeforeLevelChange: null,
     isGameRestarted: Boolean(isRestart),
+    openedSafeCells: 0,
+    correctlyFlaggedMines: 0,
   });
 };
 

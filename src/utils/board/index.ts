@@ -1,6 +1,5 @@
 import { CELL_MARKERS } from '@/constants';
 import { useGameStore } from '@/store/game';
-import { setBoard } from '@/store/game/actions';
 import { selectGameStatus, selectMinesLeft } from '@/store/game/selectors';
 import { useSettingsStore } from '@/store/settings';
 import {
@@ -20,7 +19,7 @@ import { produce } from 'immer';
 import { checkGameWin } from '../checkGameWin';
 import { initBoard } from '../init';
 import { revealBoard } from './revealBoard';
-import { revealEmptyCells } from './revealEmptyCells';
+import { applyOpenedCells, revealEmptyCells } from './revealEmptyCells';
 import type { HandleCellInteractionProps } from './types';
 
 const HOLD_TIME = 250;
@@ -95,7 +94,7 @@ const shouldOpenCell = (row: number, col: number): boolean => {
   return true;
 };
 
-const openCell = (board: TBoard, row: number, col: number): TBoard | null => {
+const openCell = (board: TBoard, row: number, col: number): void => {
   const gameState = useGameStore.getState();
   const timerState = useTimerStore.getState();
 
@@ -110,39 +109,52 @@ const openCell = (board: TBoard, row: number, col: number): TBoard | null => {
     useGameStore.setState({ gameStatus: 'playing' });
   }
 
-  return produce<TBoard>(board, (draft) => {
-    const cell = draft[row][col];
-    const isMineCell = cell.value === 'mine';
-    const isNumberCell = typeof cell.value === 'number' && cell.value > 0;
+  const cell = board[row][col];
+  const isMineCell = cell.value === 'mine';
 
-    if (isMineCell) {
-      cell.highlight = 'red';
-      useGameStore.setState({ gameStatus: 'lost' });
-      playSFX('GAME_OVER');
+  if (isMineCell) {
+    const newBoard = produce<TBoard>(board, (draft) => {
+      const draftCell = draft[row][col];
+      if (draftCell.value === 'mine') draftCell.highlight = 'red';
       revealBoard(draft);
-    }
+    });
+    useGameStore.setState({ board: newBoard, gameStatus: 'lost' });
+    playSFX('GAME_OVER');
+    return;
+  }
 
-    if (!isMineCell) {
-      const { level } = useGameStore.getState();
+  const { level, openedSafeCells, correctlyFlaggedMines } = useGameStore.getState();
+  const isNumberCell = typeof cell.value === 'number' && cell.value > 0;
+  let openedDelta = 0;
+  let newBoard: TBoard;
 
-      cell.isOpened = true;
-      cell.marker = null;
-      if (cell.value === 0) {
-        playSFX('REVEAL_EMPTY');
-        revealEmptyCells(draft, level.rows, level.cols, row, col);
-      }
+  if (cell.value === 0) {
+    playSFX('REVEAL_EMPTY');
+    // Run BFS on the plain board (no Immer proxy overhead), then apply via
+    // targeted shallow clone that preserves structural sharing for unchanged rows/cells.
+    const positions = revealEmptyCells(board, level.rows, level.cols, row, col);
+    openedDelta = positions.length;
+    newBoard = applyOpenedCells(board, positions);
+  } else {
+    if (isNumberCell) playSFX('REVEAL_NUMBER');
+    openedDelta = 1;
+    // Shallow-clone only the changed row and cell; all other rows reuse their references.
+    const newRow = [...board[row]] as TBoard[number];
+    newRow[col] = { ...cell, isOpened: true, marker: null } as unknown as typeof cell;
+    newBoard = board.map((r, i) => (i === row ? newRow : r)) as TBoard;
+  }
 
-      if (isNumberCell) {
-        playSFX('REVEAL_NUMBER');
-      }
+  const newOpenedSafeCells = openedSafeCells + openedDelta;
+  const totalSafeCells = level.rows * level.cols - level.totalMines;
 
-      if (checkGameWin(draft as TBoard, level.totalMines)) {
-        revealBoard(draft, true);
-        useGameStore.setState({ gameStatus: 'won' });
-        playSFX('GAME_WIN');
-      }
-    }
-  });
+  if (checkGameWin(newOpenedSafeCells, totalSafeCells, correctlyFlaggedMines, level.totalMines)) {
+    const wonBoard = produce<TBoard>(newBoard, (draft) => { revealBoard(draft, true); });
+    useGameStore.setState({ board: wonBoard, gameStatus: 'won', openedSafeCells: newOpenedSafeCells });
+    playSFX('GAME_WIN');
+    return;
+  }
+
+  useGameStore.setState({ board: newBoard, openedSafeCells: newOpenedSafeCells });
 };
 
 export const handleOpenCell = (row: number, col: number) => {
@@ -157,18 +169,15 @@ export const handleOpenCell = (row: number, col: number) => {
   let newGameBoard: TBoard;
 
   if (isFirstClickOnMine && !isGameRestarted) {
-    do {
-      newGameBoard = initBoard(level);
-    } while (newGameBoard[row][col].value === 'mine');
+    // Generate a fresh board guaranteed to have no mine at the clicked cell.
+    // excludeCell swaps the clicked position out of the mine pool before shuffling,
+    // so this always completes in a single O(n) pass (no retry loop needed).
+    newGameBoard = initBoard(level, { row, col });
   } else {
     newGameBoard = board;
   }
 
-  const boardAfterOpeningCell = openCell(newGameBoard, row, col);
-
-  if (boardAfterOpeningCell) {
-    setBoard(boardAfterOpeningCell);
-  }
+  openCell(newGameBoard, row, col);
 };
 
 const shouldToggleMarker = (
@@ -211,38 +220,52 @@ const toggleMarker = (
     useGameStore.setState({ gameStatus: 'playing' });
   }
 
-  const { board, level } = useGameStore.getState();
+  const { board, level, openedSafeCells, correctlyFlaggedMines } = useGameStore.getState();
   const cell = board[row][col];
+  const isCellMine = cell.value === 'mine';
   const nextMarker = getNextMarker(cell.marker, isQuestionMarkEnabled);
   let flagsDiff = 0;
+  let mineFlagDiff = 0; // tracks change to correctlyFlaggedMines
 
-  const newGameBoard = produce<TBoard>(board, (draft) => {
-    const draftCell = draft[row][col];
-    const isCurrentlyFlagged = draftCell.marker === CELL_MARKERS.FLAG;
-    const isNextFlagged = nextMarker === CELL_MARKERS.FLAG;
+  const isCurrentlyFlagged = cell.marker === CELL_MARKERS.FLAG;
+  const isNextFlagged = nextMarker === CELL_MARKERS.FLAG;
 
-    if (isCurrentlyFlagged && !isNextFlagged) {
-      flagsDiff = -1;
-      playSFX('FLAG_REMOVE');
-    }
+  if (isCurrentlyFlagged && !isNextFlagged) {
+    flagsDiff = -1;
+    if (isCellMine) mineFlagDiff = -1;
+    playSFX('FLAG_REMOVE');
+  }
 
-    if (!isCurrentlyFlagged && isNextFlagged) {
-      flagsDiff = 1;
-      playSFX('FLAG_PLACE');
-    }
+  if (!isCurrentlyFlagged && isNextFlagged) {
+    flagsDiff = 1;
+    if (isCellMine) mineFlagDiff = 1;
+    playSFX('FLAG_PLACE');
+  }
 
-    draftCell.marker = nextMarker;
+  // Shallow-clone only the changed row and cell.
+  const newRow = [...board[row]] as TBoard[number];
+  newRow[col] = { ...cell, marker: nextMarker } as unknown as typeof cell;
+  const newGameBoard = board.map((r, i) => (i === row ? newRow : r)) as TBoard;
 
-    if (checkGameWin(draft as TBoard, level.totalMines)) {
-      revealBoard(draft, true);
-      useGameStore.setState({ gameStatus: 'won' });
-      playSFX('GAME_WIN');
-    }
-  });
+  const newCorrectlyFlaggedMines = correctlyFlaggedMines + mineFlagDiff;
+  const totalSafeCells = level.rows * level.cols - level.totalMines;
+
+  if (checkGameWin(openedSafeCells, totalSafeCells, newCorrectlyFlaggedMines, level.totalMines)) {
+    const wonBoard = produce<TBoard>(newGameBoard, (draft) => { revealBoard(draft, true); });
+    useGameStore.setState((state) => ({
+      board: wonBoard,
+      gameStatus: 'won',
+      totalFlags: state.totalFlags + flagsDiff,
+      correctlyFlaggedMines: newCorrectlyFlaggedMines,
+    }));
+    playSFX('GAME_WIN');
+    return;
+  }
 
   useGameStore.setState((state) => ({
     board: newGameBoard,
     totalFlags: state.totalFlags + flagsDiff,
+    correctlyFlaggedMines: newCorrectlyFlaggedMines,
   }));
 };
 

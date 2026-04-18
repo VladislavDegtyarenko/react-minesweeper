@@ -1,9 +1,7 @@
 import { memo } from 'react';
 import styles from './styles.module.scss';
 import { createCx } from '@/utils';
-import { useGameStore } from '@/store/game';
-import { useShallow } from 'zustand/react/shallow';
-import type { OpenedMineCell } from '@/types';
+import type { CellMarkerState, GameCell } from '@/types';
 import { CELL_MARKERS, CELL_NUMBERS_COLORS } from '@/constants';
 import Bomb from './components/Bomb';
 import Number from './components/Number';
@@ -17,23 +15,14 @@ const cx = createCx(styles);
 type Props = {
   rowIndex: number;
   cellIndex: number;
+  value: GameCell['value'];
+  isOpened: boolean;
+  marker: CellMarkerState;
+  highlight: 'red' | 'green' | undefined;
 };
 
 const Cell = (props: Props) => {
-  const { rowIndex, cellIndex } = props;
-
-  const { value, isOpened, marker, highlight } = useGameStore(
-    useShallow((state) => {
-      const cell = state.board[rowIndex][cellIndex];
-
-      return {
-        value: cell.value,
-        isOpened: cell.isOpened,
-        marker: cell.marker,
-        highlight: (cell as OpenedMineCell).highlight,
-      };
-    }),
-  );
+  const { rowIndex, cellIndex, value, isOpened, marker, highlight } = props;
 
   const isMine = value === 'mine';
   const isFlagged = marker === CELL_MARKERS.FLAG;

@@ -21,6 +21,8 @@ export type GameState = {
   pendingLevelId: LevelId | null; // target difficulty selected while confirmation dialog is open
   gameStatusBeforeLevelChange: GameStatusBeforeLevelChange | null; // active gameStatus before opening the level-change confirmation dialog
   isGameRestarted: boolean; // if the game is restarted, the first click on mine won't generate a new board in a do/while loop
+  openedSafeCells: number; // running count of revealed non-mine cells — used for O(1) win detection
+  correctlyFlaggedMines: number; // running count of mines with a FLAG marker — used for O(1) win detection
 };
 
 export const useGameStore = create<GameState>()(
@@ -35,6 +37,8 @@ export const useGameStore = create<GameState>()(
           isLevelChangeDialogOpen: false,
           pendingLevelId: null,
           gameStatusBeforeLevelChange: null,
+          openedSafeCells: 0,
+          correctlyFlaggedMines: 0,
         };
 
         return { ...gameState };

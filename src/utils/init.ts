@@ -24,17 +24,31 @@ const fillBoardWithMines = (
   rows: number,
   cols: number,
   totalMines: number,
+  excludeFlatIndex?: number,
 ) => {
-  let mines = 0;
+  const total = rows * cols;
 
-  while (mines < totalMines) {
-    const row = Math.floor(Math.random() * rows);
-    const column = Math.floor(Math.random() * cols);
+  // Build a flat index array, optionally excluding one cell (e.g. first-click cell).
+  // Swap the excluded index to the end so it is never selected by the shuffle.
+  const indices = Array.from({ length: total }, (_, i) => i);
+  if (excludeFlatIndex !== undefined) {
+    const last = total - 1;
+    indices[excludeFlatIndex] = indices[last];
+    indices[last] = excludeFlatIndex;
+  }
 
-    if (board[row][column].value !== 'mine') {
-      (board[row][column] as GameCell).value = 'mine';
-      mines++;
-    }
+  const available = excludeFlatIndex !== undefined ? total - 1 : total;
+
+  // Partial Fisher-Yates shuffle — O(totalMines), no collision retries needed.
+  for (let i = 0; i < totalMines; i++) {
+    const j = i + Math.floor(Math.random() * (available - i));
+    const tmp = indices[i];
+    indices[i] = indices[j];
+    indices[j] = tmp;
+
+    const r = Math.floor(indices[i] / cols);
+    const c = indices[i] % cols;
+    (board[r][c] as GameCell).value = 'mine';
   }
 
   return board;
@@ -67,11 +81,17 @@ const fillBoardWithNumbers = (board: TBoard) => {
   return board;
 };
 
-export const initBoard = (level: Omit<Level, 'id' | 'label'>) => {
+export const initBoard = (
+  level: Omit<Level, 'id' | 'label'>,
+  excludeCell?: { row: number; col: number },
+) => {
   const { rows, cols, totalMines } = level;
 
+  const excludeFlatIndex =
+    excludeCell !== undefined ? excludeCell.row * cols + excludeCell.col : undefined;
+
   const emptyBoard = createBoard(rows, cols);
-  const boardWithMines = fillBoardWithMines(emptyBoard, rows, cols, totalMines);
+  const boardWithMines = fillBoardWithMines(emptyBoard, rows, cols, totalMines, excludeFlatIndex);
   const gameBoard = fillBoardWithNumbers(boardWithMines);
 
   return gameBoard;

@@ -3,7 +3,8 @@
     "allow": [
       "Bash(grep -n \"memo\\\\|React.memo\" /Users/test/Documents/Personal/react-minesweeper/src/components/Game/components/*.tsx)",
       "Bash(grep -n \"export default\\\\|export const\" /Users/test/Documents/Personal/react-minesweeper/src/components/Game/components/*/index.tsx)",
-      "Bash(find /Users/test/Documents/Personal/react-minesweeper/src/components/Game/components -type f -name \"index.tsx\" -exec grep -l \"memo\" {} \\\\;)"
+      "Bash(find /Users/test/Documents/Personal/react-minesweeper/src/components/Game/components -type f -name \"index.tsx\" -exec grep -l \"memo\" {} \\\\;)",
+      "Bash(npx tsc *)"
     ]
   }
 }
