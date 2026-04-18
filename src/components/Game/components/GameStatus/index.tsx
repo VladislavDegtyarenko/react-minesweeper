@@ -1,7 +1,11 @@
 import { memo } from 'react';
 import { createCx } from '@/utils';
 import { useGameStore } from '@/store/game';
-import { selectGameStatus, selectMinesLeft } from '@/store/game/selectors';
+import {
+  selectIsGameLost,
+  selectIsGameWon,
+  selectMinesLeft,
+} from '@/store/game/selectors';
 import styles from './styles.module.scss';
 
 import Win from '@/assets/themes/blue-graphite/icons/Win';
@@ -11,11 +15,12 @@ import Loss from '@/assets/themes/blue-graphite/icons/Loss';
 const cx = createCx(styles);
 
 const GameStatus = memo(() => {
-  const gameStatus = useGameStore(selectGameStatus);
+  const isGameWon = useGameStore(selectIsGameWon);
+  const isGameLost = useGameStore(selectIsGameLost);
   const minesLeft = useGameStore(selectMinesLeft);
   const isMobileViewport = useIsMobileViewport();
 
-  if (gameStatus === 'won') {
+  if (isGameWon) {
     return isMobileViewport ? (
       <span className={cx('win')}>
         <Win />
@@ -25,7 +30,7 @@ const GameStatus = memo(() => {
     );
   }
 
-  if (gameStatus === 'lost') {
+  if (isGameLost) {
     return isMobileViewport ? (
       <span className={cx('gameOver')}>
         <Loss />
