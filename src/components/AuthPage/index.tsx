@@ -86,11 +86,11 @@ const AuthPage = ({ mode }: AuthPageProps) => {
       ) : null}
 
       <form className={cx('form')} onSubmit={handleSubmit}>
-        {(isSignup ||
-          mode === 'login' ||
-          mode === 'forgot-password') && (
+        {(isSignup || mode === 'login' || mode === 'forgot-password') && (
           <label className={cx('field')}>
-            <span className={cx('fieldLabel', isSignup && 'requiredFieldLabel')}>
+            <span
+              className={cx('fieldLabel', isSignup && 'requiredFieldLabel')}
+            >
               Email
             </span>
             <input
@@ -138,11 +138,11 @@ const AuthPage = ({ mode }: AuthPageProps) => {
           </>
         ) : null}
 
-        {(mode === 'login' ||
-          isSignup ||
-          mode === 'reset-password') && (
+        {(mode === 'login' || isSignup || mode === 'reset-password') && (
           <label className={cx('field')}>
-            <span className={cx('fieldLabel', isSignup && 'requiredFieldLabel')}>
+            <span
+              className={cx('fieldLabel', isSignup && 'requiredFieldLabel')}
+            >
               Password
             </span>
             <input
@@ -168,8 +168,8 @@ const AuthPage = ({ mode }: AuthPageProps) => {
               onChange={(event) => setHasAcceptedLegal(event.target.checked)}
             />
             <span className={cx('consentText')}>
-              I acknowledge the <Link href={ROUTES.PRIVACY}>Privacy Policy</Link>{' '}
-              and agree to the{' '}
+              I acknowledge the{' '}
+              <Link href={ROUTES.PRIVACY}>Privacy Policy</Link> and agree to the{' '}
               <Link href={ROUTES.TERMS_OF_SERVICE}>Terms of Service</Link> for
               account features.
             </span>
@@ -184,7 +184,9 @@ const AuthPage = ({ mode }: AuthPageProps) => {
         <Button
           variant="primary"
           isDisabled={
-            !isConfigured || isSubmitting || (isSignup && !hasAcceptedLegal)
+            !isConfigured ||
+            isSubmitting ||
+            (isSignup && (!hasAcceptedLegal || !nickname || !password))
           }
           type="submit"
         >
