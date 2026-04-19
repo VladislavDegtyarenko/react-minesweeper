@@ -1,0 +1,20 @@
+.copyright {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+
+  a {
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+}
+
+.externalLinkIcon {
+  flex-shrink: 0;
+
+  > svg {
+    vertical-align: text-bottom;
+  }
+}

@@ -91,7 +91,6 @@ export type Database = {
       public_profiles: {
         Row: {
           avatar_path: string | null;
-          country: string | null;
           id: string;
           nickname: string;
         };

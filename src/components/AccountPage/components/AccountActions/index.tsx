@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import { useState } from 'react';
+import ROUTES from '@/config/routes.json';
 import DeleteAccountDialog from '../DeleteAccountDialog';
 import Button from '@/components/ui/Button';
 import { createCx } from '@/utils';
@@ -48,6 +50,11 @@ const AccountActions = ({
     <section className={cx('root')}>
       <div className={cx('header')}>
         <h2 className={cx('title')}>Profile Management</h2>
+        <p className={cx('notice')}>
+          Account data and public leaderboard participation are covered by the{' '}
+          <Link href={ROUTES.PRIVACY}>Privacy Policy</Link> and{' '}
+          <Link href={ROUTES.TERMS_OF_SERVICE}>Terms of Service</Link>.
+        </p>
       </div>
 
       <div className={cx('actions')}>

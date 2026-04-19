@@ -1,24 +1,21 @@
+import Link from 'next/link';
+import ROUTES from '@/config/routes.json';
 import styles from './styles.module.scss';
-import ExternalLinkIcon from '@/assets/ExternalLinkIcon';
 import { createCx } from '@/utils';
+import Copyright from '../Copyright';
 
 const cx = createCx(styles);
 
 const Footer = () => {
   return (
     <footer className={cx('footer')}>
-      <div>
-        &copy; Copyright {new Date().getFullYear()}. Created by{' '}
-        <a
-          href="https://vd-developer.online/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Vladyslav Dihtiarenko
-          <span className={cx('externalLinkIcon')} aria-hidden>
-            <ExternalLinkIcon />
-          </span>
-        </a>
+      <nav className={cx('legalLinks')} aria-label="Legal">
+        <Link href={ROUTES.PRIVACY}>Privacy Policy</Link>
+        <Link href={ROUTES.TERMS_OF_SERVICE}>Terms of Service</Link>
+      </nav>
+
+      <div className={cx('credit', 'desktopOnly')}>
+        <Copyright />
       </div>
     </footer>
   );

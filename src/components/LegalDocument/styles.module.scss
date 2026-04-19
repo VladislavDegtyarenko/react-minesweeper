@@ -1,0 +1,50 @@
+.meta {
+  margin: 0 0 var(--space-2);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.document {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: var(--space-2);
+    background-color: var(--surface-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-popover);
+  }
+
+  h2,
+  h3 {
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  p,
+  ul {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  ul {
+    padding-left: 1.25rem;
+  }
+
+  li + li {
+    margin-top: 0.6rem;
+  }
+
+  a {
+    color: var(--text-primary);
+  }
+
+  strong {
+    color: var(--text-primary);
+  }
+}

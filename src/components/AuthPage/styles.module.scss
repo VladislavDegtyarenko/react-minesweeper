@@ -30,6 +30,46 @@
   @include form.field(var(--surface-3));
 }
 
+.fieldLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.requiredFieldLabel::before {
+  content: '*';
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.consentField {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-popover);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  margin: 0.15rem 0 0;
+  accent-color: var(--accent-blue);
+  cursor: pointer;
+}
+
+.consentText {
+  color: var(--text-secondary);
+  line-height: 1.5;
+
+  a {
+    color: var(--text-primary);
+  }
+}
+
 .footerText {
   margin-top: var(--space-2);
   color: var(--text-secondary);
