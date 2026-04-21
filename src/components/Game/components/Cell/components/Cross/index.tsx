@@ -20,6 +20,7 @@ const Cross = ({ isFlagged, isMine }: Props) => {
         src="/icons/cross.svg"
         alt="cross"
         className={cx('image', 'crossFlag')}
+        draggable={false}
       />
     );
   }

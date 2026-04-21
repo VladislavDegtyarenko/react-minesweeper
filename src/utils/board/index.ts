@@ -233,13 +233,20 @@ const toggleMarker = (
   if (isCurrentlyFlagged && !isNextFlagged) {
     flagsDiff = -1;
     if (isCellMine) mineFlagDiff = -1;
-    playSFX('FLAG_REMOVE');
   }
 
   if (!isCurrentlyFlagged && isNextFlagged) {
     flagsDiff = 1;
     if (isCellMine) mineFlagDiff = 1;
+  }
+
+  // Play placement sound whenever a marker (flag or question) is being set,
+  // and removal sound whenever a marker is being cleared. This keeps the
+  // question-mark step audible the same way as flagging/unflagging.
+  if (nextMarker !== null) {
     playSFX('FLAG_PLACE');
+  } else {
+    playSFX('FLAG_REMOVE');
   }
 
   // Shallow-clone only the changed row and cell.

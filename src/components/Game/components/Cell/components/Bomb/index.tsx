@@ -9,6 +9,7 @@ const Bomb = () => {
       src="/themes/blue-graphite/icons/Bomb.png"
       alt="mine"
       className={cx('image', 'cellImage')}
+      draggable={false}
     />
   );
 };

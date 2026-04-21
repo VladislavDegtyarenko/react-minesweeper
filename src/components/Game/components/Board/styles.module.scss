@@ -15,7 +15,7 @@
   background-color: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
-  padding: 16px;
+  padding: 0;
   overflow: auto;
   position: relative;
   margin: 0 auto;
@@ -38,6 +38,16 @@
   }
 }
 
+// Inner wrapper so horizontal scroll extent includes end padding (padding on
+// overflow containers does not reliably widen scrollWidth in all engines).
+.boardContent {
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  padding: 16px;
+  min-width: 100%;
+}
+
 .boardArea {
   padding: var(--space-2);
   padding-bottom: var(--space-1);
@@ -56,10 +66,13 @@
 
 @media screen and (max-width: 768px) {
   .board {
-    padding: 10px;
     max-height: calc(100dvh - 188px);
     border: none;
     border-radius: 0;
+  }
+
+  .boardContent {
+    padding: 10px;
   }
 
   .boardArea {
