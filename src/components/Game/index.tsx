@@ -32,9 +32,9 @@ const Game = () => {
       <div className={cx('gameAbsoluteContainer')}>
         <div className={cx('game')}>
           <GameHeader />
-          {/* TODO: Extract into a separate component <BoardScrollableWrapper /> */}
 
           <Board gameFooterHeight={gameFooterHeight} />
+
           <div className={cx('footerArea')} ref={footerAreaRef}>
             <SelectLevelToggleGroup />
             <SelectDigFlag />

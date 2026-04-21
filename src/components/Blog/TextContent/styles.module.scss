@@ -7,9 +7,14 @@
   max-height: calc(100dvh - 6.5rem);
   padding: clamp(1rem, 2.6vw, 1.75rem);
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   background:
-    linear-gradient(180deg, rgba(33, 43, 64, 0.96) 0%, rgba(21, 28, 43, 0.98) 100%),
+    linear-gradient(
+      180deg,
+      rgba(33, 43, 64, 0.96) 0%,
+      rgba(21, 28, 43, 0.98) 100%
+    ),
     linear-gradient(135deg, rgba(77, 163, 255, 0.08), transparent 48%);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-card);
@@ -26,7 +31,11 @@
     width: 16rem;
     height: 16rem;
     border-radius: 999px;
-    background: radial-gradient(circle, rgba(77, 163, 255, 0.22), transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(77, 163, 255, 0.22),
+      transparent 70%
+    );
     pointer-events: none;
     z-index: -1;
   }

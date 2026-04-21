@@ -5,6 +5,8 @@
   max-width: 100%;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
 }
 
 .board {

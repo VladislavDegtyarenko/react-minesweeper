@@ -60,8 +60,8 @@
 
   background-color: var(--app-bg);
   color: var(--text-primary);
-
-  overscroll-behavior-x: none;
+  scroll-behavior: smooth;
+  overscroll-behavior: none;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
