@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { createCx } from '@/utils';
 import styles from './styles.module.scss';
+import Copyright from '@/components/Copyright';
 
 const cx = createCx(styles);
 
@@ -53,6 +54,8 @@ const MobileMenuDrawer = (props: Props) => {
           <p className={cx('sectionLabel')}>Account</p>
           {authContent}
         </section>
+
+        <Copyright />
       </Dialog.Content>
     </Dialog.Portal>
   );

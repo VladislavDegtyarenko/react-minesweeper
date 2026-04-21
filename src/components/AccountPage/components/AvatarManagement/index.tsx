@@ -15,7 +15,12 @@ type Props = {
   onAvatarRemove: () => void;
 };
 
-const AvatarManagement = ({ nickname, isSaving, onAvatarUpload, onAvatarRemove }: Props) => {
+const AvatarManagement = ({
+  nickname,
+  isSaving,
+  onAvatarUpload,
+  onAvatarRemove,
+}: Props) => {
   const { profile, user } = useAuthStore();
 
   const avatarUrl = getAvatarPublicUrl(profile?.avatar_path ?? null);

@@ -5,12 +5,7 @@ import { createServerClient } from '@supabase/ssr';
 import type { Database } from '@/types/supabase';
 import { getSupabaseAnonKey, getSupabaseUrl } from '@/utils/supabase/env';
 
-// 🚨 List the paths that should be hidden/inaccessible
-const HIDDEN_ROUTES: string[] = [
-  ROUTES.BLOG,
-  ROUTES.PRIVACY,
-  ROUTES.TERMS_OF_SERVICE,
-];
+const HIDDEN_ROUTES: string[] = [ROUTES.BLOG];
 
 const PROTECTED_ROUTES: string[] = [ROUTES.ACCOUNT];
 

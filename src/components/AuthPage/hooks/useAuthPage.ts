@@ -51,6 +51,7 @@ export function useAuthPage(mode: AuthPageMode) {
   const [lastName, setLastName] = useState('');
   const [nickname, setNickname] = useState('');
   const [country, setCountry] = useState('');
+  const [hasAcceptedLegal, setHasAcceptedLegal] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitMessage, setSubmitMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -122,6 +123,7 @@ export function useAuthPage(mode: AuthPageMode) {
     country,
     email,
     firstName,
+    hasAcceptedLegal,
     isConfigured,
     isSubmitting,
     lastName,
@@ -133,6 +135,7 @@ export function useAuthPage(mode: AuthPageMode) {
     setCountry,
     setEmail,
     setFirstName,
+    setHasAcceptedLegal,
     setLastName,
     setNickname,
     setPassword,

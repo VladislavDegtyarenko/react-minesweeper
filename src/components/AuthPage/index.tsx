@@ -22,6 +22,7 @@ const AuthPage = ({ mode }: AuthPageProps) => {
     country,
     email,
     firstName,
+    hasAcceptedLegal,
     isConfigured,
     isSubmitting,
     lastName,
@@ -33,10 +34,12 @@ const AuthPage = ({ mode }: AuthPageProps) => {
     setCountry,
     setEmail,
     setFirstName,
+    setHasAcceptedLegal,
     setLastName,
     setNickname,
     setPassword,
   } = useAuthPage(mode);
+  const isSignup = mode === 'signup';
 
   const footerContent = (() => {
     if (mode === 'login') {
@@ -83,11 +86,13 @@ const AuthPage = ({ mode }: AuthPageProps) => {
       ) : null}
 
       <form className={cx('form')} onSubmit={handleSubmit}>
-        {(mode === 'signup' ||
-          mode === 'login' ||
-          mode === 'forgot-password') && (
+        {(isSignup || mode === 'login' || mode === 'forgot-password') && (
           <label className={cx('field')}>
-            <span>Email</span>
+            <span
+              className={cx('fieldLabel', isSignup && 'requiredFieldLabel')}
+            >
+              Email
+            </span>
             <input
               autoComplete="email"
               required
@@ -98,10 +103,12 @@ const AuthPage = ({ mode }: AuthPageProps) => {
           </label>
         )}
 
-        {mode === 'signup' ? (
+        {isSignup ? (
           <>
             <label className={cx('field')}>
-              <span>Nickname</span>
+              <span className={cx('fieldLabel', 'requiredFieldLabel')}>
+                Nickname
+              </span>
               <input
                 required
                 value={nickname}
@@ -131,11 +138,13 @@ const AuthPage = ({ mode }: AuthPageProps) => {
           </>
         ) : null}
 
-        {(mode === 'login' ||
-          mode === 'signup' ||
-          mode === 'reset-password') && (
+        {(mode === 'login' || isSignup || mode === 'reset-password') && (
           <label className={cx('field')}>
-            <span>Password</span>
+            <span
+              className={cx('fieldLabel', isSignup && 'requiredFieldLabel')}
+            >
+              Password
+            </span>
             <input
               autoComplete={
                 mode === 'login' ? 'current-password' : 'new-password'
@@ -149,6 +158,24 @@ const AuthPage = ({ mode }: AuthPageProps) => {
           </label>
         )}
 
+        {isSignup ? (
+          <label className={cx('consentField')}>
+            <input
+              className={cx('checkbox')}
+              checked={hasAcceptedLegal}
+              required
+              type="checkbox"
+              onChange={(event) => setHasAcceptedLegal(event.target.checked)}
+            />
+            <span className={cx('consentText')}>
+              I acknowledge the{' '}
+              <Link href={ROUTES.PRIVACY}>Privacy Policy</Link> and agree to the{' '}
+              <Link href={ROUTES.TERMS_OF_SERVICE}>Terms of Service</Link> for
+              account features.
+            </span>
+          </label>
+        ) : null}
+
         {submitError ? <p className={cx('errorText')}>{submitError}</p> : null}
         {submitMessage ? (
           <p className={cx('successText')}>{submitMessage}</p>
@@ -156,7 +183,11 @@ const AuthPage = ({ mode }: AuthPageProps) => {
 
         <Button
           variant="primary"
-          isDisabled={!isConfigured || isSubmitting}
+          isDisabled={
+            !isConfigured ||
+            isSubmitting ||
+            (isSignup && (!hasAcceptedLegal || !nickname || !password))
+          }
           type="submit"
         >
           {isSubmitting ? 'Working…' : copy.title}
