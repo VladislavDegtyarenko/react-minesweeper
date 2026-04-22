@@ -1,51 +1,31 @@
-.boardScrollable {
-  overflow-x: auto;
-  overflow-y: auto;
-  max-height: 100%;
-  max-width: 100%;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: none;
-}
-
-.board {
+.panWrapper {
   box-sizing: border-box;
-  --cell-size: 2rem;
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
+  align-self: center;
   background-color: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
-  padding: 0;
-  overflow: auto;
-  position: relative;
   margin: 0 auto;
-  max-width: 100%;
-  max-height: calc(100dvh - 260px);
+  overflow: hidden;
+  touch-action: none;
   transition: border-color var(--duration-hover) var(--easing-standard);
-
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.18);
-    border-radius: 999px;
-  }
-
-  &::-webkit-scrollbar-corner {
-    background: transparent;
-  }
 }
 
-// Inner wrapper so horizontal scroll extent includes end padding (padding on
-// overflow containers does not reliably widen scrollWidth in all engines).
-.boardContent {
-  display: inline-block;
-  vertical-align: top;
-  box-sizing: border-box;
-  padding: 16px;
-  min-width: 100%;
+.svgRoot {
+  display: block;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  flex-shrink: 0;
+}
+
+.panBackground {
+  fill: transparent;
+  pointer-events: all;
 }
 
 .boardArea {
@@ -53,6 +33,7 @@
   padding-bottom: var(--space-1);
   display: flex;
   justify-content: center;
+  min-height: 0;
   --game-header-height: 67px;
   --game-footer-height: 0px; // changed in JSX if Dig/Flag buttons are visible
   max-height: calc(
@@ -65,14 +46,9 @@
 }
 
 @media screen and (max-width: 768px) {
-  .board {
-    max-height: calc(100dvh - 188px);
+  .panWrapper {
     border: none;
     border-radius: 0;
-  }
-
-  .boardContent {
-    padding: 10px;
   }
 
   .boardArea {

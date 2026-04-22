@@ -1,0 +1,107 @@
+.cell {
+  pointer-events: auto;
+}
+
+.baseRect {
+  transition:
+    fill var(--duration-hover) var(--easing-standard),
+    filter var(--duration-hover) var(--easing-standard);
+}
+
+.base {
+  fill: var(--cell-revealed);
+  stroke: rgba(255, 255, 255, 0.03);
+  stroke-width: 1;
+}
+
+.baseRed {
+  fill: rgba(255, 92, 122, 0.18);
+  stroke: rgba(255, 92, 122, 0.6);
+  stroke-width: 2;
+  filter: url(#glow-red);
+}
+
+.number {
+  font-weight: 700;
+  user-select: none;
+  pointer-events: none;
+}
+
+.one {
+  fill: var(--one);
+}
+
+.two {
+  fill: var(--two);
+}
+
+.three {
+  fill: var(--three);
+}
+
+.four {
+  fill: var(--four);
+}
+
+.five {
+  fill: var(--five);
+}
+
+.six {
+  fill: var(--six);
+}
+
+.seven {
+  fill: var(--seven);
+}
+
+.eight {
+  fill: var(--eight);
+}
+
+.overlayRect {
+  fill: var(--cell-closed);
+  stroke: var(--cell-border);
+  stroke-width: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    fill var(--duration-hover) var(--easing-standard),
+    transform var(--duration-press) var(--easing-standard),
+    stroke var(--duration-hover) var(--easing-standard),
+    filter var(--duration-hover) var(--easing-standard);
+
+  @media (hover: hover) {
+    &:hover {
+      fill: var(--cell-closed-hover);
+      stroke: rgba(255, 255, 255, 0.06);
+      filter: url(#soft-shadow);
+    }
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.overlayRed .overlayRect {
+  fill: rgba(255, 92, 122, 0.22);
+  stroke: rgba(255, 92, 122, 0.45);
+  stroke-width: 1.5;
+  filter: url(#glow-red);
+}
+
+.overlayGreen .overlayRect {
+  fill: rgba(51, 214, 159, 0.22);
+  stroke: rgba(51, 214, 159, 0.32);
+  stroke-width: 1.5;
+  filter: url(#glow-green);
+}
+
+.cross {
+  pointer-events: none;
+}
+
+.bomb {
+  pointer-events: none;
+}
