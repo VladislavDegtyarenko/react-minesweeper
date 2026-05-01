@@ -1,3 +1,10 @@
+.desktopAccountZone {
+  display: flex;
+  align-items: center;
+  padding-left: 18px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .group {
   display: flex;
   align-items: center;
@@ -65,10 +72,40 @@
     0 12px 26px rgba(8, 17, 29, 0.34);
 }
 
+.avatarLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  outline: none;
+  transition:
+    transform var(--duration-hover) var(--easing-standard),
+    box-shadow var(--duration-hover) var(--easing-standard);
+}
+
+.avatarLink:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 2px var(--accent-tint);
+}
+
+.avatarLink:focus-visible {
+  box-shadow: 0 0 0 3px var(--accent-tint);
+}
+
 .mobileGroup .action {
   min-height: 46px;
   width: 100%;
+  max-width: 100%;
   justify-content: flex-start;
   padding: 0 18px;
   border-radius: 16px;
+  overflow: hidden;
+}
+
+.actionLabel {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

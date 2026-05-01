@@ -1,34 +1,33 @@
+'use client';
+
+import { SignOutButton, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { useState } from 'react';
 import ROUTES from '@/config/routes.json';
-import DeleteAccountDialog from '../DeleteAccountDialog';
 import Button from '@/components/ui/Button';
 import { createCx } from '@/utils';
+import { deleteAccount } from '@/app/account/actions';
+import DeleteAccountDialog from '../DeleteAccountDialog';
 import styles from './styles.module.scss';
 
 const cx = createCx(styles);
 
-type AccountActionsProps = {
-  expectedConfirmation: string;
-  isDeleting: boolean;
-  isSaving: boolean;
-  onDeleteAccount: () => Promise<string | null>;
-  onLogout: () => void;
-};
+const AccountActions = () => {
+  const { user } = useUser();
+  const expectedConfirmation =
+    user?.username ?? user?.primaryEmailAddress?.emailAddress ?? '';
 
-const AccountActions = ({
-  expectedConfirmation,
-  isDeleting,
-  isSaving,
-  onDeleteAccount,
-  onLogout,
-}: AccountActionsProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [confirmationValue, setConfirmationValue] = useState('');
-  const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(null);
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(
+    null,
+  );
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDialogOpenChange = (isOpen: boolean) => {
-    if (isDeleting) return;
+    if (isDeleting) {
+      return;
+    }
 
     setIsDeleteDialogOpen(isOpen);
 
@@ -39,10 +38,16 @@ const AccountActions = ({
   };
 
   const handleConfirmDelete = async () => {
-    const error = await onDeleteAccount();
+    setIsDeleting(true);
+    setDeleteErrorMessage(null);
 
-    if (error) {
-      setDeleteErrorMessage(error);
+    try {
+      await deleteAccount();
+    } catch (error) {
+      setIsDeleting(false);
+      setDeleteErrorMessage(
+        error instanceof Error ? error.message : 'Failed to delete account.',
+      );
     }
   };
 
@@ -58,17 +63,14 @@ const AccountActions = ({
       </div>
 
       <div className={cx('actions')}>
-        <Button
-          variant="secondary"
-          isDisabled={isSaving || isDeleting}
-          type="button"
-          onClick={onLogout}
-        >
-          Logout
-        </Button>
+        <SignOutButton redirectUrl={ROUTES.GAME}>
+          <Button variant="secondary" isDisabled={isDeleting} type="button">
+            Logout
+          </Button>
+        </SignOutButton>
         <Button
           variant="danger"
-          isDisabled={isSaving || isDeleting}
+          isDisabled={isDeleting}
           type="button"
           onClick={() => setIsDeleteDialogOpen(true)}
         >

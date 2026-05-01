@@ -1,3 +1,5 @@
+'use client';
+
 import * as Dialog from '@radix-ui/react-dialog';
 import Button from '@/components/ui/Button';
 import { createCx } from '@/utils';

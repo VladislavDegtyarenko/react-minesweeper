@@ -1,93 +1,93 @@
+'use client';
+
+import { Show, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import Avatar from '@/components/ui/Avatar';
-import { createCx } from '@/utils';
 import ROUTES from '@/config/routes.json';
+import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 
 const cx = createCx(styles);
 
 type Props = {
-  isAuthenticated: boolean;
   isMobile?: boolean;
-  onClick?: () => void;
-  avatarUrl?: string | null;
-  accountLabel: string;
-  onLogoutClick: () => void | Promise<void>;
+  onAction?: () => void;
 };
 
-const AuthActionGroup = (props: Props) => {
-  const {
-    isAuthenticated,
-    isMobile,
-    avatarUrl,
-    accountLabel,
-    onLogoutClick,
-    onClick,
-  } = props;
-  const resolvedAccountLabel = accountLabel || 'Account';
-
-  if (isAuthenticated) {
-    if (!isMobile) {
-      return (
-        <div className={cx('desktopAccountZone')}>
-          <Link
-            aria-label="Open account page"
-            className={cx('accountZoneLink')}
-            href={ROUTES.ACCOUNT}
-            onClick={onClick}
-            title={resolvedAccountLabel}
-          >
-            <Avatar
-              alt={resolvedAccountLabel}
-              className={cx('accountAvatar')}
-              imageUrl={avatarUrl}
-              label={resolvedAccountLabel}
-            />
-          </Link>
-        </div>
-      );
-    }
-
-    return (
-      <div className={cx('group', isMobile && 'mobileGroup')}>
-        <Link
-          className={cx('action', 'accountAction')}
-          href={ROUTES.ACCOUNT}
-          onClick={onClick}
-        >
-          {resolvedAccountLabel}
-        </Link>
-        <button
-          className={cx('action', 'secondaryAction')}
-          onClick={() => {
-            onClick?.();
-            void onLogoutClick();
-          }}
-          type="button"
-        >
-          Logout
-        </button>
-      </div>
-    );
-  }
+const useAccountLabel = () => {
+  const { user } = useUser();
 
   return (
-    <div className={cx('group', isMobile && 'mobileGroup')}>
+    user?.username ??
+    [user?.firstName, user?.lastName].filter(Boolean).join(' ') ??
+    user?.primaryEmailAddress?.emailAddress ??
+    'Account'
+  );
+};
+
+const AccountAvatarLink = ({ onAction }: { onAction?: () => void }) => {
+  const { user } = useUser();
+  const label = useAccountLabel();
+
+  return (
+    <Link
+      className={cx('avatarLink')}
+      href={ROUTES.ACCOUNT}
+      aria-label="Open account"
+      onClick={onAction}
+    >
+      <Avatar alt="Account" imageUrl={user?.imageUrl ?? null} label={label} />
+    </Link>
+  );
+};
+
+const MobileAccountLink = ({ onAction }: { onAction?: () => void }) => {
+  const label = useAccountLabel();
+
+  return (
+    <div className={cx('group', 'mobileGroup')}>
       <Link
-        className={cx('action', 'secondaryAction')}
-        href={ROUTES.LOGIN}
-        onClick={onClick}
+        className={cx('action', 'accountAction')}
+        href={ROUTES.ACCOUNT}
+        onClick={onAction}
       >
-        Login
-      </Link>
-      <Link
-        className={cx('action', 'primaryAction')}
-        href={ROUTES.SIGNUP}
-        onClick={onClick}
-      >
-        Sign Up
+        <span className={cx('actionLabel')}>{label}</span>
       </Link>
     </div>
+  );
+};
+
+const AuthActionGroup = ({ isMobile, onAction }: Props) => {
+  return (
+    <>
+      <Show when="signed-in">
+        {isMobile ? (
+          <MobileAccountLink onAction={onAction} />
+        ) : (
+          <div className={cx('desktopAccountZone')}>
+            <AccountAvatarLink onAction={onAction} />
+          </div>
+        )}
+      </Show>
+      <Show when="signed-out">
+        <div className={cx('group', isMobile && 'mobileGroup')}>
+          <Link
+            href={ROUTES.LOGIN}
+            className={cx('action', 'secondaryAction')}
+            onClick={onAction}
+          >
+            Login
+          </Link>
+          <Link
+            href={ROUTES.SIGNUP}
+            className={cx('action', 'primaryAction')}
+            onClick={onAction}
+          >
+            Sign Up
+          </Link>
+        </div>
+      </Show>
+    </>
   );
 };
 
