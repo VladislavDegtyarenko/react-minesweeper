@@ -21,10 +21,8 @@ const UsernameForm = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user) {
-      setUsername(user.username ?? '');
-    }
-  }, [user]);
+    setUsername(user?.username ?? '');
+  }, [user?.username]);
 
   if (!isLoaded || !user) {
     return null;

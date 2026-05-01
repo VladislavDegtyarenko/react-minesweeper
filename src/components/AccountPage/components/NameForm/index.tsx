@@ -22,11 +22,9 @@ const NameForm = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user) {
-      setFirstName(user.firstName ?? '');
-      setLastName(user.lastName ?? '');
-    }
-  }, [user]);
+    setFirstName(user?.firstName ?? '');
+    setLastName(user?.lastName ?? '');
+  }, [user?.firstName, user?.lastName]);
 
   if (!isLoaded || !user) {
     return null;
