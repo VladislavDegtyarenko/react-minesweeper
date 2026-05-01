@@ -150,8 +150,8 @@ The two strings look identical except for the `-pooler` suffix in the
 hostname:
 
 ```
-DATABASE_URL=postgresql://neondb_owner:npg_xxx@ep-cool-name-12345-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
-DATABASE_URL_UNPOOLED=postgresql://neondb_owner:npg_xxx@ep-cool-name-12345.us-east-1.aws.neon.tech/neondb?sslmode=require
+DATABASE_URL=postgresql://<user>:<password>@<endpoint-id>-pooler.<region>.<provider>.neon.tech/<db>?sslmode=require
+DATABASE_URL_UNPOOLED=postgresql://<user>:<password>@<endpoint-id>.<region>.<provider>.neon.tech/<db>?sslmode=require
 ```
 
 ## Part 3 — Drizzle
