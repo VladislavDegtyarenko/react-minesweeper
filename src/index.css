@@ -140,3 +140,19 @@ a {
   text-decoration: none;
   cursor: pointer;
 }
+
+/*
+ * Clerk's "Secured by Clerk" branding renders with a near-invisible color on
+ * dark backgrounds and is not exposed via the appearance.elements API.
+ * Brighten it without affecting the styled action link.
+ */
+.cl-footer,
+.cl-footer p,
+.cl-footer span,
+.cl-footer div {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cl-footer svg {
+  opacity: 0.85;
+}
