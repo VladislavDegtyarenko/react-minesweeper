@@ -1,4 +1,6 @@
 {
+  "autoCompact": true,
+  "cleanupPeriodDays": 30,
   "permissions": {
     "allow": [
       "Bash(grep -n \"memo\\\\|React.memo\" /Users/test/Documents/Personal/react-minesweeper/src/components/Game/components/*.tsx)",
