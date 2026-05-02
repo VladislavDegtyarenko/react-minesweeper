@@ -132,6 +132,8 @@ export const recordAccountBestTime = async (
 };
 
 export const syncStatsWithUser = async (isSignedIn: boolean) => {
+  useStatsStore.setState({ isSignedIn });
+
   if (!isSignedIn) {
     restoreGuestStatsState();
 
@@ -180,9 +182,9 @@ export const handleCompletedGameWin = async (
   levelId: LevelId,
   elapsedMs: number,
 ) => {
-  const { scoreSource } = useStatsStore.getState();
+  const { isSignedIn } = useStatsStore.getState();
 
-  if (scoreSource === 'account') {
+  if (isSignedIn) {
     await recordAccountBestTime(levelId, elapsedMs);
     return;
   }

@@ -16,6 +16,7 @@ export type StatsState = {
   bestTimesByLevel: BestTimesByLevel;
   guestBestTimesByLevel: BestTimesByLevel;
   hasPresentedWinDialog: boolean;
+  isSignedIn: boolean;
   isWinDialogOpen: boolean;
   lastWinSummary: LastWinSummary | null;
   scoreSource: ScoreSource;

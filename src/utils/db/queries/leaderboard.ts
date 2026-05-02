@@ -7,6 +7,8 @@ import { db } from '../index';
 import { bestScores } from '../schema';
 import type { LeaderboardEntry } from '../types';
 
+const CLERK_USER_LIST_BATCH_SIZE = 500;
+
 export const getLeaderboardEntries = async (): Promise<LeaderboardEntry[]> => {
   const rows = await db
     .select()
@@ -20,24 +22,27 @@ export const getLeaderboardEntries = async (): Promise<LeaderboardEntry[]> => {
   }
 
   const clerk = await clerkClient();
-  const response = await clerk.users.getUserList({
-    userId: userIds,
-    limit: Math.min(userIds.length, 500),
-  });
-
   const userMap = new Map<string, { username: string; imageUrl: string | null }>();
 
-  for (const user of response.data) {
-    const username = getPublicUsername(user.username);
-
-    if (!username) {
-      continue;
-    }
-
-    userMap.set(user.id, {
-      username,
-      imageUrl: user.imageUrl ?? null,
+  for (let i = 0; i < userIds.length; i += CLERK_USER_LIST_BATCH_SIZE) {
+    const batch = userIds.slice(i, i + CLERK_USER_LIST_BATCH_SIZE);
+    const response = await clerk.users.getUserList({
+      userId: batch,
+      limit: batch.length,
     });
+
+    for (const user of response.data) {
+      const username = getPublicUsername(user.username);
+
+      if (!username) {
+        continue;
+      }
+
+      userMap.set(user.id, {
+        username,
+        imageUrl: user.imageUrl ?? null,
+      });
+    }
   }
 
   return rows.flatMap((row) => {

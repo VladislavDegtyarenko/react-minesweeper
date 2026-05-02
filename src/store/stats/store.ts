@@ -9,6 +9,7 @@ const initialState: StatsState = {
   bestTimesByLevel: initialGuestBestTimes,
   guestBestTimesByLevel: initialGuestBestTimes,
   hasPresentedWinDialog: false, // whether the win dialog has been opened first time
+  isSignedIn: false,
   isWinDialogOpen: false, // whether the win dialog is currently open
   lastWinSummary: null,
   scoreSource: 'guest',
@@ -30,6 +31,7 @@ export const resetStatsStore = () => {
     bestTimesByLevel: createEmptyBestTimes(),
     guestBestTimesByLevel: createEmptyBestTimes(),
     hasPresentedWinDialog: false,
+    isSignedIn: false,
     isWinDialogOpen: false,
     lastWinSummary: null,
     scoreSource: 'guest',
