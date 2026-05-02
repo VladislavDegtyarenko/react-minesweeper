@@ -46,6 +46,18 @@ export const setGuestBestTimes = (
   persistGuestBestTimes(guestBestTimesByLevel);
 };
 
+export const restoreGuestStatsState = () => {
+  const { guestBestTimesByLevel } = useStatsStore.getState();
+
+  useStatsStore.setState({
+    bestTimesByLevel: guestBestTimesByLevel,
+    scoreSource: 'guest',
+    hasPresentedWinDialog: false,
+    isWinDialogOpen: false,
+    lastWinSummary: null,
+  });
+};
+
 export const recordGuestBestTime = (levelId: LevelId, elapsedMs: number) => {
   const normalizedElapsedMs = normalizeElapsedMs(elapsedMs);
 
@@ -121,12 +133,7 @@ export const recordAccountBestTime = async (
 
 export const syncStatsWithUser = async (isSignedIn: boolean) => {
   if (!isSignedIn) {
-    const { guestBestTimesByLevel } = useStatsStore.getState();
-
-    useStatsStore.setState({
-      bestTimesByLevel: guestBestTimesByLevel,
-      scoreSource: 'guest',
-    });
+    restoreGuestStatsState();
 
     return;
   }
@@ -135,12 +142,7 @@ export const syncStatsWithUser = async (isSignedIn: boolean) => {
     const scores = await getMyBestScores();
 
     if (!scores) {
-      const { guestBestTimesByLevel } = useStatsStore.getState();
-
-      useStatsStore.setState({
-        bestTimesByLevel: guestBestTimesByLevel,
-        scoreSource: 'guest',
-      });
+      restoreGuestStatsState();
 
       return;
     }
@@ -157,12 +159,7 @@ export const syncStatsWithUser = async (isSignedIn: boolean) => {
     });
   } catch (error) {
     console.error('Failed to sync authenticated stats:', error);
-    const { guestBestTimesByLevel } = useStatsStore.getState();
-
-    useStatsStore.setState({
-      bestTimesByLevel: guestBestTimesByLevel,
-      scoreSource: 'guest',
-    });
+    restoreGuestStatsState();
   }
 };
 

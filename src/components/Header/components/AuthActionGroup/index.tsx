@@ -18,9 +18,9 @@ const useAccountLabel = () => {
   const { user } = useUser();
 
   return (
-    user?.username ??
-    [user?.firstName, user?.lastName].filter(Boolean).join(' ') ??
-    user?.primaryEmailAddress?.emailAddress ??
+    user?.username ||
+    [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
+    user?.primaryEmailAddress?.emailAddress ||
     'Account'
   );
 };

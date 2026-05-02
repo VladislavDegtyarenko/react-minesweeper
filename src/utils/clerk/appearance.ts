@@ -89,6 +89,16 @@ export const CLERK_APPEARANCE = {
     identityPreview: {
       backgroundColor: '#1a2233',
       borderColor: 'rgba(255, 255, 255, 0.085)',
+      color: 'rgba(255, 255, 255, 0.92)',
+    },
+    identityPreviewText: {
+      color: 'rgba(255, 255, 255, 0.92)',
+    },
+    identityPreviewEditButton: {
+      color: '#4da3ff',
+      '&:hover': {
+        color: '#7bc1ff',
+      },
     },
     formFieldSuccessText: {
       color: '#33d69f',

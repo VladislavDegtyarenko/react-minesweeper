@@ -22,7 +22,7 @@ const LeaderboardPage = ({ entries }: Props) => {
   return (
     <PageShell
       title="Leaderboard"
-      description="Guests can view the ranking. Logged-in players submit their best times to the shared board."
+      description="Guests can view the ranking. Signed-in players can publish their best times after setting a nickname."
     >
       <div className={cx('columns')}>
         {groupedEntries.map((group) => (
@@ -55,7 +55,7 @@ const LeaderboardPage = ({ entries }: Props) => {
                 ))
               ) : (
                 <p className={cx('emptyState')}>
-                  No account scores recorded for this level yet.
+                  No public scores recorded for this level yet.
                 </p>
               )}
             </div>

@@ -1,7 +1,6 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { clerkClient } from '@clerk/nextjs/server';
 import ROUTES from '@/config/routes.json';
 import { requireUserId } from '@/utils/auth';
@@ -15,8 +14,7 @@ export const deleteAccount = async (): Promise<void> => {
   const clerk = await clerkClient();
   await clerk.users.deleteUser(userId);
 
+  revalidatePath(ROUTES.GAME);
   revalidatePath(ROUTES.LEADERBOARD);
   revalidatePath(ROUTES.ACCOUNT);
-
-  redirect(ROUTES.GAME);
 };

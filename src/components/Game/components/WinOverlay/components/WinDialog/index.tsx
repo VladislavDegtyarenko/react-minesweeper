@@ -1,5 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { createCx } from '@/utils';
+import NicknamePrompt from './components/NicknamePrompt';
+import { isClerkComponentNode } from './utils';
 import ShareSheet from '../ShareSheet';
 import styles from './styles.module.scss';
 import type { WinOverlayPresentation } from '../../types';
@@ -21,6 +23,7 @@ type WinDialogProps = Pick<
   | 'isShareSheetOpen'
   | 'shareActionItems'
   | 'sharePayload'
+  | 'shouldShowLeaderboardPrompt'
 >;
 
 const WinDialog = ({
@@ -37,10 +40,19 @@ const WinDialog = ({
   isShareSheetOpen,
   shareActionItems,
   sharePayload,
+  shouldShowLeaderboardPrompt,
 }: WinDialogProps) => {
   if (!sharePayload) {
     return null;
   }
+
+  const handleInteractOutside = (
+    event: CustomEvent<{ originalEvent: Event }>,
+  ) => {
+    if (isClerkComponentNode(event.detail.originalEvent.target)) {
+      event.preventDefault();
+    }
+  };
 
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
@@ -49,6 +61,7 @@ const WinDialog = ({
 
         <Dialog.Content
           className={cx('dialogContent', isNewBest && 'bestDialogContent')}
+          onInteractOutside={handleInteractOutside}
         >
           <div className={cx('dialogBody')}>
             <Dialog.Title className={cx('title')}>{dialogTitle}</Dialog.Title>
@@ -85,6 +98,22 @@ const WinDialog = ({
                 Share
               </button>
             </div>
+
+            {shouldShowLeaderboardPrompt ? (
+              <section className={cx('leaderboardPrompt')}>
+                <div className={cx('leaderboardPromptBody')}>
+                  <p className={cx('leaderboardPromptTitle')}>
+                    Publish your best times
+                  </p>
+                  <p className={cx('leaderboardPromptText')}>
+                    Your best results are saved to your account. Add a nickname
+                    to show them to other players on the leaderboard.
+                  </p>
+                </div>
+
+                <NicknamePrompt />
+              </section>
+            ) : null}
 
             {isShareSheetOpen && (
               <ShareSheet

@@ -40,10 +40,10 @@ const UsernameForm = () => {
 
     try {
       await updateUser({ username: trimmed });
-      setSuccessMessage(hasUsername ? 'Username updated.' : 'Username set.');
+      setSuccessMessage(hasUsername ? 'Nickname updated.' : 'Nickname set.');
     } catch (error) {
       setErrorMessage(
-        error instanceof Error ? error.message : 'Failed to update username.',
+        error instanceof Error ? error.message : 'Failed to update nickname.',
       );
     } finally {
       setIsSaving(false);
@@ -53,15 +53,15 @@ const UsernameForm = () => {
   return (
     <section className={cx('root')}>
       <header className={cx('header')}>
-        <h2 className={cx('title')}>Username</h2>
+        <h2 className={cx('title')}>Nickname</h2>
         <p className={cx('subtitle')}>
-          Shown on the leaderboard when set. Letters, numbers, and underscores
-          are allowed.
+          Required to publish your best scores on the leaderboard. Letters,
+          numbers, and underscores are allowed.
         </p>
       </header>
       <form className={cx('form')} onSubmit={handleSubmit}>
         <label className={cx('field')}>
-          <span>Username</span>
+          <span>Nickname</span>
           <input
             type="text"
             autoComplete="username"
@@ -88,8 +88,8 @@ const UsernameForm = () => {
             {isSaving
               ? 'Saving…'
               : hasUsername
-                ? 'Save username'
-                : 'Set username'}
+                ? 'Save nickname'
+                : 'Set nickname'}
           </Button>
         </div>
       </form>

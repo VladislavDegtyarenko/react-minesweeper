@@ -2,11 +2,10 @@ import 'server-only';
 
 import { clerkClient } from '@clerk/nextjs/server';
 import { asc } from 'drizzle-orm';
+import { getPublicUsername } from '@/utils/clerk';
 import { db } from '../index';
 import { bestScores } from '../schema';
 import type { LeaderboardEntry } from '../types';
-
-const FALLBACK_USERNAME = 'Player';
 
 export const getLeaderboardEntries = async (): Promise<LeaderboardEntry[]> => {
   const rows = await db
@@ -29,8 +28,14 @@ export const getLeaderboardEntries = async (): Promise<LeaderboardEntry[]> => {
   const userMap = new Map<string, { username: string; imageUrl: string | null }>();
 
   for (const user of response.data) {
+    const username = getPublicUsername(user.username);
+
+    if (!username) {
+      continue;
+    }
+
     userMap.set(user.id, {
-      username: user.username ?? FALLBACK_USERNAME,
+      username,
       imageUrl: user.imageUrl ?? null,
     });
   }

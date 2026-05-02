@@ -1,12 +1,13 @@
 'use client';
 
-import { SignOutButton, useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { useState } from 'react';
 import ROUTES from '@/config/routes.json';
 import Button from '@/components/ui/Button';
 import { createCx } from '@/utils';
 import { deleteAccount } from '@/app/account/actions';
+import { useAccountSessionActions } from './hooks/useAccountSessionActions';
 import DeleteAccountDialog from '../DeleteAccountDialog';
 import styles from './styles.module.scss';
 
@@ -14,6 +15,7 @@ const cx = createCx(styles);
 
 const AccountActions = () => {
   const { user } = useUser();
+  const { exitSession } = useAccountSessionActions();
   const expectedConfirmation =
     user?.username ?? user?.primaryEmailAddress?.emailAddress ?? '';
 
@@ -23,9 +25,11 @@ const AccountActions = () => {
     null,
   );
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const isBusy = isDeleting || isLoggingOut;
 
   const handleDialogOpenChange = (isOpen: boolean) => {
-    if (isDeleting) {
+    if (isBusy) {
       return;
     }
 
@@ -37,12 +41,19 @@ const AccountActions = () => {
     }
   };
 
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+
+    await exitSession();
+  };
+
   const handleConfirmDelete = async () => {
     setIsDeleting(true);
     setDeleteErrorMessage(null);
 
     try {
       await deleteAccount();
+      await exitSession();
     } catch (error) {
       setIsDeleting(false);
       setDeleteErrorMessage(
@@ -63,14 +74,17 @@ const AccountActions = () => {
       </div>
 
       <div className={cx('actions')}>
-        <SignOutButton redirectUrl={ROUTES.GAME}>
-          <Button variant="secondary" isDisabled={isDeleting} type="button">
-            Logout
-          </Button>
-        </SignOutButton>
+        <Button
+          variant="secondary"
+          isDisabled={isBusy}
+          type="button"
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
         <Button
           variant="danger"
-          isDisabled={isDeleting}
+          isDisabled={isBusy}
           type="button"
           onClick={() => setIsDeleteDialogOpen(true)}
         >
