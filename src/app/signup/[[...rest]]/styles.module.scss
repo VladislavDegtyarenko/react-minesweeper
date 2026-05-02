@@ -1,0 +1,8 @@
+.center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: var(--space-2) 0 var(--space-3);
+  overflow-y: auto;
+}

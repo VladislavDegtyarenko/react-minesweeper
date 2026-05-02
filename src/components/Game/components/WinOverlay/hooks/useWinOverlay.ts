@@ -1,4 +1,5 @@
 import ROUTES from '@/config/routes.json';
+import { useUser } from '@clerk/nextjs';
 import { startNewGame } from '@/store/game/actions';
 import { selectGameStatus } from '@/store/game/selectors';
 import { useGameStore } from '@/store/game/store';
@@ -6,6 +7,7 @@ import {
   setHasPresentedWinDialog,
   setIsWinDialogOpen,
 } from '@/store/stats/actions';
+import { canPublishUserScores } from '@/utils/clerk';
 import {
   selectIsWinDialogOpen,
   selectLastWinSummary,
@@ -31,6 +33,7 @@ const WIN_DIALOG_DELAY_MS = 700;
 const COPY_RESET_DELAY_MS = 2000;
 
 export const useWinOverlay = () => {
+  const { user } = useUser();
   const gameStatus = useGameStore(selectGameStatus);
   const levelLabel = useGameStore((state) => state.level.label);
   const isDialogOpen = useStatsStore(selectIsWinDialogOpen);
@@ -188,6 +191,8 @@ export const useWinOverlay = () => {
 
     return buildShareActionItems(sharePayload);
   }, [sharePayload]);
+  const shouldShowLeaderboardPrompt =
+    Boolean(user) && !canPublishUserScores(user?.username);
 
   const handleDialogOpenChange = (nextOpen: boolean) => {
     setIsWinDialogOpen(nextOpen);
@@ -288,6 +293,7 @@ export const useWinOverlay = () => {
     lastWinSummary,
     shareActionItems,
     sharePayload,
+    shouldShowLeaderboardPrompt,
   };
 
   return {

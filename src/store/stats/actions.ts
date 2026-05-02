@@ -1,17 +1,5 @@
-import {
-  resetAccountStore,
-  setAccountScoresCache,
-  setAccountScoresLoading,
-  upsertAccountScore,
-} from '@/store/account';
-import { useAuthStore } from '@/store/auth';
-import { resetLeaderboardStore } from '@/store/leaderboard';
+import { getMyBestScores, saveBestScore } from '@/app/(game)/actions';
 import type { LevelId } from '@/types';
-import {
-  fetchUserBestScores,
-  getCurrentSession,
-  upsertBestScore,
-} from '@/utils/supabase';
 import { useStatsStore } from './store';
 import {
   createEmptyBestTimes,
@@ -58,6 +46,18 @@ export const setGuestBestTimes = (
   persistGuestBestTimes(guestBestTimesByLevel);
 };
 
+export const restoreGuestStatsState = () => {
+  const { guestBestTimesByLevel } = useStatsStore.getState();
+
+  useStatsStore.setState({
+    bestTimesByLevel: guestBestTimesByLevel,
+    scoreSource: 'guest',
+    hasPresentedWinDialog: false,
+    isWinDialogOpen: false,
+    lastWinSummary: null,
+  });
+};
+
 export const recordGuestBestTime = (levelId: LevelId, elapsedMs: number) => {
   const normalizedElapsedMs = normalizeElapsedMs(elapsedMs);
 
@@ -82,7 +82,6 @@ export const recordGuestBestTime = (levelId: LevelId, elapsedMs: number) => {
 };
 
 export const recordAccountBestTime = async (
-  userId: string,
   levelId: LevelId,
   elapsedMs: number,
 ) => {
@@ -96,27 +95,30 @@ export const recordAccountBestTime = async (
   }
 
   try {
-    const nextScore = await upsertBestScore(
-      userId,
+    const result = await saveBestScore({
       levelId,
-      normalizedElapsedMs,
-    );
+      bestTimeMs: normalizedElapsedMs,
+    });
+
+    if (result.status === 'guest') {
+      recordGuestBestTime(levelId, normalizedElapsedMs);
+      return;
+    }
+
     const nextBestTimes = {
       ...bestTimesByLevel,
-      [levelId]: nextScore.best_time_ms,
+      [levelId]: result.score.bestTimeMs,
     };
 
     useStatsStore.setState({
       bestTimesByLevel: nextBestTimes,
       scoreSource: 'account',
     });
-    upsertAccountScore(userId, nextScore);
-    resetLeaderboardStore();
     setWinSummary(
       levelId,
       normalizedElapsedMs,
       previousBestMs,
-      nextScore.best_time_ms,
+      result.score.bestTimeMs,
     );
   } catch (error) {
     console.error('Failed to record account best time:', error);
@@ -129,43 +131,35 @@ export const recordAccountBestTime = async (
   }
 };
 
-export const syncStatsWithSession = async (userId: string | null) => {
-  if (!userId) {
-    const { guestBestTimesByLevel } = useStatsStore.getState();
-
-    useStatsStore.setState({
-      bestTimesByLevel: guestBestTimesByLevel,
-      scoreSource: 'guest',
-    });
-    resetAccountStore();
-    resetLeaderboardStore();
+export const syncStatsWithUser = async (isSignedIn: boolean) => {
+  if (!isSignedIn) {
+    restoreGuestStatsState();
 
     return;
   }
 
   try {
-    setAccountScoresLoading(userId);
+    const scores = await getMyBestScores();
 
-    const scores = await fetchUserBestScores(userId);
+    if (!scores) {
+      restoreGuestStatsState();
+
+      return;
+    }
+
     const syncedBestTimes = createEmptyBestTimes();
 
     scores.forEach((score) => {
-      syncedBestTimes[score.level_id] = score.best_time_ms;
+      syncedBestTimes[score.levelId] = score.bestTimeMs;
     });
 
     useStatsStore.setState({
       bestTimesByLevel: syncedBestTimes,
       scoreSource: 'account',
     });
-    setAccountScoresCache(userId, scores);
   } catch (error) {
     console.error('Failed to sync authenticated stats:', error);
-    const { guestBestTimesByLevel } = useStatsStore.getState();
-
-    useStatsStore.setState({
-      bestTimesByLevel: guestBestTimesByLevel,
-      scoreSource: 'guest',
-    });
+    restoreGuestStatsState();
   }
 };
 
@@ -186,16 +180,14 @@ export const handleCompletedGameWin = async (
   levelId: LevelId,
   elapsedMs: number,
 ) => {
-  const { user } = useAuthStore.getState();
-  const session = await getCurrentSession();
+  const { scoreSource } = useStatsStore.getState();
 
-  if (!user || !session) {
-    recordGuestBestTime(levelId, elapsedMs);
-
+  if (scoreSource === 'account') {
+    await recordAccountBestTime(levelId, elapsedMs);
     return;
   }
 
-  await recordAccountBestTime(user.id, levelId, elapsedMs);
+  recordGuestBestTime(levelId, elapsedMs);
 };
 
 export const setIsWinDialogOpen = (isWinDialogOpen: boolean) => {

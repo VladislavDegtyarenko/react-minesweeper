@@ -1,61 +1,29 @@
-'use client';
-
-import { useEffect, useMemo } from 'react';
 import PageShell from '@/components/PageShell';
 import { LEVELS_CONFIG } from '@/constants';
-import {
-  fetchLeaderboard,
-  selectLeaderboardEntries,
-  selectLeaderboardErrorMessage,
-  selectLeaderboardLoadingState,
-  useLeaderboardStore,
-} from '@/store/leaderboard';
+import type { LeaderboardEntry } from '@/utils/db';
 import { createCx, getTimeDiff } from '@/utils';
-import { getAvatarPublicUrl, hasSupabaseEnv } from '@/utils/supabase';
-import Avatar from '../ui/Avatar';
 import { formatDate } from '@/utils/formatDate';
-
+import Avatar from '../ui/Avatar';
 import styles from './styles.module.scss';
+
 const cx = createCx(styles);
 
-const LeaderboardPage = () => {
-  const isConfigured = hasSupabaseEnv();
-  const entries = useLeaderboardStore(selectLeaderboardEntries);
-  const errorMessage = useLeaderboardStore(selectLeaderboardErrorMessage);
-  const loadingState = useLeaderboardStore(selectLeaderboardLoadingState);
+type Props = {
+  entries: LeaderboardEntry[];
+};
 
-  useEffect(() => {
-    if (!isConfigured) {
-      return;
-    }
-
-    void fetchLeaderboard();
-  }, [isConfigured]);
-
-  const groupedEntries = useMemo(() => {
-    return LEVELS_CONFIG.map((level) => ({
-      entries: entries.filter((entry) => entry.level_id === level.id),
-      levelId: level.id,
-      label: level.label,
-    }));
-  }, [entries]);
+const LeaderboardPage = ({ entries }: Props) => {
+  const groupedEntries = LEVELS_CONFIG.map((level) => ({
+    entries: entries.filter((entry) => entry.levelId === level.id),
+    levelId: level.id,
+    label: level.label,
+  }));
 
   return (
     <PageShell
       title="Leaderboard"
-      description="Guests can view the ranking. Logged-in players submit their best times to the shared board."
+      description="Guests can view the ranking. Signed-in players can publish their best times after setting a nickname."
     >
-      {!isConfigured ? (
-        <p className={cx('notice')}>
-          Supabase is not configured yet, so the shared leaderboard is
-          unavailable.
-        </p>
-      ) : null}
-      {errorMessage ? <p className={cx('notice')}>{errorMessage}</p> : null}
-      {loadingState === 'loading' ? (
-        <p className={cx('notice')}>Loading leaderboard…</p>
-      ) : null}
-
       <div className={cx('columns')}>
         {groupedEntries.map((group) => (
           <section className={cx('column')} key={group.levelId}>
@@ -66,28 +34,28 @@ const LeaderboardPage = () => {
             <div className={cx('entries')}>
               {group.entries.length ? (
                 group.entries.map((entry, index) => (
-                  <article className={cx('entry')} key={entry.user_id}>
+                  <article className={cx('entry')} key={entry.id}>
                     <div className={cx('rank')}>#{index + 1}</div>
                     <div className={cx('player')}>
                       <Avatar
-                        alt={entry.nickname}
+                        alt={entry.username}
                         className={cx('avatar')}
-                        imageUrl={getAvatarPublicUrl(entry.avatar_path)}
-                        label={entry.nickname}
+                        imageUrl={entry.imageUrl}
+                        label={entry.username}
                       />
                       <div>
-                        <strong>{entry.nickname}</strong>
-                        <p>{formatDate(new Date(entry.achieved_at))}</p>
+                        <strong>{entry.username}</strong>
+                        <p>{formatDate(new Date(entry.achievedAt))}</p>
                       </div>
                     </div>
                     <div className={cx('time')}>
-                      {getTimeDiff(entry.best_time_ms)}
+                      {getTimeDiff(entry.bestTimeMs)}
                     </div>
                   </article>
                 ))
               ) : (
                 <p className={cx('emptyState')}>
-                  No account scores recorded for this level yet.
+                  No public scores recorded for this level yet.
                 </p>
               )}
             </div>

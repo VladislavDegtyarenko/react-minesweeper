@@ -2,12 +2,9 @@
 
 import * as Dialog from '@radix-ui/react-dialog';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import ROUTES from '@/config/routes.json';
-import { useAuthStore } from '@/store/auth';
 import { createCx } from '@/utils';
-import { getAvatarPublicUrl, signOut } from '@/utils/supabase';
 import AuthActionGroup from './components/AuthActionGroup';
 import MobileMenuDrawer from './components/MobileMenuDrawer';
 import MobileMenuTrigger from './components/MobileMenuTrigger';
@@ -31,27 +28,8 @@ const NAV_ITEMS = [
 ];
 
 const Header = () => {
-  const router = useRouter();
-  const { profile, status } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isAuthenticated = status === 'authenticated';
-  const accountLabel = profile?.nickname || 'Account';
-  const avatarUrl = useMemo(
-    () => getAvatarPublicUrl(profile?.avatar_path ?? null),
-    [profile?.avatar_path],
-  );
-
-  const handleLogoutClick = async () => {
-    await signOut();
-    setIsMobileMenuOpen(false);
-
-    router.replace(ROUTES.GAME);
-  };
-
-  const mobileNavItems = NAV_ITEMS.map((item) => ({
-    href: item.href,
-    label: item.label,
-  }));
+  const closeMobile = () => setIsMobileMenuOpen(false);
 
   return (
     <header className={cx('header')}>
@@ -75,12 +53,7 @@ const Header = () => {
         </nav>
 
         <div className={cx('authCluster')}>
-          <AuthActionGroup
-            avatarUrl={avatarUrl}
-            accountLabel={accountLabel}
-            isAuthenticated={isAuthenticated}
-            onLogoutClick={handleLogoutClick}
-          />
+          <AuthActionGroup />
         </div>
       </div>
 
@@ -94,17 +67,8 @@ const Header = () => {
         </div>
 
         <MobileMenuDrawer
-          authContent={
-            <AuthActionGroup
-              isMobile
-              avatarUrl={avatarUrl}
-              accountLabel={accountLabel}
-              isAuthenticated={isAuthenticated}
-              onLogoutClick={handleLogoutClick}
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-          }
-          navItems={mobileNavItems}
+          authContent={<AuthActionGroup isMobile onAction={closeMobile} />}
+          navItems={NAV_ITEMS}
         />
       </Dialog.Root>
     </header>

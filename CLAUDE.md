@@ -52,6 +52,15 @@ From `AGENTS.md`:
 - Empty line before `return` unless it's the only statement in scope. No empty `return` statements.
 - Aim for components ≤ 120 lines; split when they grow beyond that.
 
+## Legal Pages
+
+Whenever you change account, authentication, leaderboard, avatar, profile, database schema, local storage, cookies, analytics, third-party providers, or any user-data handling, review the legal pages and update them if needed:
+
+- `src/app/(pages)/privacy/page.tsx`
+- `src/app/(pages)/terms-of-service/page.tsx`
+
+If a legal page is updated, also bump `lastUpdatedDateTime` and `lastUpdated` on the page.
+
 ## Project Planning
 
 - Notion page: `Minesweeper Game to Production` — `https://www.notion.so/2b4ca6160f2b809f9cf8cec286e4242b`

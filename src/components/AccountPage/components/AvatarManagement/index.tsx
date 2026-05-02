@@ -1,50 +1,77 @@
-import { useAuthStore } from '@/store/auth';
+'use client';
+
+import { useState } from 'react';
+import { useReverification, useUser } from '@clerk/nextjs';
 import Avatar from '@/components/ui/Avatar';
 import Button from '@/components/ui/Button';
-import { getAvatarPublicUrl } from '@/utils/supabase';
 import { createCx } from '@/utils';
-import styles from './styles.module.scss';
 import AvatarUploadDialog from '../AvatarUploadDialog';
+import styles from './styles.module.scss';
 
 const cx = createCx(styles);
 
-type Props = {
-  nickname: string;
-  isSaving: boolean;
-  onAvatarUpload: (file: File) => Promise<void>;
-  onAvatarRemove: () => void;
-};
+const AvatarManagement = () => {
+  const { user, isLoaded } = useUser();
+  const setProfileImage = useReverification((file: File | null) =>
+    user
+      ? user.setProfileImage({ file })
+      : Promise.reject(new Error('Not signed in.')),
+  );
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-const AvatarManagement = ({
-  nickname,
-  isSaving,
-  onAvatarUpload,
-  onAvatarRemove,
-}: Props) => {
-  const { profile, user } = useAuthStore();
+  if (!isLoaded || !user) {
+    return null;
+  }
 
-  const avatarUrl = getAvatarPublicUrl(profile?.avatar_path ?? null);
+  const label =
+    user.username ?? user.firstName ?? user.primaryEmailAddress?.emailAddress;
+
+  const handleUpload = async (file: File) => {
+    setErrorMessage(null);
+    await setProfileImage(file);
+  };
+
+  const handleRemove = async () => {
+    setIsRemoving(true);
+    setErrorMessage(null);
+
+    try {
+      await setProfileImage(null);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Failed to remove image.',
+      );
+    } finally {
+      setIsRemoving(false);
+    }
+  };
 
   return (
     <div className={cx('root')}>
       <Avatar
-        alt={nickname || 'Avatar'}
+        alt="Profile avatar"
         className={cx('avatar')}
-        imageUrl={avatarUrl}
-        label={nickname || user?.email || 'A'}
+        imageUrl={user.imageUrl}
+        label={label ?? undefined}
       />
       <div className={cx('avatarActions')}>
         <div className={cx('avatarButtons')}>
-          <AvatarUploadDialog onUpload={onAvatarUpload} isSaving={isSaving} />
-          <Button
-            variant="ghost"
-            isDisabled={!profile?.avatar_path || isSaving}
-            type="button"
-            onClick={onAvatarRemove}
-          >
-            Remove
-          </Button>
+          <AvatarUploadDialog onUpload={handleUpload} isSaving={isRemoving} />
+          {user.hasImage ? (
+            <Button
+              variant="ghost"
+              isDisabled={isRemoving}
+              type="button"
+              onClick={handleRemove}
+            >
+              Remove
+            </Button>
+          ) : null}
         </div>
+        {errorMessage ? (
+          <p className={cx('errorText')}>{errorMessage}</p>
+        ) : null}
       </div>
     </div>
   );

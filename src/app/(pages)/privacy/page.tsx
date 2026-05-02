@@ -13,8 +13,8 @@ export default function PrivacyPage() {
     <LegalDocument
       title="Privacy Policy"
       description="How Minesweeper collects, uses, stores, and discloses personal data for accounts and the shared leaderboard."
-      lastUpdatedDateTime="2026-04-18"
-      lastUpdated="April 18, 2026"
+      lastUpdatedDateTime="2026-05-02"
+      lastUpdated="May 2, 2026"
     >
       <section>
         <h2>1. Controller and scope</h2>
@@ -41,25 +41,28 @@ export default function PrivacyPage() {
         <h2>2. Data we collect</h2>
         <ul>
           <li>
-            <strong>Account data:</strong> email address, password credentials
-            handled through Supabase Auth, nickname, and optional first name,
-            last name, and country.
+            <strong>Account data:</strong> email address, password credentials,
+            username, and optional first and last name handled through Clerk,
+            our authentication provider.
           </li>
           <li>
             <strong>Profile media:</strong> optional avatar images that you
-            upload for your account profile.
+            upload to your Clerk-managed profile.
           </li>
           <li>
-            <strong>Gameplay records:</strong> account-backed best scores,
-            level identifiers, and achievement timestamps used for your private
-            account page and the public leaderboard.
+            <strong>Gameplay records:</strong> account-backed best scores
+            stored in our database (Neon Postgres), keyed by your Clerk user
+            identifier. Each record contains the level identifier, the best
+            time in milliseconds, and timestamps for when the score was
+            achieved, created, and last updated. These records are used for
+            your private account page and the public leaderboard.
           </li>
           <li>
             <strong>Session and device storage:</strong> authentication cookies
-            required to keep signed-in sessions working and local storage used
-            for guest best scores and gameplay preferences such as control mode,
-            zoom, dig/flag toggle, question mark preference, and sound
-            settings.
+            issued by Clerk that are required to keep signed-in sessions
+            working, and browser local storage used for guest best scores and
+            gameplay preferences such as control mode, zoom, dig/flag toggle,
+            question mark preference, and sound mute setting.
           </li>
         </ul>
       </section>
@@ -68,7 +71,10 @@ export default function PrivacyPage() {
         <h2>3. How we use the data</h2>
         <ul>
           <li>Create and manage your account.</li>
-          <li>Authenticate sign-in, password reset, and account recovery flows.</li>
+          <li>
+            Authenticate sign-in, email verification, password reset, and
+            account recovery flows.
+          </li>
           <li>Save your account profile and avatar.</li>
           <li>Store and display account-backed leaderboard performance.</li>
           <li>Let you delete your account and associated stored profile data.</li>
@@ -80,18 +86,14 @@ export default function PrivacyPage() {
         <h2>4. What is public</h2>
         <ul>
           <li>
-            Your <strong>nickname</strong>, optional <strong>avatar</strong>,
+            Your <strong>username</strong>, optional <strong>avatar</strong>,
             best time, level, and achievement date can be shown publicly on the
-            leaderboard when you play with an account.
+            leaderboard when you play with an account. Only accounts that have
+            a Clerk username set are listed on the leaderboard.
           </li>
           <li>
-            Your <strong>email address</strong> is not displayed publicly by the
-            app.
-          </li>
-          <li>
-            Your optional <strong>country</strong> is stored in your account
-            profile for profile management and is not intended to be shown
-            publicly by the app.
+            Your <strong>email address</strong> is not displayed publicly by
+            the app.
           </li>
         </ul>
       </section>
@@ -110,8 +112,16 @@ export default function PrivacyPage() {
         <h2>6. Sharing and service providers</h2>
         <ul>
           <li>
-            Account, database, and avatar storage infrastructure is provided
-            through Supabase.
+            Identity, authentication, profile data, and avatar storage are
+            provided through Clerk.
+          </li>
+          <li>
+            Application data, including best scores, is stored in a Neon
+            Postgres database.
+          </li>
+          <li>
+            The site is hosted on Vercel, which processes request and runtime
+            metadata necessary to deliver the service.
           </li>
           <li>
             Public leaderboard visitors can see the public profile and score
@@ -143,9 +153,9 @@ export default function PrivacyPage() {
             is removed.
           </li>
           <li>
-            You can delete your account from the account page. That flow is
-            designed to remove your account record and associated account-backed
-            profile data from the service.
+            You can delete your account from the account page. That flow
+            removes your scores from our database and deletes your account
+            record at Clerk.
           </li>
         </ul>
       </section>
@@ -154,7 +164,7 @@ export default function PrivacyPage() {
         <h2>8. Cookies and similar storage</h2>
         <p>
           Minesweeper currently uses cookies that are necessary for signed-in
-          Supabase sessions and browser local storage that supports gameplay and
+          Clerk sessions and browser local storage that supports gameplay and
           account functionality. At the time of this policy, the app does not
           use analytics cookies, advertising cookies, or cross-site tracking
           technologies.

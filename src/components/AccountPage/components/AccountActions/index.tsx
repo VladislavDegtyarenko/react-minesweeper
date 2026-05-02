@@ -1,34 +1,37 @@
+'use client';
+
+import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { useState } from 'react';
 import ROUTES from '@/config/routes.json';
-import DeleteAccountDialog from '../DeleteAccountDialog';
 import Button from '@/components/ui/Button';
 import { createCx } from '@/utils';
+import { deleteAccount } from '@/app/account/actions';
+import { useAccountSessionActions } from './hooks/useAccountSessionActions';
+import DeleteAccountDialog from '../DeleteAccountDialog';
 import styles from './styles.module.scss';
 
 const cx = createCx(styles);
 
-type AccountActionsProps = {
-  expectedConfirmation: string;
-  isDeleting: boolean;
-  isSaving: boolean;
-  onDeleteAccount: () => Promise<string | null>;
-  onLogout: () => void;
-};
+const AccountActions = () => {
+  const { user } = useUser();
+  const { exitSession } = useAccountSessionActions();
+  const expectedConfirmation =
+    user?.username ?? user?.primaryEmailAddress?.emailAddress ?? '';
 
-const AccountActions = ({
-  expectedConfirmation,
-  isDeleting,
-  isSaving,
-  onDeleteAccount,
-  onLogout,
-}: AccountActionsProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [confirmationValue, setConfirmationValue] = useState('');
-  const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(null);
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(
+    null,
+  );
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const isBusy = isDeleting || isLoggingOut;
 
   const handleDialogOpenChange = (isOpen: boolean) => {
-    if (isDeleting) return;
+    if (isBusy) {
+      return;
+    }
 
     setIsDeleteDialogOpen(isOpen);
 
@@ -38,11 +41,24 @@ const AccountActions = ({
     }
   };
 
-  const handleConfirmDelete = async () => {
-    const error = await onDeleteAccount();
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
 
-    if (error) {
-      setDeleteErrorMessage(error);
+    await exitSession();
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    setDeleteErrorMessage(null);
+
+    try {
+      await deleteAccount();
+      await exitSession();
+    } catch (error) {
+      setIsDeleting(false);
+      setDeleteErrorMessage(
+        error instanceof Error ? error.message : 'Failed to delete account.',
+      );
     }
   };
 
@@ -60,15 +76,15 @@ const AccountActions = ({
       <div className={cx('actions')}>
         <Button
           variant="secondary"
-          isDisabled={isSaving || isDeleting}
+          isDisabled={isBusy}
           type="button"
-          onClick={onLogout}
+          onClick={handleLogout}
         >
           Logout
         </Button>
         <Button
           variant="danger"
-          isDisabled={isSaving || isDeleting}
+          isDisabled={isBusy}
           type="button"
           onClick={() => setIsDeleteDialogOpen(true)}
         >

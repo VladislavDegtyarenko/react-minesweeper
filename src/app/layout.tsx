@@ -1,10 +1,12 @@
 // Styles
 import '@/index.css';
 
+import { ClerkProvider } from '@clerk/nextjs';
 import { generateMetadata } from '../utils/seo';
-import AuthProvider from '@/components/AuthProvider';
+import ClerkAuthBridge from '@/components/ClerkAuthBridge';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { CLERK_APPEARANCE } from '@/utils/clerk';
 import { PropsWithChildren } from 'react';
 import type { Viewport } from 'next';
 
@@ -30,18 +32,19 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en">
-      <body>
-        <div id="root">
-          <AuthProvider>
+    <ClerkProvider appearance={CLERK_APPEARANCE}>
+      <html lang="en">
+        <body>
+          <div id="root">
+            <ClerkAuthBridge />
             <Header />
 
             {children}
 
             <Footer />
-          </AuthProvider>
-        </div>
-      </body>
-    </html>
+          </div>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -37,6 +37,7 @@ export type WinOverlayState = {
   lastWinSummary: LastWinSummary | null;
   shareActionItems: ShareActionItem[];
   sharePayload: NativeSharePayload | null;
+  shouldShowLeaderboardPrompt: boolean;
 };
 
 export type WinOverlayActions = {
