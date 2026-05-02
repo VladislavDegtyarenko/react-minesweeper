@@ -86,7 +86,7 @@ export function generateMetadata({
   };
 
   // Root layout only: metadataBase and title template
-  // favicon.ico is auto-detected from app/favicon.ico
+  // icon.png and apple-icon.png are auto-detected from app/
   if (isRootLayout) {
     metadata.metadataBase = new URL(SITE_URL);
     metadata.title = {
