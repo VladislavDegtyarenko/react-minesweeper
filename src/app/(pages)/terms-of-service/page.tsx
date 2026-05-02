@@ -13,8 +13,8 @@ export default function TermsOfServicePage() {
     <LegalDocument
       title="Terms of Service"
       description="Rules for using Minesweeper, including accounts, public leaderboard participation, avatars, and acceptable use."
-      lastUpdatedDateTime="2026-04-18"
-      lastUpdated="April 18, 2026"
+      lastUpdatedDateTime="2026-05-02"
+      lastUpdated="May 2, 2026"
     >
       <section>
         <h2>1. Acceptance of these terms</h2>
@@ -39,8 +39,9 @@ export default function TermsOfServicePage() {
             flows.
           </li>
           <li>
-            You may delete your account through the account page when the
-            feature is available.
+            You may delete your account through the account page. Deleting
+            your account removes your stored best scores from our database
+            and deletes your account record at Clerk.
           </li>
         </ul>
       </section>
@@ -49,11 +50,11 @@ export default function TermsOfServicePage() {
         <h2>3. Public profiles and leaderboard</h2>
         <ul>
           <li>
-            If you use an account, your nickname, avatar, and qualifying best
+            If you use an account, your username, avatar, and qualifying best
             scores may appear on the public leaderboard.
           </li>
           <li>
-            You should choose a nickname and avatar that you are comfortable
+            You should choose a username and avatar that you are comfortable
             making public.
           </li>
           <li>
@@ -68,9 +69,10 @@ export default function TermsOfServicePage() {
         <h2>4. User content</h2>
         <ul>
           <li>
-            You keep ownership of content you upload, such as avatar images, but
-            you give Minesweeper permission to host, process, resize, store, and
-            display that content as needed to operate the service.
+            You keep ownership of content you upload, such as avatar images,
+            but you give Minesweeper permission to host, process, resize,
+            store, and display that content (through Clerk, our authentication
+            and profile provider) as needed to operate the service.
           </li>
           <li>
             You must not upload content that is unlawful, infringing, deceptive,

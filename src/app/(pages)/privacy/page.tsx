@@ -13,8 +13,8 @@ export default function PrivacyPage() {
     <LegalDocument
       title="Privacy Policy"
       description="How Minesweeper collects, uses, stores, and discloses personal data for accounts and the shared leaderboard."
-      lastUpdatedDateTime="2026-04-27"
-      lastUpdated="April 27, 2026"
+      lastUpdatedDateTime="2026-05-02"
+      lastUpdated="May 2, 2026"
     >
       <section>
         <h2>1. Controller and scope</h2>
@@ -50,17 +50,19 @@ export default function PrivacyPage() {
             upload to your Clerk-managed profile.
           </li>
           <li>
-            <strong>Gameplay records:</strong> account-backed best scores,
-            level identifiers, and achievement timestamps stored in our
-            database (Neon Postgres) and used for your private account page
-            and the public leaderboard.
+            <strong>Gameplay records:</strong> account-backed best scores
+            stored in our database (Neon Postgres), keyed by your Clerk user
+            identifier. Each record contains the level identifier, the best
+            time in milliseconds, and timestamps for when the score was
+            achieved, created, and last updated. These records are used for
+            your private account page and the public leaderboard.
           </li>
           <li>
             <strong>Session and device storage:</strong> authentication cookies
             issued by Clerk that are required to keep signed-in sessions
             working, and browser local storage used for guest best scores and
             gameplay preferences such as control mode, zoom, dig/flag toggle,
-            question mark preference, and sound settings.
+            question mark preference, and sound mute setting.
           </li>
         </ul>
       </section>
@@ -86,7 +88,8 @@ export default function PrivacyPage() {
           <li>
             Your <strong>username</strong>, optional <strong>avatar</strong>,
             best time, level, and achievement date can be shown publicly on the
-            leaderboard when you play with an account.
+            leaderboard when you play with an account. Only accounts that have
+            a Clerk username set are listed on the leaderboard.
           </li>
           <li>
             Your <strong>email address</strong> is not displayed publicly by
