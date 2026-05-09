@@ -1,0 +1,71 @@
+.scrollHint {
+  display: block;
+  pointer-events: none;
+  position: absolute;
+  user-select: none;
+  transition: opacity 100ms var(--easing-standard);
+
+  &.top,
+  &.bottom {
+    left: 0;
+    right: 0;
+    height: var(--cell-size);
+  }
+
+  &.top {
+    top: 0;
+    background: linear-gradient(
+      to bottom,
+      var(--surface-1) 0%,
+      color-mix(in srgb, var(--surface-1) 70%, transparent) 40%,
+      color-mix(in srgb, var(--surface-1) 30%, transparent) 70%,
+      transparent 100%
+    );
+  }
+
+  &.bottom {
+    bottom: 0;
+    background: linear-gradient(
+      to top,
+      var(--surface-1) 0%,
+      color-mix(in srgb, var(--surface-1) 70%, transparent) 40%,
+      color-mix(in srgb, var(--surface-1) 30%, transparent) 70%,
+      transparent 100%
+    );
+  }
+
+  &.left,
+  &.right {
+    top: 0;
+    bottom: 0;
+    width: var(--cell-size);
+  }
+
+  &.left {
+    left: 0;
+    background: linear-gradient(
+      to right,
+      var(--surface-1) 0%,
+      color-mix(in srgb, var(--surface-1) 70%, transparent) 40%,
+      color-mix(in srgb, var(--surface-1) 30%, transparent) 70%,
+      transparent 100%
+    );
+  }
+
+  &.right {
+    right: 0;
+    background: linear-gradient(
+      to left,
+      var(--surface-1) 0%,
+      color-mix(in srgb, var(--surface-1) 70%, transparent) 40%,
+      color-mix(in srgb, var(--surface-1) 30%, transparent) 70%,
+      transparent 100%
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrollHint {
+    transition: none;
+  }
+}

@@ -1,7 +1,7 @@
 import { useGameStore } from '@/store/game';
 import { selectIsGameLost } from '@/store/game/selectors';
 import { useStatsStore } from '@/store/stats';
-import { CSSProperties, PropsWithChildren, useState } from 'react';
+import type { CSSProperties, PropsWithChildren } from 'react';
 import { setIsWinDialogOpen } from '@/store/stats/actions';
 import { createCx } from '@/utils';
 import styles from './styles.module.scss';
@@ -9,10 +9,11 @@ import styles from './styles.module.scss';
 const cx = createCx(styles);
 
 type Props = PropsWithChildren<{
+  cellSize: string;
   gameFooterHeight: number;
 }>;
 
-const BoardWrapper = ({ gameFooterHeight, children }: Props) => {
+const BoardWrapper = ({ cellSize, children, gameFooterHeight }: Props) => {
   const isGameLost = useGameStore(selectIsGameLost);
 
   const handleBoardAreaClick = () => {
@@ -23,7 +24,6 @@ const BoardWrapper = ({ gameFooterHeight, children }: Props) => {
       return undefined;
     }
 
-    // Open the win dialog
     setIsWinDialogOpen(true);
   };
 
@@ -33,6 +33,7 @@ const BoardWrapper = ({ gameFooterHeight, children }: Props) => {
       onClick={handleBoardAreaClick}
       style={
         {
+          '--cell-size': cellSize,
           '--game-footer-height': gameFooterHeight + 'px',
         } as CSSProperties
       }

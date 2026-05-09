@@ -11,7 +11,6 @@
 
 .board {
   box-sizing: border-box;
-  --cell-size: 2rem;
   background-color: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
@@ -82,7 +81,7 @@
   }
 
   .boardArea {
-    padding: 0;
+    padding: var(--space-1);
     --game-header-height: 57px;
   }
 }
