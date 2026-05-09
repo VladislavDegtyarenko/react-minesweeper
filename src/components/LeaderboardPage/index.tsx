@@ -9,10 +9,11 @@ import styles from './styles.module.scss';
 const cx = createCx(styles);
 
 type Props = {
+  currentUserId: string | null;
   entries: LeaderboardEntry[];
 };
 
-const LeaderboardPage = ({ entries }: Props) => {
+const LeaderboardPage = ({ currentUserId, entries }: Props) => {
   const groupedEntries = LEVELS_CONFIG.map((level) => ({
     entries: entries.filter((entry) => entry.levelId === level.id),
     levelId: level.id,
@@ -33,26 +34,42 @@ const LeaderboardPage = ({ entries }: Props) => {
             </header>
             <div className={cx('entries')}>
               {group.entries.length ? (
-                group.entries.map((entry, index) => (
-                  <article className={cx('entry')} key={entry.id}>
-                    <div className={cx('rank')}>#{index + 1}</div>
-                    <div className={cx('player')}>
-                      <Avatar
-                        alt={entry.username}
-                        className={cx('avatar')}
-                        imageUrl={entry.imageUrl}
-                        label={entry.username}
-                      />
-                      <div>
-                        <strong>{entry.username}</strong>
-                        <p>{formatDate(new Date(entry.achievedAt))}</p>
+                group.entries.map((entry, index) => {
+                  const isCurrentUser = entry.userId === currentUserId;
+
+                  return (
+                    <article
+                      className={cx(
+                        'entry',
+                        isCurrentUser && 'currentUserEntry',
+                      )}
+                      key={entry.id}
+                      aria-current={isCurrentUser ? 'true' : undefined}
+                    >
+                      <div className={cx('rank')}>#{index + 1}</div>
+                      <div className={cx('player')}>
+                        <Avatar
+                          alt={entry.username}
+                          className={cx('avatar')}
+                          imageUrl={entry.imageUrl}
+                          label={entry.username}
+                        />
+                        <div>
+                          <strong className={cx('playerName')}>
+                            {entry.username}
+                            {isCurrentUser ? (
+                              <span className={cx('youBadge')}>You</span>
+                            ) : null}
+                          </strong>
+                          <p>{formatDate(new Date(entry.achievedAt))}</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className={cx('time')}>
-                      {getTimeDiff(entry.bestTimeMs)}
-                    </div>
-                  </article>
-                ))
+                      <div className={cx('time')}>
+                        {getTimeDiff(entry.bestTimeMs)}
+                      </div>
+                    </article>
+                  );
+                })
               ) : (
                 <p className={cx('emptyState')}>
                   No public scores recorded for this level yet.

@@ -11,6 +11,7 @@ export const PUBLIC_PAGES = [
     priority: 1.0,
     changeFrequency: 'weekly' as const,
   },
+  { path: '/leaderboard', priority: 0.7, changeFrequency: 'daily' as const },
   { path: '/how-to-play', priority: 0.8, changeFrequency: 'monthly' as const },
   { path: '/privacy', priority: 0.3, changeFrequency: 'yearly' as const },
   {

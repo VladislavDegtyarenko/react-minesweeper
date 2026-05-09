@@ -33,8 +33,11 @@ export type WinOverlayState = {
   dialogTitle: string;
   isDialogOpen: boolean;
   isNewBest: boolean;
+  isScoreSyncFailed: boolean;
+  isScoreSyncRetrying: boolean;
   isShareSheetOpen: boolean;
   lastWinSummary: LastWinSummary | null;
+  scoreSyncMessage: string | null;
   shareActionItems: ShareActionItem[];
   sharePayload: NativeSharePayload | null;
   shouldShowLeaderboardPrompt: boolean;
@@ -43,6 +46,7 @@ export type WinOverlayState = {
 export type WinOverlayActions = {
   handleDialogOpenChange: (nextOpen: boolean) => void;
   handleNewGameClick: () => void;
+  handleRetryScoreSyncClick: () => Promise<void>;
   handleShareActionClick: (channel: ShareChannel) => Promise<void>;
   handleShareClick: () => Promise<void>;
 };

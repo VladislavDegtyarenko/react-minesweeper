@@ -85,6 +85,7 @@ const shouldOpenCell = (row: number, col: number): boolean => {
   if (
     gameStatus === 'won' ||
     gameStatus === 'lost' ||
+    gameStatus === 'paused' ||
     isCellOpened ||
     isCellFlagged
   ) {
@@ -123,7 +124,8 @@ const openCell = (board: TBoard, row: number, col: number): void => {
     return;
   }
 
-  const { level, openedSafeCells, correctlyFlaggedMines } = useGameStore.getState();
+  const { level, openedSafeCells, correctlyFlaggedMines } =
+    useGameStore.getState();
   const isNumberCell = typeof cell.value === 'number' && cell.value > 0;
   let openedDelta = 0;
   let newBoard: TBoard;
@@ -140,21 +142,41 @@ const openCell = (board: TBoard, row: number, col: number): void => {
     openedDelta = 1;
     // Shallow-clone only the changed row and cell; all other rows reuse their references.
     const newRow = [...board[row]] as TBoard[number];
-    newRow[col] = { ...cell, isOpened: true, marker: null } as unknown as typeof cell;
+    newRow[col] = {
+      ...cell,
+      isOpened: true,
+      marker: null,
+    } as unknown as typeof cell;
     newBoard = board.map((r, i) => (i === row ? newRow : r)) as TBoard;
   }
 
   const newOpenedSafeCells = openedSafeCells + openedDelta;
   const totalSafeCells = level.rows * level.cols - level.totalMines;
 
-  if (checkGameWin(newOpenedSafeCells, totalSafeCells, correctlyFlaggedMines, level.totalMines)) {
-    const wonBoard = produce<TBoard>(newBoard, (draft) => { revealBoard(draft, true); });
-    useGameStore.setState({ board: wonBoard, gameStatus: 'won', openedSafeCells: newOpenedSafeCells });
+  if (
+    checkGameWin(
+      newOpenedSafeCells,
+      totalSafeCells,
+      correctlyFlaggedMines,
+      level.totalMines,
+    )
+  ) {
+    const wonBoard = produce<TBoard>(newBoard, (draft) => {
+      revealBoard(draft, true);
+    });
+    useGameStore.setState({
+      board: wonBoard,
+      gameStatus: 'won',
+      openedSafeCells: newOpenedSafeCells,
+    });
     playSFX('GAME_WIN');
     return;
   }
 
-  useGameStore.setState({ board: newBoard, openedSafeCells: newOpenedSafeCells });
+  useGameStore.setState({
+    board: newBoard,
+    openedSafeCells: newOpenedSafeCells,
+  });
 };
 
 export const handleOpenCell = (row: number, col: number) => {
@@ -198,6 +220,7 @@ const shouldToggleMarker = (
   if (
     gameStatus === 'won' ||
     gameStatus === 'lost' ||
+    gameStatus === 'paused' ||
     isCellOpened ||
     isFlagLimitReached
   ) {
@@ -220,7 +243,8 @@ const toggleMarker = (
     useGameStore.setState({ gameStatus: 'playing' });
   }
 
-  const { board, level, openedSafeCells, correctlyFlaggedMines } = useGameStore.getState();
+  const { board, level, openedSafeCells, correctlyFlaggedMines } =
+    useGameStore.getState();
   const cell = board[row][col];
   const isCellMine = cell.value === 'mine';
   const nextMarker = getNextMarker(cell.marker, isQuestionMarkEnabled);
@@ -257,8 +281,17 @@ const toggleMarker = (
   const newCorrectlyFlaggedMines = correctlyFlaggedMines + mineFlagDiff;
   const totalSafeCells = level.rows * level.cols - level.totalMines;
 
-  if (checkGameWin(openedSafeCells, totalSafeCells, newCorrectlyFlaggedMines, level.totalMines)) {
-    const wonBoard = produce<TBoard>(newGameBoard, (draft) => { revealBoard(draft, true); });
+  if (
+    checkGameWin(
+      openedSafeCells,
+      totalSafeCells,
+      newCorrectlyFlaggedMines,
+      level.totalMines,
+    )
+  ) {
+    const wonBoard = produce<TBoard>(newGameBoard, (draft) => {
+      revealBoard(draft, true);
+    });
     useGameStore.setState((state) => ({
       board: wonBoard,
       gameStatus: 'won',

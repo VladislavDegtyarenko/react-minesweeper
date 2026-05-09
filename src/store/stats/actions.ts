@@ -8,11 +8,15 @@ import {
   persistGuestBestTimes,
 } from './utils';
 
+const SCORE_SYNC_ERROR_MESSAGE =
+  'We could not sync this score to your account. Check your connection and try again.';
+
 const setWinSummary = (
   levelId: LevelId,
   elapsedMs: number,
   previousBestMs: number | null,
   bestTimeMs: number,
+  isNewBest = previousBestMs == null || elapsedMs < previousBestMs,
 ) => {
   useStatsStore.setState({
     hasPresentedWinDialog: false,
@@ -22,7 +26,34 @@ const setWinSummary = (
       elapsedMs,
       previousBestMs,
       bestTimeMs,
-      isNewBest: previousBestMs == null || elapsedMs < previousBestMs,
+      isNewBest,
+    },
+  });
+};
+
+const resetScoreSyncState = () => {
+  useStatsStore.setState({
+    scoreSyncState: {
+      message: null,
+      status: 'idle',
+    },
+  });
+};
+
+const setScoreSyncFailed = () => {
+  useStatsStore.setState({
+    scoreSyncState: {
+      message: SCORE_SYNC_ERROR_MESSAGE,
+      status: 'failed',
+    },
+  });
+};
+
+const setScoreSyncing = () => {
+  useStatsStore.setState({
+    scoreSyncState: {
+      message: null,
+      status: 'syncing',
     },
   });
 };
@@ -56,6 +87,7 @@ export const restoreGuestStatsState = () => {
     isWinDialogOpen: false,
     lastWinSummary: null,
   });
+  resetScoreSyncState();
 };
 
 export const recordGuestBestTime = (levelId: LevelId, elapsedMs: number) => {
@@ -78,6 +110,7 @@ export const recordGuestBestTime = (levelId: LevelId, elapsedMs: number) => {
     scoreSource: 'guest',
   });
   persistGuestBestTimes(nextGuestBestTimes);
+  resetScoreSyncState();
   setWinSummary(levelId, normalizedElapsedMs, previousBestMs, bestTimeMs);
 };
 
@@ -90,11 +123,14 @@ export const recordAccountBestTime = async (
   const previousBestMs = bestTimesByLevel[levelId];
 
   if (previousBestMs != null && normalizedElapsedMs >= previousBestMs) {
+    resetScoreSyncState();
     setWinSummary(levelId, normalizedElapsedMs, previousBestMs, previousBestMs);
     return;
   }
 
   try {
+    setScoreSyncing();
+
     const result = await saveBestScore({
       levelId,
       bestTimeMs: normalizedElapsedMs,
@@ -114,11 +150,13 @@ export const recordAccountBestTime = async (
       bestTimesByLevel: nextBestTimes,
       scoreSource: 'account',
     });
+    resetScoreSyncState();
     setWinSummary(
       levelId,
       normalizedElapsedMs,
       previousBestMs,
       result.score.bestTimeMs,
+      result.didSave,
     );
   } catch (error) {
     console.error('Failed to record account best time:', error);
@@ -128,6 +166,7 @@ export const recordAccountBestTime = async (
       previousBestMs,
       previousBestMs ?? normalizedElapsedMs,
     );
+    setScoreSyncFailed();
   }
 };
 
@@ -159,6 +198,7 @@ export const syncStatsWithUser = async (isSignedIn: boolean) => {
       bestTimesByLevel: syncedBestTimes,
       scoreSource: 'account',
     });
+    resetScoreSyncState();
   } catch (error) {
     console.error('Failed to sync authenticated stats:', error);
     restoreGuestStatsState();
@@ -190,6 +230,16 @@ export const handleCompletedGameWin = async (
   }
 
   recordGuestBestTime(levelId, elapsedMs);
+};
+
+export const retryAccountBestTimeSync = async () => {
+  const { isSignedIn, lastWinSummary } = useStatsStore.getState();
+
+  if (!isSignedIn || !lastWinSummary) {
+    return;
+  }
+
+  await recordAccountBestTime(lastWinSummary.levelId, lastWinSummary.elapsedMs);
 };
 
 export const setIsWinDialogOpen = (isWinDialogOpen: boolean) => {

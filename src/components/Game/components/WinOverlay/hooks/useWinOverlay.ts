@@ -4,6 +4,7 @@ import { startNewGame } from '@/store/game/actions';
 import { selectGameStatus } from '@/store/game/selectors';
 import { useGameStore } from '@/store/game/store';
 import {
+  retryAccountBestTimeSync,
   setHasPresentedWinDialog,
   setIsWinDialogOpen,
 } from '@/store/stats/actions';
@@ -11,6 +12,7 @@ import { canPublishUserScores } from '@/utils/clerk';
 import {
   selectIsWinDialogOpen,
   selectLastWinSummary,
+  selectScoreSyncState,
 } from '@/store/stats/selectors';
 import { useStatsStore } from '@/store/stats/store';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -38,6 +40,7 @@ export const useWinOverlay = () => {
   const levelLabel = useGameStore((state) => state.level.label);
   const isDialogOpen = useStatsStore(selectIsWinDialogOpen);
   const lastWinSummary = useStatsStore(selectLastWinSummary);
+  const scoreSyncState = useStatsStore(selectScoreSyncState);
 
   const [confettiCanvas, setConfettiCanvas] =
     useState<HTMLCanvasElement | null>(null);
@@ -209,6 +212,10 @@ export const useWinOverlay = () => {
     startNewGame();
   };
 
+  const handleRetryScoreSyncClick = async () => {
+    await retryAccountBestTimeSync();
+  };
+
   const setCopiedState = (nextState: CopyState) => {
     resetCopyFeedbackTimeout();
     setCopyState(nextState);
@@ -285,12 +292,16 @@ export const useWinOverlay = () => {
     dialogTitle: lastWinSummary?.isNewBest ? 'New Best Time' : 'You Win',
     handleDialogOpenChange,
     handleNewGameClick,
+    handleRetryScoreSyncClick,
     handleShareActionClick,
     handleShareClick,
     isDialogOpen,
     isNewBest: Boolean(lastWinSummary?.isNewBest),
+    isScoreSyncFailed: scoreSyncState.status === 'failed',
+    isScoreSyncRetrying: scoreSyncState.status === 'syncing',
     isShareSheetOpen,
     lastWinSummary,
+    scoreSyncMessage: scoreSyncState.message,
     shareActionItems,
     sharePayload,
     shouldShowLeaderboardPrompt,

@@ -38,6 +38,11 @@
   }
 }
 
+.pausedBoard {
+  overflow: hidden;
+  touch-action: none;
+}
+
 // Inner wrapper so horizontal scroll extent includes end padding (padding on
 // overflow containers does not reliably widen scrollWidth in all engines).
 .boardContent {
@@ -53,6 +58,7 @@
   padding-bottom: var(--space-1);
   display: flex;
   justify-content: center;
+  position: relative;
   --game-header-height: 67px;
   --game-footer-height: 0px; // changed in JSX if Dig/Flag buttons are visible
   max-height: calc(

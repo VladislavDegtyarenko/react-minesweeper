@@ -5,7 +5,8 @@ export const selectBestTimesByLevel = (state: StatsState) =>
   state.bestTimesByLevel;
 
 export const selectBestTimeByLevel =
-  (levelId: LevelId) => (state: StatsState) => state.bestTimesByLevel[levelId];
+  (levelId: LevelId) => (state: StatsState) =>
+    state.bestTimesByLevel[levelId];
 
 export const selectGuestBestTimesByLevel = (state: StatsState) =>
   state.guestBestTimesByLevel;
@@ -19,3 +20,5 @@ export const selectHasPresentedWinDialog = (state: StatsState) =>
 export const selectLastWinSummary = (state: StatsState) => state.lastWinSummary;
 
 export const selectScoreSource = (state: StatsState) => state.scoreSource;
+
+export const selectScoreSyncState = (state: StatsState) => state.scoreSyncState;

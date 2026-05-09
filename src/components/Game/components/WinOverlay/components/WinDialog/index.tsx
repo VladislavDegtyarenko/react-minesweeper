@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { createCx } from '@/utils';
 import NicknamePrompt from './components/NicknamePrompt';
+import ScoreSyncNotice from './components/ScoreSyncNotice';
 import { isClerkComponentNode } from './utils';
 import ShareSheet from '../ShareSheet';
 import styles from './styles.module.scss';
@@ -16,11 +17,15 @@ type WinDialogProps = Pick<
   | 'dialogTitle'
   | 'handleDialogOpenChange'
   | 'handleNewGameClick'
+  | 'handleRetryScoreSyncClick'
   | 'handleShareActionClick'
   | 'handleShareClick'
   | 'isDialogOpen'
   | 'isNewBest'
+  | 'isScoreSyncFailed'
+  | 'isScoreSyncRetrying'
   | 'isShareSheetOpen'
+  | 'scoreSyncMessage'
   | 'shareActionItems'
   | 'sharePayload'
   | 'shouldShowLeaderboardPrompt'
@@ -33,11 +38,15 @@ const WinDialog = ({
   dialogTitle,
   handleDialogOpenChange,
   handleNewGameClick,
+  handleRetryScoreSyncClick,
   handleShareActionClick,
   handleShareClick,
   isDialogOpen,
   isNewBest,
+  isScoreSyncFailed,
+  isScoreSyncRetrying,
   isShareSheetOpen,
+  scoreSyncMessage,
   shareActionItems,
   sharePayload,
   shouldShowLeaderboardPrompt,
@@ -80,6 +89,14 @@ const WinDialog = ({
                 <dd>{sharePayload.bestTimeLabel}</dd>
               </div>
             </dl>
+
+            {(isScoreSyncFailed || isScoreSyncRetrying) && (
+              <ScoreSyncNotice
+                isRetrying={isScoreSyncRetrying}
+                message={scoreSyncMessage}
+                onRetry={handleRetryScoreSyncClick}
+              />
+            )}
 
             <div className={cx('actions')}>
               <button

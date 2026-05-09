@@ -1,4 +1,11 @@
-import { CSSProperties, memo, PointerEvent, MouseEvent, useRef, useEffect } from 'react';
+import {
+  CSSProperties,
+  memo,
+  PointerEvent,
+  MouseEvent,
+  useRef,
+  useEffect,
+} from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/store/game';
 import {
@@ -64,6 +71,12 @@ const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
 
     if (!indexes) return;
 
+    if (gameStatus === 'paused') {
+      e.preventDefault();
+
+      return;
+    }
+
     const { rowIndex, cellIndex } = indexes;
 
     handleCellInteraction({
@@ -82,7 +95,10 @@ const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
 
   // Created once; never re-instantiated, so throttle state survives re-renders.
   const throttledPointerMove = useRef(
-    throttle((e: PointerEvent<HTMLDivElement>) => onPointerEventRef.current(e), 100),
+    throttle(
+      (e: PointerEvent<HTMLDivElement>) => onPointerEventRef.current(e),
+      100,
+    ),
   ).current;
 
   const onContextMenu = (e: MouseEvent<HTMLDivElement>) => {
@@ -91,6 +107,12 @@ const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
     );
 
     if (!indexes) return;
+
+    if (gameStatus === 'paused') {
+      e.preventDefault();
+
+      return;
+    }
 
     const { rowIndex, cellIndex } = indexes;
 
@@ -104,7 +126,11 @@ const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
   return (
     <BoardWrapper gameFooterHeight={gameFooterHeight}>
       <div
-        className={cx('boardScrollable', 'board')}
+        className={cx(
+          'boardScrollable',
+          'board',
+          gameStatus === 'paused' && 'pausedBoard',
+        )}
         style={
           {
             '--cell-size': `${2.125 * zoom}rem`,
@@ -122,9 +148,9 @@ const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
         {Array.from({ length: rows }, (_, rowIndex) => (
           <Row rowIndex={rowIndex} key={rowIndex} />
         ))}
-
-        {shouldShowPauseOverlay && <PauseOverlay />}
       </div>
+
+      {shouldShowPauseOverlay && <PauseOverlay />}
     </BoardWrapper>
   );
 };

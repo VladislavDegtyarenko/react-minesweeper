@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { auth } from '@clerk/nextjs/server';
 import LeaderboardPage from '@/components/LeaderboardPage';
 import ROUTES from '@/config/routes.json';
 import { getLeaderboardEntries } from '@/utils/db/queries';
@@ -14,7 +15,8 @@ export const metadata: Metadata = buildMetadata({
 export const dynamic = 'force-dynamic';
 
 export default async function LeaderboardRoutePage() {
+  const { userId } = await auth();
   const entries = await getLeaderboardEntries();
 
-  return <LeaderboardPage entries={entries} />;
+  return <LeaderboardPage currentUserId={userId} entries={entries} />;
 }

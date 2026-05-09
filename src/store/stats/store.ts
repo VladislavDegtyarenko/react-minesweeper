@@ -13,6 +13,10 @@ const initialState: StatsState = {
   isWinDialogOpen: false, // whether the win dialog is currently open
   lastWinSummary: null,
   scoreSource: 'guest',
+  scoreSyncState: {
+    message: null,
+    status: 'idle',
+  },
 };
 
 export const useStatsStore = create<StatsState>()(
@@ -35,5 +39,9 @@ export const resetStatsStore = () => {
     isWinDialogOpen: false,
     lastWinSummary: null,
     scoreSource: 'guest',
+    scoreSyncState: {
+      message: null,
+      status: 'idle',
+    },
   });
 };

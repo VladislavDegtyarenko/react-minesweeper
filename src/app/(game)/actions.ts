@@ -14,7 +14,7 @@ type SaveBestScoreInput = {
 
 type SaveBestScoreResult =
   | { status: 'guest' }
-  | { status: 'saved'; score: BestScore };
+  | { status: 'saved'; didSave: boolean; score: BestScore };
 
 export const saveBestScore = async (
   input: SaveBestScoreInput,
@@ -25,7 +25,7 @@ export const saveBestScore = async (
     return { status: 'guest' };
   }
 
-  const score = await saveUserBestScore({
+  const result = await saveUserBestScore({
     userId,
     levelId: input.levelId,
     bestTimeMs: input.bestTimeMs,
@@ -34,7 +34,7 @@ export const saveBestScore = async (
   revalidatePath(ROUTES.LEADERBOARD);
   revalidatePath(ROUTES.ACCOUNT);
 
-  return { status: 'saved', score };
+  return { status: 'saved', ...result };
 };
 
 export const getMyBestScores = async (): Promise<BestScore[] | null> => {
