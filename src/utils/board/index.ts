@@ -180,7 +180,7 @@ const openCell = (board: TBoard, row: number, col: number): void => {
 };
 
 export const handleOpenCell = (row: number, col: number) => {
-  const { board, level, isGameRestarted } = useGameStore.getState();
+  const { board, level, isGameRestarted, mode } = useGameStore.getState();
 
   const isMineCell = board[row][col].value === 'mine';
   const isFirstClick =
@@ -190,11 +190,9 @@ export const handleOpenCell = (row: number, col: number) => {
 
   let newGameBoard: TBoard;
 
-  if (isFirstClickOnMine && !isGameRestarted) {
+  if (isFirstClickOnMine && !isGameRestarted && mode === 'free') {
     // Generate a fresh board guaranteed to have no mine at the clicked cell.
-    // excludeCell swaps the clicked position out of the mine pool before shuffling,
-    // so this always completes in a single O(n) pass (no retry loop needed).
-    newGameBoard = initBoard(level, { row, col });
+    newGameBoard = initBoard(level, { excludeCell: { row, col } });
   } else {
     newGameBoard = board;
   }

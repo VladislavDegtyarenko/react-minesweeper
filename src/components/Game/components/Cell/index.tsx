@@ -31,27 +31,27 @@ const Cell = (props: Props) => {
     typeof value === 'number' ? CELL_NUMBERS_COLORS[value] : null;
 
   return (
-    <div
-      className={cx(
-        'cell',
-        cellNumberClass || undefined,
-        highlight === 'red' && 'red',
-      )}
-      data-row={rowIndex}
-      data-cell={cellIndex}
-    >
-      {isMine && isOpened && <Bomb />}
+    <div className={cx('cell')} data-row={rowIndex} data-cell={cellIndex}>
+      <div
+        className={cx(
+          'cellSurface',
+          cellNumberClass || undefined,
+          highlight === 'red' && 'red',
+        )}
+      >
+        {isMine && isOpened && <Bomb />}
 
-      {typeof value === 'number' && isOpened && <Number value={value} />}
+        {typeof value === 'number' && isOpened && <Number value={value} />}
 
-      {!isOpened && (
-        <Overlay isMine={value === 'mine'} highlight={highlight}>
-          {isFlagged && <Flag />}
-          {isQuestionMarked && <QuestionMark />}
-        </Overlay>
-      )}
+        {!isOpened && (
+          <Overlay isMine={value === 'mine'} highlight={highlight}>
+            {isFlagged && <Flag />}
+            {isQuestionMarked && <QuestionMark />}
+          </Overlay>
+        )}
 
-      <Cross isFlagged={isFlagged} isMine={isMine} />
+        <Cross isFlagged={isFlagged} isMine={isMine} />
+      </div>
     </div>
   );
 };

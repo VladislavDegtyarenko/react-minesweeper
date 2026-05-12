@@ -249,3 +249,17 @@ export const setIsWinDialogOpen = (isWinDialogOpen: boolean) => {
 export const setHasPresentedWinDialog = (hasPresentedWinDialog: boolean) => {
   useStatsStore.setState({ hasPresentedWinDialog });
 };
+
+/**
+ * Daily wins are recorded into the daily attempts store and don't touch the
+ * free-play best score table. We still want to surface the win dialog, so
+ * this sets a transient summary derived purely from the current run.
+ */
+export const recordDailyWinSummary = (
+  levelId: LevelId,
+  elapsedMs: number,
+) => {
+  const normalizedElapsedMs = normalizeElapsedMs(elapsedMs);
+  resetScoreSyncState();
+  setWinSummary(levelId, normalizedElapsedMs, null, normalizedElapsedMs, false);
+};

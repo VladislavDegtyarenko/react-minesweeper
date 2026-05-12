@@ -1,8 +1,20 @@
 import { LevelId, TBoard } from '@/types';
 import { initGame } from '@/utils';
+import {
+  DAILY_SEED_VERSION,
+  generateDailyBoard,
+  getDailyKey,
+} from '@/utils/daily';
 import { getLevelById } from '@/utils/getLevelById';
 import { resetTimer, stopTimer } from '../timer/actions';
-import { useGameStore, type GameStatusBeforeLevelChange } from './store';
+import {
+  useGameStore,
+  type GameMode,
+  type GameStatus,
+  type GameStatusBeforeLevelChange,
+} from './store';
+
+const FINISHED_GAME_STATUSES: GameStatus[] = ['idle', 'won', 'lost'];
 
 export const changeLevel = (newLevelId: LevelId) => {
   useGameStore.setState({ level: getLevelById(newLevelId) });
@@ -11,10 +23,12 @@ export const changeLevel = (newLevelId: LevelId) => {
 const setLevelChangeDialogState = (
   pendingLevelId: LevelId | null,
   gameStatusBeforeLevelChange: GameStatusBeforeLevelChange | null,
+  pendingMode: GameMode | null = null,
 ) => {
   useGameStore.setState({
-    isLevelChangeDialogOpen: Boolean(pendingLevelId),
+    isLevelChangeDialogOpen: Boolean(pendingLevelId || pendingMode),
     pendingLevelId,
+    pendingMode,
     gameStatusBeforeLevelChange,
   });
 };
@@ -26,8 +40,9 @@ export const requestLevelChange = (newLevelId: LevelId) => {
     return undefined;
   }
 
-  if (gameStatus === 'idle' || gameStatus === 'won' || gameStatus === 'lost') {
+  if (FINISHED_GAME_STATUSES.includes(gameStatus)) {
     changeLevel(newLevelId);
+
     return undefined;
   }
 
@@ -46,14 +61,23 @@ export const requestLevelChange = (newLevelId: LevelId) => {
 };
 
 export const confirmLevelChange = () => {
-  const { pendingLevelId } = useGameStore.getState();
+  const { pendingLevelId, pendingMode } = useGameStore.getState();
 
-  if (!pendingLevelId) {
+  if (!pendingLevelId && !pendingMode) {
     return undefined;
   }
 
   setLevelChangeDialogState(null, null);
-  changeLevel(pendingLevelId);
+
+  if (pendingMode) {
+    changeMode(pendingMode, pendingLevelId ?? undefined);
+
+    return undefined;
+  }
+
+  if (pendingLevelId) {
+    changeLevel(pendingLevelId);
+  }
 
   return undefined;
 };
@@ -75,32 +99,65 @@ export const cancelLevelChange = () => {
   return undefined;
 };
 
+const buildBoardForCurrentMode = (level: ReturnType<typeof getLevelById>) => {
+  const { mode, dailyKey, dailySeedVersion } = useGameStore.getState();
+
+  if (mode === 'daily') {
+    const key = dailyKey ?? getDailyKey();
+    const seedVersion = dailySeedVersion ?? DAILY_SEED_VERSION;
+
+    return {
+      board: generateDailyBoard({ dailyKey: key, level }),
+      dailyKey: key,
+      dailySeedVersion: seedVersion,
+    };
+  }
+
+  return {
+    board: initGame(level),
+    dailyKey: null,
+    dailySeedVersion: null,
+  };
+};
+
 export const resetBoard = (isRestart?: boolean) => {
   stopTimer();
   resetTimer();
 
-  const { board, level } = useGameStore.getState();
+  const { board, level, mode } = useGameStore.getState();
 
-  const newBoard = isRestart
-    ? board.map((row) =>
-        row.map((cell) => ({
-          value: cell.value,
-          marker: null,
-          isOpened: false,
-        })),
-      )
-    : initGame(level);
+  // For daily mode, "restart" replays the same daily board with cells closed.
+  // For free mode, "restart" preserves the random board values; non-restart
+  // generates a fresh random board.
+  const shouldReuseValues = isRestart && mode === 'free';
+  const reset = shouldReuseValues
+    ? {
+        board: board.map((row) =>
+          row.map((cell) => ({
+            value: cell.value,
+            marker: null,
+            isOpened: false,
+          })),
+        ) as TBoard,
+        dailyKey: null,
+        dailySeedVersion: null,
+      }
+    : buildBoardForCurrentMode(level);
 
   useGameStore.setState({
-    board: newBoard as TBoard,
+    board: reset.board,
     totalFlags: 0,
     gameStatus: 'idle',
     isLevelChangeDialogOpen: false,
     pendingLevelId: null,
+    pendingMode: null,
     gameStatusBeforeLevelChange: null,
     isGameRestarted: Boolean(isRestart),
     openedSafeCells: 0,
     correctlyFlaggedMines: 0,
+    ...(mode === 'daily'
+      ? { dailyKey: reset.dailyKey, dailySeedVersion: reset.dailySeedVersion }
+      : {}),
   });
 };
 
@@ -110,6 +167,76 @@ export const startNewGame = () => {
 
 export const restartGame = () => {
   resetBoard(true);
+};
+
+export const enterDailyMode = (levelId?: LevelId) => {
+  const { level } = useGameStore.getState();
+  const targetLevel = levelId ? getLevelById(levelId) : level;
+  const dailyKey = getDailyKey();
+
+  useGameStore.setState({
+    mode: 'daily',
+    dailyKey,
+    dailySeedVersion: DAILY_SEED_VERSION,
+    level: targetLevel,
+  });
+
+  // Subscriptions on `level` will also call startNewGame; the explicit reset
+  // covers the "same level" case where the level reference is unchanged.
+  resetBoard();
+};
+
+export const enterFreeMode = (levelId?: LevelId) => {
+  const { level } = useGameStore.getState();
+  const targetLevel = levelId ? getLevelById(levelId) : level;
+
+  useGameStore.setState({
+    mode: 'free',
+    dailyKey: null,
+    dailySeedVersion: null,
+    level: targetLevel,
+  });
+
+  resetBoard();
+};
+
+const changeMode = (mode: GameMode, levelId?: LevelId) => {
+  if (mode === 'daily') {
+    enterDailyMode(levelId);
+
+    return;
+  }
+
+  enterFreeMode(levelId);
+};
+
+export const requestModeChange = (newMode: GameMode, levelId?: LevelId) => {
+  const { gameStatus, mode } = useGameStore.getState();
+
+  if (mode === newMode) {
+    return undefined;
+  }
+
+  if (FINISHED_GAME_STATUSES.includes(gameStatus)) {
+    changeMode(newMode, levelId);
+
+    return undefined;
+  }
+
+  const pendingLevelId = levelId ?? null;
+
+  if (gameStatus === 'playing') {
+    setLevelChangeDialogState(pendingLevelId, 'playing', newMode);
+    useGameStore.setState({ gameStatus: 'paused' });
+
+    return undefined;
+  }
+
+  if (gameStatus === 'paused') {
+    setLevelChangeDialogState(pendingLevelId, 'paused', newMode);
+  }
+
+  return undefined;
 };
 
 export const setBoard = (board: TBoard) => {

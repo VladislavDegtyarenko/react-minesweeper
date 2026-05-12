@@ -38,7 +38,7 @@ Combine small credibility issues into one ticket:
 - Fix the broken lint command under Next 16.
 - Re-check the production build hang seen during planning.
 
-### 2. Daily Challenge, streaks, and emoji share
+### 2. Daily Challenge and streaks
 
 Add a Wordle-style daily loop:
 
@@ -48,7 +48,6 @@ Add a Wordle-style daily loop:
 - Signed-in daily attempts in a `daily_attempts` table.
 - Server-side streak recomputation for signed-in users.
 - One attempt per difficulty per UTC day.
-- Emoji-grid share from the win dialog.
 - Explicitly defer custom-shaped boards and daily leaderboard.
 
 ### 3. Intro screen and first-time onboarding
@@ -122,7 +121,6 @@ Add privacy-first measurement only if still wanted for this sprint:
 - Lint command works after the Next 16 tooling fix.
 - Production build completes.
 - Guest and signed-in daily flows work.
-- Emoji share copies and opens through supported share targets.
 - Account stats and guest stats persist.
 - Theme persists and respects system mode.
 - PWA install button appears only when installable.
@@ -138,7 +136,7 @@ Tracker data source:
 Every sprint task should use `Status = Not started`.
 
 - `Social Sprint: Bug and credibility fixes`
-- `Social Sprint: Daily Challenge, streaks, and emoji share`
+- `Social Sprint: Daily Challenge and streaks`
 - `Social Sprint: Intro screen and first-time onboarding`
 - `Social Sprint: Theme system`
 - `Social Sprint: Personal stats expansion`

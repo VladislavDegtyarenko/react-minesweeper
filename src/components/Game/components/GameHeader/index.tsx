@@ -1,6 +1,6 @@
 import { createCx } from '@/utils';
-import Button from '@/components/ui/Button';
 import Settings from '@/components/Settings';
+import DailyBadge from '../DailyBadge';
 import GameStatus from '../GameStatus';
 import TimerDisplay from '../TimerDisplay';
 import styles from './styles.module.scss';
@@ -15,6 +15,7 @@ const GameHeader = () => {
     <header className={cx('header')}>
       <div className={cx('headerLabel', 'minesLeft')}>
         <GameStatus />
+        <DailyBadge />
       </div>
       <div className={cx('headerButtons')}>
         <TogglePauseButton />

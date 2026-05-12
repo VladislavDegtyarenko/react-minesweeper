@@ -1,6 +1,7 @@
 import { startNewGame } from "./actions";
 import { initVisibilityPauseListener } from "./listeners";
-import { selectGameStatus } from "./selectors";
+import { savePreferredGameMode } from "./preferences";
+import { selectGameMode, selectGameStatus } from "./selectors";
 import { useGameStore } from "./store";
 import { pauseTimer, startTimer, stopTimer } from "../timer/actions";
 
@@ -41,6 +42,13 @@ export const initSubscriptions = (): void => {
       startNewGame();
     }
   );
+
+  // Persist the preferred game mode whenever it changes. The active provider
+  // (localStorage by default, swappable to an account-backed provider in the
+  // future via `setGameModePreferenceProvider`) handles the actual write.
+  useGameStore.subscribe(selectGameMode, (mode) => {
+    savePreferredGameMode(mode);
+  });
 
   initVisibilityPauseListener();
 };

@@ -2,7 +2,12 @@ import type { Metadata } from 'next';
 import AccountPage from '@/components/AccountPage';
 import ROUTES from '@/config/routes.json';
 import { requireUserId } from '@/utils/auth';
-import { getUserBestScores } from '@/utils/db/queries';
+import { getDailyKey } from '@/utils/daily';
+import {
+  getMyDailyStreakSummary,
+  getUserBestScores,
+  getUserDailyAttempts,
+} from '@/utils/db/queries';
 import { generateMetadata as buildMetadata } from '@/utils/seo';
 
 export const metadata: Metadata = buildMetadata({
@@ -16,7 +21,19 @@ export const dynamic = 'force-dynamic';
 
 export default async function AccountRoutePage() {
   const userId = await requireUserId();
-  const scores = await getUserBestScores(userId);
+  const todayKey = getDailyKey();
+  const [scores, dailyAttempts, dailyStreak] = await Promise.all([
+    getUserBestScores(userId),
+    getUserDailyAttempts(userId),
+    getMyDailyStreakSummary(userId, todayKey),
+  ]);
 
-  return <AccountPage scores={scores} />;
+  return (
+    <AccountPage
+      dailyAttempts={dailyAttempts}
+      dailyStreak={dailyStreak}
+      scores={scores}
+      todayKey={todayKey}
+    />
+  );
 }

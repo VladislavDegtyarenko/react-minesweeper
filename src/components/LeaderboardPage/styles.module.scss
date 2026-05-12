@@ -10,6 +10,60 @@
   gap: var(--space-2);
 }
 
+.tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-button);
+  background-color: var(--surface-1);
+}
+
+.tab {
+  border-radius: calc(var(--radius-button) - 3px);
+  color: var(--text-secondary);
+  font-weight: 700;
+  padding: 8px 14px;
+  text-decoration: none;
+
+  &.activeTab {
+    color: var(--text-primary);
+    background-color: var(--surface-elevated);
+  }
+}
+
+.dailyView {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dailyIntro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-popover);
+  background-color: var(--surface-2);
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  p,
+  span {
+    color: var(--text-secondary);
+  }
+
+  span {
+    font-weight: 700;
+  }
+}
+
 .column {
   border: 1px solid var(--border);
   border-radius: var(--radius-popover);
@@ -108,6 +162,39 @@
   font-weight: 700;
 }
 
+.streakColumn {
+  width: 100%;
+}
+
+.streakEntry {
+  grid-template-columns: auto 1fr minmax(150px, auto);
+}
+
+.streakStats {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0;
+
+  div {
+    min-width: 64px;
+    text-align: right;
+  }
+
+  dt,
+  dd {
+    margin: 0;
+  }
+
+  dt {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+  }
+
+  dd {
+    font-weight: 700;
+  }
+}
+
 .emptyState {
   padding: var(--space-2);
 }
@@ -115,5 +202,39 @@
 @media screen and (max-width: 900px) {
   .columns {
     grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .tabs {
+    display: flex;
+  }
+
+  .tab {
+    flex: 1;
+    text-align: center;
+  }
+
+  .dailyIntro {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .entry,
+  .streakEntry {
+    grid-template-columns: auto 1fr;
+  }
+
+  .time,
+  .streakStats {
+    grid-column: 2;
+  }
+
+  .streakStats {
+    justify-content: flex-start;
+
+    div {
+      text-align: left;
+    }
   }
 }

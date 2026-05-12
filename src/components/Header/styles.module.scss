@@ -10,6 +10,7 @@
   gap: 1rem;
   color: var(--text-secondary);
   position: relative;
+  min-height: 88px; // temporary solution to avoid layout shift while loading account data (accountStateStatus in account state)
 
   .brandArea {
     display: flex;
@@ -23,6 +24,10 @@
     line-height: 1;
     font-weight: 700;
     letter-spacing: -0.2px;
+
+    a {
+      padding: var(--space-1) 0;
+    }
   }
 
   .desktopNavArea {

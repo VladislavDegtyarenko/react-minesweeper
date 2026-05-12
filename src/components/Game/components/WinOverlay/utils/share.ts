@@ -2,10 +2,21 @@ import type { LastWinSummary } from '@/store/stats';
 import { getTimeDiff } from '@/utils';
 import type { NativeSharePayload, ShareActionItem } from '../types';
 
+type DailyShareContext = {
+  dailyKey: string;
+  currentStreak: number;
+};
+
+type PracticeShareContext = {
+  dailyKey: string;
+};
+
 type SharePayloadParams = {
   baseUrl: string;
   difficultyLabel: string;
   summary: LastWinSummary;
+  daily?: DailyShareContext;
+  practice?: PracticeShareContext;
 };
 
 const encodeValue = (value: string) => encodeURIComponent(value);
@@ -24,17 +35,26 @@ const buildShareText = ({
   return `I just cleared ${difficultyLabel} Minesweeper in ${currentTimeLabel}. My best is ${bestTimeLabel}. Can you beat me?`;
 };
 
-export const buildNativeSharePayload = ({
-  baseUrl,
-  difficultyLabel,
-  summary,
-}: SharePayloadParams): NativeSharePayload => {
+export const buildNativeSharePayload = (
+  params: SharePayloadParams,
+): NativeSharePayload => {
+  const { baseUrl, difficultyLabel, summary, daily, practice } = params;
   const currentTimeLabel = getTimeDiff(summary.elapsedMs);
   const bestTimeLabel = getTimeDiff(summary.bestTimeMs);
 
+  const shareText = daily
+    ? `Minesweeper Daily ${daily.dailyKey} (${difficultyLabel}) — ${currentTimeLabel}. Streak: ${daily.currentStreak}.`
+    : practice
+      ? `I just cleared a ${difficultyLabel} Minesweeper daily practice run for ${practice.dailyKey} in ${currentTimeLabel}.`
+    : buildShareText({ difficultyLabel, summary });
+
   return {
-    title: 'Minesweeper result',
-    text: buildShareText({ difficultyLabel, summary }),
+    title: daily
+      ? 'Minesweeper Daily result'
+      : practice
+        ? 'Minesweeper practice result'
+        : 'Minesweeper result',
+    text: shareText,
     url: baseUrl,
     currentTimeLabel,
     bestTimeLabel,

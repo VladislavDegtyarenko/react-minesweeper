@@ -18,8 +18,11 @@
   overflow: auto;
   position: relative;
   margin: 0 auto;
+  width: max-content;
   max-width: 100%;
-  max-height: calc(100dvh - 260px);
+  // 110px reserves the header (~67px) + board-area padding/margins (~43px).
+  // The footer slot already covers the dynamic footer + DailyCard height.
+  max-height: calc(100dvh - 110px - var(--game-footer-height, 150px));
   transition: border-color var(--duration-hover) var(--easing-standard);
 
   &::-webkit-scrollbar {
@@ -71,7 +74,8 @@
 
 @media screen and (max-width: 768px) {
   .board {
-    max-height: calc(100dvh - 188px);
+    // 70px reserves the mobile header (~57px) + board-area padding (~13px).
+    max-height: calc(100dvh - 70px - var(--game-footer-height, 118px));
     border: none;
     border-radius: 0;
   }

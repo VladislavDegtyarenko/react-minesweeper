@@ -39,6 +39,10 @@
   gap: var(--space-1);
 }
 
+.footerControlsRow {
+  display: contents;
+}
+
 @media screen and (max-width: 768px) {
   .game {
     width: 100%;
@@ -51,6 +55,11 @@
 
   .footerArea {
     padding: 4px 6px 6px;
+    gap: 6px;
+  }
+
+  .footerControlsRow {
+    display: flex;
     flex-direction: row;
     align-items: stretch;
     gap: 6px;

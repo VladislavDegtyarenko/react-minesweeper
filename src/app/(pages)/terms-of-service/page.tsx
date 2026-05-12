@@ -4,7 +4,7 @@ import { generateMetadata } from '../../../utils/seo';
 export const metadata = generateMetadata({
   title: 'Terms of Service',
   description:
-    'Terms of Service for Minesweeper. Read the rules for accounts, public profiles, avatars, and the leaderboard.',
+    'Terms of Service for Minesweeper. Read the rules for accounts, public profiles, avatars, daily challenges, and the leaderboard.',
   path: '/terms-of-service',
 });
 
@@ -12,9 +12,9 @@ export default function TermsOfServicePage() {
   return (
     <LegalDocument
       title="Terms of Service"
-      description="Rules for using Minesweeper, including accounts, public leaderboard participation, avatars, and acceptable use."
-      lastUpdatedDateTime="2026-05-02"
-      lastUpdated="May 2, 2026"
+      description="Rules for using Minesweeper, including accounts, public leaderboard participation, daily challenges, avatars, and acceptable use."
+      lastUpdatedDateTime="2026-05-10"
+      lastUpdated="May 10, 2026"
     >
       <section>
         <h2>1. Acceptance of these terms</h2>
@@ -40,18 +40,20 @@ export default function TermsOfServicePage() {
           </li>
           <li>
             You may delete your account through the account page. Deleting
-            your account removes your stored best scores from our database
-            and deletes your account record at Clerk.
+            your account removes your stored best scores and daily challenge
+            attempts from our database and deletes your account record at
+            Clerk.
           </li>
         </ul>
       </section>
 
       <section>
-        <h2>3. Public profiles and leaderboard</h2>
+        <h2>3. Public profiles, leaderboard, and daily challenge</h2>
         <ul>
           <li>
             If you use an account, your username, avatar, and qualifying best
-            scores may appear on the public leaderboard.
+            scores, daily wins, and daily streaks may appear on the public
+            leaderboard.
           </li>
           <li>
             You should choose a username and avatar that you are comfortable
@@ -61,6 +63,16 @@ export default function TermsOfServicePage() {
             Minesweeper may remove, hide, or reset leaderboard entries that are
             believed to be inaccurate, abusive, fraudulent, or obtained through
             cheating or technical manipulation.
+          </li>
+          <li>
+            Daily challenge attempts and streaks may be stored for your account
+            and are derived from recorded results. Only the first daily result
+            for each difficulty and UTC day counts; later replays of that same
+            daily challenge are treated as practice.
+          </li>
+          <li>
+            Daily losses may be shown in your private account history, but they
+            are not shown as public daily leaderboard results.
           </li>
         </ul>
       </section>
@@ -90,7 +102,8 @@ export default function TermsOfServicePage() {
           </li>
           <li>
             Do not use bots, automation, modified clients, or other abusive
-            methods to manipulate scores, accounts, or public rankings.
+            methods to manipulate scores, daily challenge attempts, streaks,
+            accounts, or public rankings.
           </li>
           <li>
             Do not impersonate other people or submit misleading public profile
@@ -103,9 +116,10 @@ export default function TermsOfServicePage() {
         <h2>6. Availability and changes</h2>
         <p>
           Minesweeper may change, suspend, or remove features at any time,
-          including account features, leaderboard behavior, and avatar handling.
-          The service may be unavailable from time to time for maintenance,
-          updates, or issues outside the operator&apos;s control.
+          including account features, leaderboard behavior, daily challenge
+          behavior, and avatar handling. The service may be unavailable from
+          time to time for maintenance, updates, or issues outside the
+          operator&apos;s control.
         </p>
       </section>
 

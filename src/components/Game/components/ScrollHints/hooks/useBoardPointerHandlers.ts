@@ -23,13 +23,13 @@ export const useBoardPointerHandlers = ({
     const indexes = getRowAndCellIndex(e);
 
     if (!indexes) {
-      return;
+      return undefined;
     }
 
     if (gameStatus === 'paused') {
       e.preventDefault();
 
-      return;
+      return undefined;
     }
 
     const { rowIndex, cellIndex } = indexes;
@@ -57,18 +57,18 @@ export const useBoardPointerHandlers = ({
   ).current;
 
   const onContextMenu = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
     const indexes = getRowAndCellIndex(
       e as unknown as PointerEvent<HTMLDivElement>,
     );
 
     if (!indexes) {
-      return;
+      return undefined;
     }
 
     if (gameStatus === 'paused') {
-      e.preventDefault();
-
-      return;
+      return undefined;
     }
 
     const { rowIndex, cellIndex } = indexes;

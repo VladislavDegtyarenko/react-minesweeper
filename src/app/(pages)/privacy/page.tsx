@@ -13,8 +13,8 @@ export default function PrivacyPage() {
     <LegalDocument
       title="Privacy Policy"
       description="How Minesweeper collects, uses, stores, and discloses personal data for accounts and the shared leaderboard."
-      lastUpdatedDateTime="2026-05-02"
-      lastUpdated="May 2, 2026"
+      lastUpdatedDateTime="2026-05-10"
+      lastUpdated="May 10, 2026"
     >
       <section>
         <h2>1. Controller and scope</h2>
@@ -50,19 +50,28 @@ export default function PrivacyPage() {
             upload to your Clerk-managed profile.
           </li>
           <li>
-            <strong>Gameplay records:</strong> account-backed best scores
-            stored in our database (Neon Postgres), keyed by your Clerk user
-            identifier. Each record contains the level identifier, the best
-            time in milliseconds, and timestamps for when the score was
-            achieved, created, and last updated. These records are used for
-            your private account page and the public leaderboard.
+            <strong>Gameplay records:</strong> account-backed best scores and
+            daily challenge attempts stored in our database (Neon Postgres),
+            keyed by your Clerk user identifier. Best score records contain
+            the level identifier, the best time in milliseconds, and
+            timestamps for when the score was achieved, created, and last
+            updated. Daily challenge attempts contain the level identifier,
+            the UTC daily key, the daily seed version, the result (win or
+            loss), the elapsed time in milliseconds, and the time the attempt
+            was recorded. Best score records are used for your private account
+            page and the public leaderboard. Daily challenge attempts are used
+            for your private account page, today&apos;s public daily leaderboard
+            when you win, and to derive your daily challenge streak
+            server-side.
           </li>
           <li>
             <strong>Session and device storage:</strong> authentication cookies
             issued by Clerk that are required to keep signed-in sessions
-            working, and browser local storage used for guest best scores and
-            gameplay preferences such as control mode, zoom, dig/flag toggle,
-            question mark preference, and sound mute setting.
+            working, and browser local storage used for guest best scores,
+            guest daily challenge history and streaks, and gameplay
+            preferences such as control mode, zoom, dig/flag toggle, question
+            mark preference, sound mute setting, and the selected game mode
+            (free play or daily challenge).
           </li>
         </ul>
       </section>
@@ -76,7 +85,10 @@ export default function PrivacyPage() {
             account recovery flows.
           </li>
           <li>Save your account profile and avatar.</li>
-          <li>Store and display account-backed leaderboard performance.</li>
+          <li>
+            Store and display account-backed leaderboard and daily challenge
+            performance.
+          </li>
           <li>Let you delete your account and associated stored profile data.</li>
           <li>Operate, secure, and troubleshoot the service.</li>
         </ul>
@@ -90,6 +102,13 @@ export default function PrivacyPage() {
             best time, level, and achievement date can be shown publicly on the
             leaderboard when you play with an account. Only accounts that have
             a Clerk username set are listed on the leaderboard.
+          </li>
+          <li>
+            Your public daily challenge wins may show your username, optional
+            avatar, difficulty, elapsed time, and completion time on the daily
+            leaderboard. Your current and best daily challenge streak may also
+            appear on the daily streak leaderboard. Daily losses are not shown
+            publicly on the leaderboard.
           </li>
           <li>
             Your <strong>email address</strong> is not displayed publicly by
@@ -116,8 +135,8 @@ export default function PrivacyPage() {
             provided through Clerk.
           </li>
           <li>
-            Application data, including best scores, is stored in a Neon
-            Postgres database.
+            Application data, including best scores and daily challenge
+            attempts, is stored in a Neon Postgres database.
           </li>
           <li>
             The site is hosted on Vercel, which processes request and runtime
@@ -148,14 +167,14 @@ export default function PrivacyPage() {
             the account is deleted.
           </li>
           <li>
-            Guest best scores and gameplay preferences stored in local storage
-            remain on your device until you clear them or your browser storage
-            is removed.
+            Guest best scores, guest daily challenge history, and gameplay
+            preferences stored in local storage remain on your device until
+            you clear them or your browser storage is removed.
           </li>
           <li>
             You can delete your account from the account page. That flow
-            removes your scores from our database and deletes your account
-            record at Clerk.
+            removes your scores and daily challenge attempts from our
+            database and deletes your account record at Clerk.
           </li>
         </ul>
       </section>

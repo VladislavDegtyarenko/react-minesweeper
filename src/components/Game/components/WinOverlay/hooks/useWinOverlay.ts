@@ -1,7 +1,20 @@
 import ROUTES from '@/config/routes.json';
 import { useUser } from '@clerk/nextjs';
+import {
+  retryDailyAttemptSync,
+  selectActiveDailyRunKind,
+  selectDailyStreak,
+  selectDailySyncError,
+  selectIsDailySyncing,
+  selectPendingDailySyncAttempt,
+  useDailyStore,
+} from '@/store/daily';
 import { startNewGame } from '@/store/game/actions';
-import { selectGameStatus } from '@/store/game/selectors';
+import {
+  selectGameStatus,
+  selectIsDailyMode,
+  selectDailyKey,
+} from '@/store/game/selectors';
 import { useGameStore } from '@/store/game/store';
 import {
   retryAccountBestTimeSync,
@@ -38,6 +51,14 @@ export const useWinOverlay = () => {
   const { user } = useUser();
   const gameStatus = useGameStore(selectGameStatus);
   const levelLabel = useGameStore((state) => state.level.label);
+  const isDailyMode = useGameStore(selectIsDailyMode);
+  const dailyKey = useGameStore(selectDailyKey);
+  const levelId = useGameStore((state) => state.level.id);
+  const dailyStreak = useDailyStore(selectDailyStreak);
+  const activeDailyRunKind = useDailyStore(selectActiveDailyRunKind);
+  const dailySyncError = useDailyStore(selectDailySyncError);
+  const isDailySyncing = useDailyStore(selectIsDailySyncing);
+  const pendingDailySyncAttempt = useDailyStore(selectPendingDailySyncAttempt);
   const isDialogOpen = useStatsStore(selectIsWinDialogOpen);
   const lastWinSummary = useStatsStore(selectLastWinSummary);
   const scoreSyncState = useStatsStore(selectScoreSyncState);
@@ -175,6 +196,15 @@ export const useWinOverlay = () => {
     };
   }, []);
 
+  const isDailyGameWin =
+    isDailyMode && Boolean(dailyKey) && gameStatus === 'won';
+  const isDailyPracticeWin =
+    isDailyGameWin && activeDailyRunKind === 'practice';
+  const isDailyWin = isDailyGameWin && !isDailyPracticeWin;
+  const hasCurrentDailySyncAttempt =
+    pendingDailySyncAttempt?.dailyKey === dailyKey &&
+    pendingDailySyncAttempt.levelId === levelId;
+
   const sharePayload = useMemo(() => {
     if (!lastWinSummary) {
       return null;
@@ -184,8 +214,28 @@ export const useWinOverlay = () => {
       baseUrl: `${window.location.origin}${ROUTES.GAME}`,
       difficultyLabel: levelLabel,
       summary: lastWinSummary,
+      daily:
+        isDailyWin && dailyKey
+          ? {
+              dailyKey,
+              currentStreak: dailyStreak.currentStreak,
+            }
+            : undefined,
+      practice:
+        isDailyPracticeWin && dailyKey
+          ? {
+              dailyKey,
+            }
+          : undefined,
     });
-  }, [lastWinSummary, levelLabel]);
+  }, [
+    dailyKey,
+    dailyStreak.currentStreak,
+    isDailyPracticeWin,
+    isDailyWin,
+    lastWinSummary,
+    levelLabel,
+  ]);
 
   const shareActionItems = useMemo(() => {
     if (!sharePayload) {
@@ -214,6 +264,10 @@ export const useWinOverlay = () => {
 
   const handleRetryScoreSyncClick = async () => {
     await retryAccountBestTimeSync();
+  };
+
+  const handleRetryDailySyncClick = async () => {
+    await retryDailyAttemptSync();
   };
 
   const setCopiedState = (nextState: CopyState) => {
@@ -285,16 +339,36 @@ export const useWinOverlay = () => {
     }
   };
 
+  const dialogDescription = isDailyWin
+    ? `${levelLabel} • Daily ${dailyKey ?? ''}`.trim()
+    : isDailyPracticeWin
+      ? `${levelLabel} • Daily practice ${dailyKey ?? ''}`.trim()
+    : `${levelLabel} difficulty`;
+  const dialogTitle = isDailyWin
+    ? 'Daily Cleared'
+    : isDailyPracticeWin
+      ? 'Practice Cleared'
+    : lastWinSummary?.isNewBest
+      ? 'New Best Time'
+      : 'You Win';
+
   const presentation: WinOverlayPresentation = {
     copyFallbackVisible: copyState === 'manual',
     copyState,
-    dialogDescription: `${levelLabel} difficulty`,
-    dialogTitle: lastWinSummary?.isNewBest ? 'New Best Time' : 'You Win',
+    dailyStreakCount: dailyStreak.currentStreak,
+    dialogDescription,
+    dialogTitle,
     handleDialogOpenChange,
     handleNewGameClick,
+    handleRetryDailySyncClick,
     handleRetryScoreSyncClick,
     handleShareActionClick,
     handleShareClick,
+    dailySyncMessage: dailySyncError,
+    isDailyPracticeWin,
+    isDailySyncFailed: Boolean(dailySyncError && hasCurrentDailySyncAttempt),
+    isDailySyncRetrying: isDailySyncing && hasCurrentDailySyncAttempt,
+    isDailyWin,
     isDialogOpen,
     isNewBest: Boolean(lastWinSummary?.isNewBest),
     isScoreSyncFailed: scoreSyncState.status === 'failed',

@@ -7,16 +7,26 @@ type Props = {
   isRetrying: boolean;
   message: string | null;
   onRetry: () => Promise<void>;
+  retryingButtonLabel?: string;
+  retryingMessage?: string;
+  title?: string;
 };
 
-const ScoreSyncNotice = ({ isRetrying, message, onRetry }: Props) => {
+const ScoreSyncNotice = ({
+  isRetrying,
+  message,
+  onRetry,
+  retryingButtonLabel = 'Retrying',
+  retryingMessage = 'Retrying account sync...',
+  title = 'Score not synced',
+}: Props) => {
   return (
     <section className={cx('notice')} role="status">
       <div>
-        <p className={cx('title')}>Score not synced</p>
+        <p className={cx('title')}>{title}</p>
         <p className={cx('message')}>
           {isRetrying
-            ? 'Retrying account sync...'
+            ? retryingMessage
             : (message ?? 'Your score is saved locally for this dialog only.')}
         </p>
       </div>
@@ -27,7 +37,7 @@ const ScoreSyncNotice = ({ isRetrying, message, onRetry }: Props) => {
         disabled={isRetrying}
         onClick={() => void onRetry()}
       >
-        {isRetrying ? 'Retrying' : 'Retry'}
+        {isRetrying ? retryingButtonLabel : 'Retry'}
       </button>
     </section>
   );

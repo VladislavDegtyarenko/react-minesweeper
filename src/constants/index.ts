@@ -9,6 +9,8 @@ export const LOCAL_STORAGE_KEYS = {
   zoom: 'ZOOM',
   digFlag: 'DIG_FLAG',
   isQuestionMarkEnabled: 'IS_QUESTION_MARK_ENABLED',
+  dailyHistory: 'DAILY_HISTORY',
+  gameMode: 'GAME_MODE',
 } as const;
 
 export const CELL_MARKERS = {
