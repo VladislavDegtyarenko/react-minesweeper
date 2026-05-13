@@ -1,11 +1,12 @@
 import LegalDocument from '@/components/LegalDocument';
-import { generateMetadata } from '../../../utils/seo';
+import ROUTES from '@/config/routes.json';
+import { generateMetadata as buildMetadata } from '@/utils/seo';
 
-export const metadata = generateMetadata({
+export const metadata = buildMetadata({
   title: 'Terms of Service',
   description:
     'Terms of Service for Minesweeper. Read the rules for accounts, public profiles, avatars, daily challenges, and the leaderboard.',
-  path: '/terms-of-service',
+  path: ROUTES.TERMS_OF_SERVICE,
 });
 
 export default function TermsOfServicePage() {
@@ -39,10 +40,9 @@ export default function TermsOfServicePage() {
             flows.
           </li>
           <li>
-            You may delete your account through the account page. Deleting
-            your account removes your stored best scores and daily challenge
-            attempts from our database and deletes your account record at
-            Clerk.
+            You may delete your account through the account page. Deleting your
+            account removes your stored best scores and daily challenge attempts
+            from our database and deletes your account record at Clerk.
           </li>
         </ul>
       </section>
@@ -81,10 +81,10 @@ export default function TermsOfServicePage() {
         <h2>4. User content</h2>
         <ul>
           <li>
-            You keep ownership of content you upload, such as avatar images,
-            but you give Minesweeper permission to host, process, resize,
-            store, and display that content (through Clerk, our authentication
-            and profile provider) as needed to operate the service.
+            You keep ownership of content you upload, such as avatar images, but
+            you give Minesweeper permission to host, process, resize, store, and
+            display that content (through Clerk, our authentication and profile
+            provider) as needed to operate the service.
           </li>
           <li>
             You must not upload content that is unlawful, infringing, deceptive,
@@ -146,10 +146,11 @@ export default function TermsOfServicePage() {
       <section>
         <h2>9. Disclaimers and limitation of liability</h2>
         <p>
-          Minesweeper is provided on an &quot;as is&quot; and &quot;as available&quot;
-          basis to the maximum extent permitted by applicable law. The operator
-          does not guarantee uninterrupted availability, error-free operation,
-          or that the service will always be secure or free from defects.
+          Minesweeper is provided on an &quot;as is&quot; and &quot;as
+          available&quot; basis to the maximum extent permitted by applicable
+          law. The operator does not guarantee uninterrupted availability,
+          error-free operation, or that the service will always be secure or
+          free from defects.
         </p>
         <p>
           To the maximum extent permitted by law, the operator will not be

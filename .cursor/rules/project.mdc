@@ -6,6 +6,11 @@ alwaysApply: true
 
 ## Project Structure
 
+- Routes live in `src/app`
+  - Root (game) page live in `src/app/(game)`
+  - Other routes live in `src/app/(pages)`
+  - auth pages `src/app/login` and `src/app/signup`
+
 - Feature components live in `src/components/`
 - Reusable UI parts live in `src/components/ui/`
 - Component folder structure: `ComponentName/index.tsx` + `styles.module.scss`

@@ -1,11 +1,12 @@
 import LegalDocument from '@/components/LegalDocument';
-import { generateMetadata } from '../../../utils/seo';
+import { generateMetadata as buildMetadata } from '@/utils/seo';
+import ROUTES from '@/config/routes.json';
 
-export const metadata = generateMetadata({
+export const metadata = buildMetadata({
   title: 'Privacy Policy',
   description:
     'Privacy Policy for Minesweeper. Learn how we handle account data, public leaderboard data, cookies, and local storage.',
-  path: '/privacy',
+  path: ROUTES.PRIVACY,
 });
 
 export default function PrivacyPage() {
@@ -52,26 +53,25 @@ export default function PrivacyPage() {
           <li>
             <strong>Gameplay records:</strong> account-backed best scores and
             daily challenge attempts stored in our database (Neon Postgres),
-            keyed by your Clerk user identifier. Best score records contain
-            the level identifier, the best time in milliseconds, and
-            timestamps for when the score was achieved, created, and last
-            updated. Daily challenge attempts contain the level identifier,
-            the UTC daily key, the daily seed version, the result (win or
-            loss), the elapsed time in milliseconds, and the time the attempt
-            was recorded. Best score records are used for your private account
-            page and the public leaderboard. Daily challenge attempts are used
-            for your private account page, today&apos;s public daily leaderboard
-            when you win, and to derive your daily challenge streak
-            server-side.
+            keyed by your Clerk user identifier. Best score records contain the
+            level identifier, the best time in milliseconds, and timestamps for
+            when the score was achieved, created, and last updated. Daily
+            challenge attempts contain the level identifier, the UTC daily key,
+            the daily seed version, the result (win or loss), the elapsed time
+            in milliseconds, and the time the attempt was recorded. Best score
+            records are used for your private account page and the public
+            leaderboard. Daily challenge attempts are used for your private
+            account page, today&apos;s public daily leaderboard when you win,
+            and to derive your daily challenge streak server-side.
           </li>
           <li>
             <strong>Session and device storage:</strong> authentication cookies
             issued by Clerk that are required to keep signed-in sessions
-            working, and browser local storage used for guest best scores,
-            guest daily challenge history and streaks, and gameplay
-            preferences such as control mode, zoom, dig/flag toggle, question
-            mark preference, sound mute setting, and the selected game mode
-            (free play or daily challenge).
+            working, and browser local storage used for guest best scores, guest
+            daily challenge history and streaks, and gameplay preferences such
+            as control mode, zoom, dig/flag toggle, question mark preference,
+            sound mute setting, and the selected game mode (free play or daily
+            challenge).
           </li>
         </ul>
       </section>
@@ -89,7 +89,9 @@ export default function PrivacyPage() {
             Store and display account-backed leaderboard and daily challenge
             performance.
           </li>
-          <li>Let you delete your account and associated stored profile data.</li>
+          <li>
+            Let you delete your account and associated stored profile data.
+          </li>
           <li>Operate, secure, and troubleshoot the service.</li>
         </ul>
       </section>
@@ -100,8 +102,8 @@ export default function PrivacyPage() {
           <li>
             Your <strong>username</strong>, optional <strong>avatar</strong>,
             best time, level, and achievement date can be shown publicly on the
-            leaderboard when you play with an account. Only accounts that have
-            a Clerk username set are listed on the leaderboard.
+            leaderboard when you play with an account. Only accounts that have a
+            Clerk username set are listed on the leaderboard.
           </li>
           <li>
             Your public daily challenge wins may show your username, optional
@@ -111,8 +113,8 @@ export default function PrivacyPage() {
             publicly on the leaderboard.
           </li>
           <li>
-            Your <strong>email address</strong> is not displayed publicly by
-            the app.
+            Your <strong>email address</strong> is not displayed publicly by the
+            app.
           </li>
         </ul>
       </section>
@@ -168,13 +170,13 @@ export default function PrivacyPage() {
           </li>
           <li>
             Guest best scores, guest daily challenge history, and gameplay
-            preferences stored in local storage remain on your device until
-            you clear them or your browser storage is removed.
+            preferences stored in local storage remain on your device until you
+            clear them or your browser storage is removed.
           </li>
           <li>
-            You can delete your account from the account page. That flow
-            removes your scores and daily challenge attempts from our
-            database and deletes your account record at Clerk.
+            You can delete your account from the account page. That flow removes
+            your scores and daily challenge attempts from our database and
+            deletes your account record at Clerk.
           </li>
         </ul>
       </section>

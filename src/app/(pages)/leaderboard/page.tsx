@@ -12,8 +12,7 @@ import { generateMetadata as buildMetadata } from '@/utils/seo';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Leaderboard',
-  description:
-    'See the fastest Minesweeper completion times across Easy, Medium, and Expert difficulties.',
+  description: 'See top Minesweeper times and daily streaks.',
   path: ROUTES.LEADERBOARD,
 });
 
