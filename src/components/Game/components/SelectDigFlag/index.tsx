@@ -57,6 +57,7 @@ const SelectDigFlag = () => {
 
   return (
     <ToggleGroup
+      data-tour-id="flag-controls"
       label={isMobileViewport ? undefined : DIG_FLAG_LABEL}
       type="single"
       value={digFlag}

@@ -1,8 +1,10 @@
 # Game Modes
 
 The game currently has two playable modes: Free Play and Daily Challenge.
-Both use the same board UI, controls, timer, level selector, pause handling,
-and win/loss flow, but they differ in board generation and result tracking.
+Players can enter either mode from the intro screen at `/`, or switch modes
+inside the playable board at `/game`. Both modes use the same board UI,
+controls, timer, level selector, pause handling, and win/loss flow, but they
+differ in board generation and result tracking.
 
 ## Mode Comparison
 
@@ -30,6 +32,11 @@ the game is playing or paused, the app opens `LevelChangeDialog` as a reset
 confirmation. Canceling restores the previous playing or paused state;
 confirming switches mode and resets the board for the selected mode.
 
+The intro screen starts either mode through a setup flow: choose a mode, choose
+a difficulty, then click Start Playing. Those starts navigate to
+`/game?mode=<mode>&level=<level>` and bypass the in-game confirmation because
+no active board is being replaced.
+
 ## Shared Files
 
 | Path | Responsibility |
@@ -43,5 +50,6 @@ confirming switches mode and resets the board for the selected mode.
 
 ## Related Docs
 
+- [Intro Screen](./intro-screen.md)
 - [Free Play](./free-play.md)
 - [Daily Challenge](./daily-challenge.md)

@@ -13,7 +13,10 @@ const cx = createCx(styles);
 const GameHeader = () => {
   return (
     <header className={cx('header')}>
-      <div className={cx('headerLabel', 'minesLeft')}>
+      <div
+        className={cx('headerLabel', 'minesLeft')}
+        data-tour-id="win-status"
+      >
         <GameStatus />
         <DailyBadge />
       </div>

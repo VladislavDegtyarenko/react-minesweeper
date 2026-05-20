@@ -14,8 +14,8 @@ export default function PrivacyPage() {
     <LegalDocument
       title="Privacy Policy"
       description="How Minesweeper collects, uses, stores, and discloses personal data for accounts and the shared leaderboard."
-      lastUpdatedDateTime="2026-05-10"
-      lastUpdated="May 10, 2026"
+      lastUpdatedDateTime="2026-05-14"
+      lastUpdated="May 14, 2026"
     >
       <section>
         <h2>1. Controller and scope</h2>
@@ -68,8 +68,9 @@ export default function PrivacyPage() {
             <strong>Session and device storage:</strong> authentication cookies
             issued by Clerk that are required to keep signed-in sessions
             working, and browser local storage used for guest best scores, guest
-            daily challenge history and streaks, and gameplay preferences such
-            as control mode, zoom, dig/flag toggle, question mark preference,
+            daily challenge history and streaks, saved in-progress game state,
+            first-time onboarding status, and gameplay preferences such as
+            control mode, zoom, dig/flag toggle, question mark preference,
             sound mute setting, and the selected game mode (free play or daily
             challenge).
           </li>
@@ -169,9 +170,11 @@ export default function PrivacyPage() {
             the account is deleted.
           </li>
           <li>
-            Guest best scores, guest daily challenge history, and gameplay
-            preferences stored in local storage remain on your device until you
-            clear them or your browser storage is removed.
+            Guest best scores, guest daily challenge history, saved
+            in-progress games, onboarding status, and gameplay preferences
+            stored in local storage remain on your device until you clear them,
+            they expire according to feature rules, or your browser storage is
+            removed.
           </li>
           <li>
             You can delete your account from the account page. That flow removes

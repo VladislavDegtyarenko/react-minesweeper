@@ -1,6 +1,6 @@
+import ROUTES from '@/config/routes.json';
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
-import ROUTES from '@/config/routes.json';
 
 const HIDDEN_ROUTES: string[] = [ROUTES.BLOG];
 
@@ -12,7 +12,7 @@ export default clerkMiddleware(async (auth, request) => {
   const { pathname } = request.nextUrl;
 
   if (isHiddenRoute(pathname)) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL(ROUTES.LOBBY, request.url));
   }
 
   if (isProtectedRoute(request)) {

@@ -5,21 +5,37 @@
   gap: var(--space-3);
   padding: var(--space-1) var(--space-2);
   margin: 0;
-  background: linear-gradient(135deg, rgba(99, 132, 255, 0.18), rgba(160, 90, 255, 0.18));
+  background: linear-gradient(
+    135deg,
+    rgba(99, 132, 255, 0.18),
+    rgba(160, 90, 255, 0.18)
+  );
   border: none;
   border-radius: 0;
   color: var(--text-primary);
 
   &.completed {
-    background: linear-gradient(135deg, rgba(56, 178, 117, 0.22), rgba(99, 132, 255, 0.22));
+    background: linear-gradient(
+      135deg,
+      rgba(56, 178, 117, 0.22),
+      rgba(99, 132, 255, 0.22)
+    );
   }
 
   &.practice {
-    background: linear-gradient(135deg, rgba(77, 163, 255, 0.16), rgba(251, 191, 36, 0.14));
+    background: linear-gradient(
+      135deg,
+      rgba(77, 163, 255, 0.16),
+      rgba(251, 191, 36, 0.14)
+    );
   }
 
   &.syncFailed {
-    background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(239, 68, 68, 0.12));
+    background: linear-gradient(
+      135deg,
+      rgba(251, 191, 36, 0.18),
+      rgba(239, 68, 68, 0.12)
+    );
   }
 }
 
@@ -27,7 +43,6 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 0;
 }
 
 .eyebrow {

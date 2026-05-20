@@ -35,6 +35,7 @@ export type GameState = {
   mode: GameMode; // 'free' for random boards, 'daily' for the deterministic daily challenge
   dailyKey: string | null; // UTC daily key (YYYY-MM-DD) of the current daily board, when in daily mode
   dailySeedVersion: number | null; // seed version used to generate the current daily board, when in daily mode
+  isOnboardingTourOpen: boolean; // suppresses background auto-pause while the interactive tour needs the board
 };
 
 const buildInitialGameState = (): GameState => {
@@ -59,6 +60,7 @@ const buildInitialGameState = (): GameState => {
       mode: 'daily',
       dailyKey,
       dailySeedVersion: DAILY_SEED_VERSION,
+      isOnboardingTourOpen: false,
     };
   }
 
@@ -77,6 +79,7 @@ const buildInitialGameState = (): GameState => {
     mode: 'free',
     dailyKey: null,
     dailySeedVersion: null,
+    isOnboardingTourOpen: false,
   };
 };
 

@@ -2,20 +2,27 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-2) 0;
+  padding-block: var(--space-2);
+  padding-inline: var(--page-inline-padding);
   font-weight: 600;
   font-size: 0.84rem;
   white-space: nowrap;
   width: 100%;
   gap: 1rem;
   color: var(--text-secondary);
-  position: relative;
-  min-height: 88px; // temporary solution to avoid layout shift while loading account data (accountStateStatus in account state)
+  position: fixed;
+  min-height: var(
+    --header-height
+  ); // temporary solution to avoid layout shift while loading account data (accountStateStatus in account state)
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 70;
 
   .brandArea {
     display: flex;
     align-items: center;
-    min-width: 0;
+    gap: 10px;
   }
 
   .logo {
@@ -32,15 +39,11 @@
 
   .desktopNavArea {
     flex: 1 1 auto;
-    min-width: 0;
+
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 18px;
-  }
-
-  .nav {
-    min-width: 0;
   }
 
   .navList {
@@ -91,7 +94,7 @@
   }
 
   @media screen and (max-width: 768px) {
-    padding: var(--space-1) 0;
+    padding-block: var(--space-1);
 
     .logo {
       font-size: 1.2rem;

@@ -1,6 +1,6 @@
 .cell {
-  --cell-gap: 2px;
-  --cell-hit-inset: 1px;
+  --cell-gap: var(--board-cell-gap, 2px);
+  --cell-hit-inset: var(--board-cell-hit-inset, 1px);
   width: calc(var(--cell-size) + var(--cell-gap));
   height: calc(var(--cell-size) + var(--cell-gap));
   padding: var(--cell-hit-inset);

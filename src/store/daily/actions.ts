@@ -1,4 +1,4 @@
-import { getMyDailyState, saveDailyAttempt } from '@/app/(game)/actions';
+import { getMyDailyState, saveDailyAttempt } from '@/app/(lobby)/actions';
 import type { LevelId } from '@/types';
 import {
   clampDailyElapsedMs,
@@ -149,8 +149,7 @@ export const classifyDailyRun = (levelId: LevelId): DailyRunKind => {
 };
 
 const recordLocalAttempt = (entry: DailyHistoryEntry): DailySource => {
-  const { guestHistory, history, source, todayKey } =
-    useDailyStore.getState();
+  const { guestHistory, history, source, todayKey } = useDailyStore.getState();
   const nextGuestHistory = upsertEntry(guestHistory, entry);
   const nextHistory =
     source === 'account' ? upsertEntry(history, entry) : nextGuestHistory;

@@ -1,5 +1,6 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useResizeObserver } from '@/hooks';
 import { throttle } from '@/utils';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { DEFAULT_BOARD_SCROLL_HINTS } from '../constants';
 import type { BoardScrollHints } from '../types';
 import { areBoardScrollHintsEqual, getBoardScrollHints } from '../utils';
@@ -49,33 +50,22 @@ export const useBoardScrollHints = ({
   ).current;
 
   useLayoutEffect(() => {
-    const boardElement = boardRef.current;
-
-    if (!boardElement) {
+    if (!boardRef.current) {
       return undefined;
     }
 
     updateScrollHints();
-
-    const resizeObserver =
-      typeof ResizeObserver === 'undefined'
-        ? undefined
-        : new ResizeObserver(updateScrollHints);
-    const contentElement = boardElement.firstElementChild;
-
-    resizeObserver?.observe(boardElement);
-
-    if (contentElement) {
-      resizeObserver?.observe(contentElement);
-    }
-
-    window.addEventListener('resize', updateScrollHints);
-
-    return () => {
-      resizeObserver?.disconnect();
-      window.removeEventListener('resize', updateScrollHints);
-    };
   }, [layoutKey, updateScrollHints]);
+
+  useResizeObserver(
+    () => {
+      const boardElement = boardRef.current;
+
+      return [boardElement, boardElement?.firstElementChild];
+    },
+    updateScrollHints,
+    [layoutKey],
+  );
 
   return { boardRef, onScroll, scrollHints };
 };

@@ -1,4 +1,5 @@
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION } from "./config";
+import ROUTES from '@/config/routes.json';
 
 /**
  * Generates JSON-LD structured data for a Game schema.
@@ -10,7 +11,7 @@ export function generateGameJsonLd(): string {
     "@type": "VideoGame",
     name: SITE_NAME,
     description: DEFAULT_DESCRIPTION,
-    url: SITE_URL,
+    url: `${SITE_URL}${ROUTES.GAME}`,
     genre: ["Puzzle", "Logic"],
     gamePlatform: ["Web Browser", "Mobile"],
     applicationCategory: "Game",

@@ -34,6 +34,7 @@ const ModeToggle = memo(() => {
 
   return (
     <ToggleGroup
+      data-tour-id="daily-mode"
       label={isMobileViewport ? undefined : MODE_LABEL}
       type="single"
       value={mode}

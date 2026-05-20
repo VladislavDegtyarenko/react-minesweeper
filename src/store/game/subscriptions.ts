@@ -1,6 +1,10 @@
-import { startNewGame } from "./actions";
+import {
+  consumeShouldSuppressNextLevelReset,
+  startNewGame,
+} from "./actions";
 import { initVisibilityPauseListener } from "./listeners";
 import { savePreferredGameMode } from "./preferences";
+import { initSnapshotSubscription } from './snapshot/subscribe';
 import { selectGameMode, selectGameStatus } from "./selectors";
 import { useGameStore } from "./store";
 import { pauseTimer, startTimer, stopTimer } from "../timer/actions";
@@ -39,6 +43,10 @@ export const initSubscriptions = (): void => {
   useGameStore.subscribe(
     (state) => state.level,
     () => {
+      if (consumeShouldSuppressNextLevelReset()) {
+        return;
+      }
+
       startNewGame();
     }
   );
@@ -51,8 +59,8 @@ export const initSubscriptions = (): void => {
   });
 
   initVisibilityPauseListener();
+  initSnapshotSubscription();
 };
 
 // Auto-initialize subscriptions
 initSubscriptions();
-

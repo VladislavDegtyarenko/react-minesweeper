@@ -6,7 +6,14 @@ import {
   getDailyKey,
 } from '@/utils/daily';
 import { getLevelById } from '@/utils/getLevelById';
-import { resetTimer, stopTimer } from '../timer/actions';
+import {
+  resetTimer,
+  restoreTimerElapsed,
+  startTimer,
+  stopTimer,
+} from '../timer/actions';
+import { clearSnapshot } from './snapshot';
+import type { GameSnapshotV1 } from './snapshot/types';
 import {
   useGameStore,
   type GameMode,
@@ -15,6 +22,22 @@ import {
 } from './store';
 
 const FINISHED_GAME_STATUSES: GameStatus[] = ['idle', 'won', 'lost'];
+
+let shouldSuppressNextLevelReset = false;
+
+const suppressNextLevelReset = () => {
+  shouldSuppressNextLevelReset = true;
+};
+
+export const consumeShouldSuppressNextLevelReset = () => {
+  if (!shouldSuppressNextLevelReset) {
+    return false;
+  }
+
+  shouldSuppressNextLevelReset = false;
+
+  return true;
+};
 
 export const changeLevel = (newLevelId: LevelId) => {
   useGameStore.setState({ level: getLevelById(newLevelId) });
@@ -121,6 +144,7 @@ const buildBoardForCurrentMode = (level: ReturnType<typeof getLevelById>) => {
 };
 
 export const resetBoard = (isRestart?: boolean) => {
+  clearSnapshot();
   stopTimer();
   resetTimer();
 
@@ -200,7 +224,7 @@ export const enterFreeMode = (levelId?: LevelId) => {
   resetBoard();
 };
 
-const changeMode = (mode: GameMode, levelId?: LevelId) => {
+export const startConfiguredGame = (mode: GameMode, levelId?: LevelId) => {
   if (mode === 'daily') {
     enterDailyMode(levelId);
 
@@ -208,6 +232,10 @@ const changeMode = (mode: GameMode, levelId?: LevelId) => {
   }
 
   enterFreeMode(levelId);
+};
+
+const changeMode = (mode: GameMode, levelId?: LevelId) => {
+  startConfiguredGame(mode, levelId);
 };
 
 export const requestModeChange = (newMode: GameMode, levelId?: LevelId) => {
@@ -241,6 +269,35 @@ export const requestModeChange = (newMode: GameMode, levelId?: LevelId) => {
 
 export const setBoard = (board: TBoard) => {
   useGameStore.setState({ board });
+};
+
+export const setOnboardingTourOpen = (isOnboardingTourOpen: boolean) => {
+  useGameStore.setState({ isOnboardingTourOpen });
+};
+
+export const resumeFromSnapshot = (snapshot: GameSnapshotV1) => {
+  suppressNextLevelReset();
+  restoreTimerElapsed(snapshot.elapsedMs);
+
+  useGameStore.setState({
+    board: snapshot.board,
+    level: snapshot.level,
+    totalFlags: snapshot.totalFlags,
+    gameStatus: 'playing',
+    isLevelChangeDialogOpen: false,
+    pendingLevelId: null,
+    pendingMode: null,
+    gameStatusBeforeLevelChange: null,
+    isGameRestarted: true,
+    openedSafeCells: snapshot.openedSafeCells,
+    correctlyFlaggedMines: snapshot.correctlyFlaggedMines,
+    mode: snapshot.mode,
+    dailyKey: snapshot.mode === 'daily' ? (snapshot.dailyKey ?? null) : null,
+    dailySeedVersion:
+      snapshot.mode === 'daily' ? (snapshot.dailySeedVersion ?? null) : null,
+  });
+
+  startTimer();
 };
 
 export const togglePause = () => {

@@ -14,8 +14,8 @@ const cx = createCx(styles);
 
 const NAV_ITEMS = [
   {
-    label: 'Game',
-    href: ROUTES.GAME,
+    label: 'Lobby',
+    href: ROUTES.LOBBY,
   },
   {
     label: 'How To Play',
@@ -35,7 +35,7 @@ const Header = () => {
     <header className={cx('header')}>
       <div className={cx('brandArea')}>
         <div className={cx('logo')}>
-          <Link href={ROUTES.GAME}>Minesweeper</Link>
+          <Link href={ROUTES.LOBBY}>Minesweeper</Link>
         </div>
       </div>
 

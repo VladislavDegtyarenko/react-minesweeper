@@ -1,4 +1,4 @@
-import { getMyBestScores, saveBestScore } from '@/app/(game)/actions';
+import { getMyBestScores, saveBestScore } from '@/app/(lobby)/actions';
 import type { LevelId } from '@/types';
 import { useStatsStore } from './store';
 import {
@@ -255,10 +255,7 @@ export const setHasPresentedWinDialog = (hasPresentedWinDialog: boolean) => {
  * free-play best score table. We still want to surface the win dialog, so
  * this sets a transient summary derived purely from the current run.
  */
-export const recordDailyWinSummary = (
-  levelId: LevelId,
-  elapsedMs: number,
-) => {
+export const recordDailyWinSummary = (levelId: LevelId, elapsedMs: number) => {
   const normalizedElapsedMs = normalizeElapsedMs(elapsedMs);
   resetScoreSyncState();
   setWinSummary(levelId, normalizedElapsedMs, null, normalizedElapsedMs, false);

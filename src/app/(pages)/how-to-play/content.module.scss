@@ -35,11 +35,9 @@
 .main {
   display: grid;
   gap: var(--space-2);
-  min-width: 0;
 }
 
 .sidebar {
-  min-width: 0;
 }
 
 .hero,
@@ -47,8 +45,11 @@
 .ready {
   position: relative;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(33, 43, 64, 0.82) 0%, rgba(21, 28, 43, 0.94) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(33, 43, 64, 0.82) 0%,
+    rgba(21, 28, 43, 0.94) 100%
+  );
   border: 1px solid var(--border);
   border-radius: calc(var(--radius-card) - 4px);
   padding: clamp(1rem, 2vw, 1.35rem);
@@ -63,7 +64,11 @@
   width: 16rem;
   height: 16rem;
   border-radius: 999px;
-  background: radial-gradient(circle, rgba(77, 163, 255, 0.14), transparent 72%);
+  background: radial-gradient(
+    circle,
+    rgba(77, 163, 255, 0.14),
+    transparent 72%
+  );
   pointer-events: none;
 }
 
@@ -254,8 +259,11 @@
   display: grid;
   gap: 0.75rem;
   padding: 1rem;
-  background:
-    linear-gradient(180deg, rgba(33, 43, 64, 0.85) 0%, rgba(21, 28, 43, 0.95) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(33, 43, 64, 0.85) 0%,
+    rgba(21, 28, 43, 0.95) 100%
+  );
   border: 1px solid var(--border);
   border-radius: var(--radius-segment);
 }
@@ -377,8 +385,11 @@
   padding: 0.65rem 1.15rem;
   border: 1px solid rgba(77, 163, 255, 0.32);
   border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(77, 163, 255, 0.24) 0%, rgba(77, 163, 255, 0.12) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(77, 163, 255, 0.24) 0%,
+    rgba(77, 163, 255, 0.12) 100%
+  );
   color: var(--text-primary);
   font-weight: 700;
   letter-spacing: 0.01em;

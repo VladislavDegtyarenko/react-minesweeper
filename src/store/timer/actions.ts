@@ -1,4 +1,5 @@
 import { useTimerStore } from ".";
+import type { TimerState } from "./types";
 
 const now = () => performance.now();
 
@@ -61,6 +62,19 @@ export const resetTimer = () => {
   useTimerStore.setState({
     status: "idle",
     elapsedMs: 0,
+    startedAtMs: null,
+    rafId: null,
+  });
+};
+
+export const restoreTimerElapsed = (
+  elapsedMs: number,
+  status: Extract<TimerState['status'], 'idle' | 'paused'> = 'idle',
+) => {
+  cancelRaf();
+  useTimerStore.setState({
+    status,
+    elapsedMs,
     startedAtMs: null,
     rafId: null,
   });

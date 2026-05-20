@@ -1,4 +1,5 @@
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION } from "./config";
+import ROUTES from '@/config/routes.json';
 
 /**
  * Generates JSON-LD structured data for the WebSite schema.
@@ -24,7 +25,7 @@ export function generateWebsiteJsonLd(): string {
     },
     potentialAction: {
       "@type": "PlayAction",
-      target: SITE_URL,
+      target: `${SITE_URL}${ROUTES.GAME}`,
       name: "Play Minesweeper",
     },
   });

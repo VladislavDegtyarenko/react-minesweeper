@@ -13,6 +13,8 @@ export const selectIsLevelChangeDialogOpen = (state: GameState) =>
   state.isLevelChangeDialogOpen;
 export const selectGameStatusBeforeLevelChange = (state: GameState) =>
   state.gameStatusBeforeLevelChange;
+export const selectIsOnboardingTourOpen = (state: GameState) =>
+  state.isOnboardingTourOpen;
 export const selectIsGameIdle = (state: GameState) =>
   state.gameStatus === "idle";
 export const selectIsGamePlaying = (state: GameState) =>

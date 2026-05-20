@@ -3,7 +3,8 @@ import type { Level, LevelId, LevelsConfig } from '../types';
 
 export const LOCAL_STORAGE_KEYS = {
   bestTimes: 'BEST_TIMES',
-  gameBoard: 'GAME_BOARD',
+  GAME_SNAPSHOT: 'GAME_SNAPSHOT',
+  ONBOARDING_SEEN_V1: 'ONBOARDING_SEEN_V1',
   isMutedSFX: 'IS_MUTED_SFX',
   preferredControlMode: 'PREFERRED_CONTROL_MODE',
   zoom: 'ZOOM',

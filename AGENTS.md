@@ -34,3 +34,7 @@
 - Store hooks related to a component in a local `hooks/` subfolder inside that component folder.
 - Prefer nested SCSS rules over repeating flat selectors when working in `.scss` modules.
 - If a component has sub-components with dedicated styles, place those styles in the local `components/` folder next to the sub-component instead of keeping them in the parent component stylesheet.
+
+### Styling
+
+- Do not add `min-width: 0`, fixed `width`/`height`, or `min-*`/`max-*` width/height values in CSS/SCSS unless the user explicitly asks for it or an unavoidable third-party override requires it. Prefer fluid layout with flex/grid behavior, intrinsic sizing, padding, gap, and `aspect-ratio`.

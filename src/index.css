@@ -27,7 +27,7 @@
   --radius-card: 20px;
   --radius-popover: 16px;
   --radius-button: 12px;
-  --radius-cell: 8px;
+  --radius-cell: 15%;
   --radius-segment: 14px;
 
   --shadow-card: 0 14px 42px rgba(0, 0, 0, 0.38);
@@ -58,9 +58,14 @@
   --red: #ff5c7a;
   --green: #33d69f;
 
+  --header-height: 88px;
+  --page-inline-padding: var(--space-2);
+  --page-block-offset: var(--header-height);
+
   background-color: var(--app-bg);
   color: var(--text-primary);
   scroll-behavior: smooth;
+  scroll-padding-top: var(--page-block-offset);
   overscroll-behavior: none;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -110,7 +115,8 @@ body {
   height: 100%;
   width: 100%;
   margin: 0 auto;
-  padding: 0 var(--space-2);
+  padding-block-start: var(--page-block-offset);
+  padding-inline: var(--page-inline-padding);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -125,8 +131,8 @@ body {
 }
 
 @media screen and (max-width: 480px) {
-  #root {
-    padding: 0 var(--space-1);
+  :root {
+    --page-inline-padding: var(--space-1);
   }
 }
 

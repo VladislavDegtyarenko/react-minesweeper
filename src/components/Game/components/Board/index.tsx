@@ -7,19 +7,21 @@ import {
 } from '@/store/game/selectors';
 import { selectZoom } from '@/store/settings/selectors';
 import { useSettingsStore } from '@/store/settings';
-import { createCx } from '@/utils';
 import Row from '../Row';
 import PauseOverlay from '../PauseOverlay';
-import styles from './styles.module.scss';
 import BoardWrapper from './BoardWrapper';
 import { useBoardScrollHints } from '../ScrollHints/hooks/useBoardScrollHints';
 import { useBoardPointerHandlers } from '../ScrollHints/hooks/useBoardPointerHandlers';
 import { getCellSize } from './utils';
 import ScrollHints from '../ScrollHints';
+import BoardFrame from '../BoardFrame';
 
-const cx = createCx(styles);
+type Props = {
+  dailyCardHeight: number;
+  gameFooterHeight: number;
+};
 
-const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
+const Board = ({ dailyCardHeight, gameFooterHeight }: Props) => {
   const { cols, rows, gameStatus } = useGameStore(
     useShallow((state) => ({
       cols: state.level.cols,
@@ -34,7 +36,7 @@ const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
   const zoom = useSettingsStore(selectZoom);
   const cellSize = getCellSize(zoom);
   const { boardRef, onScroll, scrollHints } = useBoardScrollHints({
-    layoutKey: `${cols}|${rows}|${zoom}|${gameFooterHeight}`,
+    layoutKey: `${cols}|${rows}|${zoom}|${dailyCardHeight}|${gameFooterHeight}`,
   });
   const { onContextMenu, onPointerEvent, throttledPointerMove } =
     useBoardPointerHandlers({ gameStatus });
@@ -44,24 +46,25 @@ const Board = ({ gameFooterHeight }: { gameFooterHeight: number }) => {
   const isInteractive = gameStatus === 'playing' || gameStatus === 'idle';
 
   return (
-    <BoardWrapper cellSize={cellSize} gameFooterHeight={gameFooterHeight}>
-      <div
+    <BoardWrapper
+      cellSize={cellSize}
+      dailyCardHeight={dailyCardHeight}
+      gameFooterHeight={gameFooterHeight}
+    >
+      <BoardFrame
         ref={boardRef}
-        className={cx(
-          'boardScrollable',
-          'board',
-          gameStatus === 'paused' && 'pausedBoard',
-        )}
+        data-tour-id="board"
+        isPaused={gameStatus === 'paused'}
         onScroll={onScroll}
-        onPointerDown={onPointerEvent}
-        onPointerUp={onPointerEvent}
+        onPointerDown={isInteractive ? onPointerEvent : undefined}
+        onPointerUp={isInteractive ? onPointerEvent : undefined}
         onPointerMove={isInteractive ? throttledPointerMove : undefined}
-        onContextMenu={onContextMenu}
+        onContextMenu={isInteractive ? onContextMenu : undefined}
       >
         {Array.from({ length: rows }, (_, rowIndex) => (
           <Row rowIndex={rowIndex} key={rowIndex} />
         ))}
-      </div>
+      </BoardFrame>
 
       {shouldShowPauseOverlay && <PauseOverlay />}
 

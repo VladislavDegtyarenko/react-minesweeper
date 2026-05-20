@@ -24,9 +24,9 @@ export const initVisibilityPauseListener = (): (() => void) | undefined => {
       return undefined;
     }
 
-    const { gameStatus } = useGameStore.getState();
+    const { gameStatus, isOnboardingTourOpen } = useGameStore.getState();
 
-    if (gameStatus !== GAME_STATUS_PLAYING) {
+    if (gameStatus !== GAME_STATUS_PLAYING || isOnboardingTourOpen) {
       return undefined;
     }
 
