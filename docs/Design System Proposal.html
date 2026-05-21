@@ -15,10 +15,10 @@
       :root {
         /* App palette — kept from current app, lightly recalibrated */
         --app-bg: #0e1420;
-        --surface-1: #161e2e;
-        --surface-2: #1d273b;
-        --surface-3: #121828;
-        --surface-elev: #26324a;
+        --surface-1: #121828;  /* sunken — recessed wells, board, input bg, segmented track */
+        --surface-2: #161e2e;  /* base — default card background */
+        --surface-3: #1d273b;  /* raised — nested card, active segment, game header */
+        --surface-4: #26324a;  /* overlay — popover / dropdown / dialog */
         --border: rgba(255, 255, 255, 0.07);
         --border-strong: rgba(255, 255, 255, 0.14);
         --border-emphasis: rgba(255, 255, 255, 0.22);
@@ -141,7 +141,7 @@
         padding: var(--space-5);
         border: 1px solid var(--border);
         border-radius: var(--radius-4);
-        background: linear-gradient(180deg, var(--surface-1), var(--surface-3));
+        background: linear-gradient(180deg, var(--surface-2), var(--surface-1));
         box-shadow: var(--elev-2);
         height: max-content;
       }
@@ -243,7 +243,7 @@
         border-radius: var(--radius-4);
         background:
           radial-gradient(700px 320px at 18% 0%, var(--accent-14), transparent 55%),
-          linear-gradient(180deg, var(--surface-1) 0%, var(--surface-3) 100%);
+          linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
         box-shadow: var(--elev-3);
         overflow: hidden;
       }
@@ -336,7 +336,7 @@
       .card {
         border: 1px solid var(--border);
         border-radius: var(--radius-4);
-        background: var(--surface-1);
+        background: var(--surface-2);
         box-shadow: var(--elev-1);
       }
       .card.pad {
@@ -383,7 +383,7 @@
       pre.code {
         margin: 0;
         padding: var(--space-4);
-        background: var(--surface-3);
+        background: var(--surface-1);
         border: 1px solid var(--border);
         border-radius: var(--radius-3);
         font-family: var(--font-mono);
@@ -410,7 +410,7 @@
         padding: var(--space-5);
         border: 1px solid var(--border);
         border-radius: var(--radius-4);
-        background: var(--surface-1);
+        background: var(--surface-2);
         display: flex;
         flex-direction: column;
         gap: var(--space-3);
@@ -457,7 +457,7 @@
         font-size: var(--fs-label);
         color: var(--text-3);
         padding: var(--space-3);
-        background: var(--surface-3);
+        background: var(--surface-1);
         border-radius: var(--radius-2);
         line-height: 1.7;
       }
@@ -473,7 +473,7 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        background: var(--surface-1);
+        background: var(--surface-2);
       }
       .swatch .chip {
         height: 84px;
@@ -577,7 +577,7 @@
       .radius-tile {
         padding: var(--space-4);
         border: 1px solid var(--border);
-        background: var(--surface-1);
+        background: var(--surface-2);
         text-align: center;
       }
       .radius-tile .shape {
@@ -610,7 +610,7 @@
       .elev-tile {
         height: 130px;
         border-radius: var(--radius-3);
-        background: var(--surface-1);
+        background: var(--surface-2);
         border: 1px solid var(--border);
         padding: var(--space-4);
         display: flex;
@@ -652,7 +652,7 @@
             rgba(255, 255, 255, 0.012) 12px,
             rgba(255, 255, 255, 0.012) 13px
           ),
-          var(--surface-3);
+          var(--surface-1);
         padding: var(--space-6);
         min-height: 200px;
         display: flex;
@@ -672,7 +672,7 @@
         color: var(--text-2);
         line-height: 1.8;
         padding: var(--space-5);
-        background: var(--surface-1);
+        background: var(--surface-2);
         border: 1px solid var(--border);
         border-radius: var(--radius-4);
       }
@@ -729,13 +729,19 @@
         color: var(--accent-on);
         box-shadow: var(--elev-1), inset 0 1px 0 rgba(255, 255, 255, 0.3);
       }
-      .btn.primary:hover { box-shadow: var(--elev-2), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+      .btn.primary:hover {
+        background: linear-gradient(180deg, #80c0ff, #5db0ff);
+        box-shadow: var(--elev-2), inset 0 1px 0 rgba(255, 255, 255, 0.36);
+      }
+      .btn.primary:active {
+        background: linear-gradient(180deg, #5db0ff, #4097f0);
+      }
       .btn.secondary {
-        background: var(--surface-2);
+        background: var(--surface-3);
         border-color: var(--border);
         color: var(--text-1);
       }
-      .btn.secondary:hover { background: var(--surface-elev); border-color: var(--border-strong); }
+      .btn.secondary:hover { background: var(--surface-4); border-color: var(--border-strong); }
       .btn.ghost {
         background: transparent;
         color: var(--text-1);
@@ -801,7 +807,7 @@
         display: inline-flex;
         padding: 4px;
         gap: 2px;
-        background: var(--surface-3);
+        background: var(--surface-1);
         border: 1px solid var(--border);
         border-radius: var(--radius-3);
       }
@@ -822,7 +828,7 @@
         gap: var(--space-2);
       }
       .segmented button[aria-selected='true'] {
-        background: var(--surface-elev);
+        background: var(--surface-4);
         color: var(--text-1);
         box-shadow: var(--elev-1), inset 0 0 0 1px var(--border-strong);
       }
@@ -871,7 +877,7 @@
         width: 40px;
         height: 24px;
         border-radius: var(--radius-pill);
-        background: var(--surface-3);
+        background: var(--surface-1);
         border: 1px solid var(--border);
         position: relative;
         cursor: pointer;
@@ -898,7 +904,7 @@
       .stat-tile {
         padding: var(--space-3) var(--space-4);
         border-radius: var(--radius-2);
-        background: var(--surface-2);
+        background: var(--surface-3);
         border: 1px solid var(--border);
         display: flex;
         flex-direction: column;
@@ -926,7 +932,7 @@
       .surface-card {
         border: 1px solid var(--border);
         border-radius: var(--radius-4);
-        background: var(--surface-1);
+        background: var(--surface-2);
         padding: var(--space-5);
         display: flex;
         flex-direction: column;
@@ -940,8 +946,13 @@
       }
       .surface-card.selected {
         border-color: var(--accent-48);
-        background: linear-gradient(180deg, var(--accent-14), var(--accent-08)), var(--surface-1);
+        background: linear-gradient(180deg, var(--accent-14), var(--accent-08)), var(--surface-2);
         box-shadow: var(--elev-2), var(--ring-emphasis);
+      }
+      .surface-card.interactive.selected:hover {
+        /* Keep the accent border on hover — never downgrade to --border-strong */
+        border-color: var(--accent);
+        box-shadow: var(--elev-3), var(--ring-emphasis);
       }
       .surface-card .head {
         display: flex;
@@ -965,7 +976,7 @@
       .dialog {
         width: min(440px, 100%);
         border-radius: var(--radius-4);
-        background: var(--surface-1);
+        background: var(--surface-2);
         border: 1px solid var(--border-strong);
         box-shadow: var(--elev-4);
         padding: var(--space-5);
@@ -997,7 +1008,7 @@
         padding: 4px;
         border: 1px solid var(--border);
         border-radius: var(--radius-2);
-        background: var(--surface-3);
+        background: var(--surface-1);
       }
       .tabs button {
         appearance: none;
@@ -1014,7 +1025,7 @@
       }
       .tabs button[aria-selected='true'] {
         color: var(--text-1);
-        background: var(--surface-elev);
+        background: var(--surface-4);
       }
 
       /* ── Component: NoticeBar (replaces ContinueBanner ad-hoc) ── */
@@ -1062,13 +1073,13 @@
       .ba .panel {
         border: 1px solid var(--border);
         border-radius: var(--radius-4);
-        background: var(--surface-3);
+        background: var(--surface-1);
         padding: var(--space-5);
         display: flex;
         flex-direction: column;
         gap: var(--space-4);
       }
-      .ba .panel.before { background: repeating-linear-gradient(45deg, transparent 0, transparent 14px, rgba(255, 92, 122, 0.04) 14px, rgba(255, 92, 122, 0.04) 15px), var(--surface-3); }
+      .ba .panel.before { background: repeating-linear-gradient(45deg, transparent 0, transparent 14px, rgba(255, 92, 122, 0.04) 14px, rgba(255, 92, 122, 0.04) 15px), var(--surface-1); }
       .ba .panel header {
         display: flex;
         align-items: center;
@@ -1199,7 +1210,7 @@
         gap: var(--space-3);
         align-items: center;
         padding: var(--space-3) var(--space-4);
-        background: var(--surface-2);
+        background: var(--surface-3);
         border: 1px solid var(--border);
         border-radius: var(--radius-3);
         width: 100%;
@@ -1211,7 +1222,7 @@
         height: 36px;
         padding: 0 var(--space-3);
         border-radius: var(--radius-2);
-        background: var(--surface-3);
+        background: var(--surface-1);
         border: 1px solid var(--border);
         font-family: var(--font-mono);
         font-variant-numeric: tabular-nums;
@@ -1229,7 +1240,7 @@
         display: inline-flex;
         gap: 2px;
         padding: 3px;
-        background: var(--surface-3);
+        background: var(--surface-1);
         border: 1px solid var(--border);
         border-radius: var(--radius-2);
       }
@@ -1247,8 +1258,8 @@
         justify-content: center;
         font-size: 14px;
       }
-      .game-bar .toolbar button:hover { background: var(--surface-elev); }
-      .game-bar .actions { justify-self: end; display: inline-flex; gap: 2px; padding: 3px; background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-2); }
+      .game-bar .toolbar button:hover { background: var(--surface-4); }
+      .game-bar .actions { justify-self: end; display: inline-flex; gap: 2px; padding: 3px; background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-2); }
       .game-bar .actions button {
         appearance: none;
         width: 34px;
@@ -1262,14 +1273,14 @@
         align-items: center;
         justify-content: center;
       }
-      .game-bar .actions button:hover { background: var(--surface-elev); }
+      .game-bar .actions button:hover { background: var(--surface-4); }
 
       /* ─── Migration table ────────────────────────────────── */
       table.migration {
         width: 100%;
         border-collapse: collapse;
         font-size: var(--fs-body-sm);
-        background: var(--surface-1);
+        background: var(--surface-2);
         border: 1px solid var(--border);
         border-radius: var(--radius-3);
         overflow: hidden;
@@ -1288,7 +1299,7 @@
         letter-spacing: 0.08em;
         color: var(--text-3);
         font-weight: var(--fw-semibold);
-        background: var(--surface-3);
+        background: var(--surface-1);
       }
       table.migration code { font-size: 11px; }
       table.migration td.path { color: var(--text-1); font-family: var(--font-mono); font-size: 12px; }
@@ -1323,7 +1334,7 @@
         gap: var(--space-3);
         align-items: flex-start;
         padding: var(--space-3) var(--space-4);
-        background: var(--surface-1);
+        background: var(--surface-2);
         border: 1px solid var(--border);
         border-radius: var(--radius-2);
       }
@@ -1364,6 +1375,7 @@
               <li><a href="#radius">Radii</a></li>
               <li><a href="#elev">Elevation</a></li>
               <li><a href="#motion">Motion</a></li>
+              <li><a href="#responsive">Responsive</a></li>
             </ul>
           </li>
           <li>
@@ -1505,19 +1517,27 @@
           <!-- COLOR -->
           <h3 id="color">2.1 &nbsp; Color</h3>
           <p>
-            The palette is preserved &mdash; same hue, same vibe. Two adjustments:
-            <b>(a)</b> surfaces are renamed by elevation, not by feel (<code>surface-1 / 2 / elev</code>);
-            <b>(b)</b> accent &amp; danger ship as <b>opacity steps</b> (<code>-14, -24, -48</code>) so the rgba inline-fills can be retired.
+            The palette is preserved &mdash; same hue, same vibe. Three adjustments:
+            <b>(a)</b> surfaces are renumbered so the index follows elevation (<code>--surface-1</code> is the most sunken, <code>--surface-4</code> sits on top &mdash; today's <code>-1 / -2 / -3</code> ordering is non-monotonic and confusing);
+            <b>(b)</b> accent &amp; danger ship as <b>opacity steps</b> (<code>-14, -24, -48</code>) so the rgba inline-fills can be retired;
+            <b>(c)</b> text colors collapse to three roles (<code>text-1 / 2 / 3</code>).
           </p>
 
-          <p class="eyebrow-label">Surfaces · dark theme</p>
-          <div class="grid cols-4" style="margin-top: var(--space-3);">
+          <p class="eyebrow-label" style="margin-top: var(--space-3);">Surfaces · numbered by elevation (low &rarr; high)</p>
+          <div class="grid" style="margin-top: var(--space-3); grid-template-columns: repeat(5, minmax(0, 1fr));">
             <div class="swatch"><div class="chip" style="background: var(--app-bg);"></div><div class="meta"><span class="name">app-bg</span><span class="val">#0E1420</span></div></div>
-            <div class="swatch"><div class="chip" style="background: var(--surface-3);"></div><div class="meta"><span class="name">surface-3</span><span class="val">#121828</span></div></div>
-            <div class="swatch"><div class="chip" style="background: var(--surface-1);"></div><div class="meta"><span class="name">surface-1</span><span class="val">#161E2E</span></div></div>
-            <div class="swatch"><div class="chip" style="background: var(--surface-2);"></div><div class="meta"><span class="name">surface-2</span><span class="val">#1D273B</span></div></div>
-            <div class="swatch"><div class="chip" style="background: var(--surface-elev);"></div><div class="meta"><span class="name">surface-elev</span><span class="val">#26324A</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--surface-1);"></div><div class="meta"><span class="name">surface-1</span><span class="val">#121828</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--surface-2);"></div><div class="meta"><span class="name">surface-2</span><span class="val">#161E2E</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--surface-3);"></div><div class="meta"><span class="name">surface-3</span><span class="val">#1D273B</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--surface-4);"></div><div class="meta"><span class="name">surface-4</span><span class="val">#26324A</span></div></div>
           </div>
+          <p style="font-size: var(--fs-body-sm); color: var(--text-3); margin-top: var(--space-3);">
+            <b style="color: var(--text-2);">app-bg</b> page itself &nbsp;&middot;&nbsp;
+            <b style="color: var(--text-2);">surface-1</b> recessed wells, inputs, segmented tracks &nbsp;&middot;&nbsp;
+            <b style="color: var(--text-2);">surface-2</b> default card &nbsp;&middot;&nbsp;
+            <b style="color: var(--text-2);">surface-3</b> nested card, active segment, game header &nbsp;&middot;&nbsp;
+            <b style="color: var(--text-2);">surface-4</b> popovers, dropdowns, dialogs.
+          </p>
 
           <p class="eyebrow-label" style="margin-top: var(--space-6);">Accent · brand</p>
           <div class="grid cols-4" style="margin-top: var(--space-3);">
@@ -1691,9 +1711,186 @@
 
 <span class="k">--ease-std</span>: <span class="s">cubic-bezier(0.4, 0, 0.2, 1)</span>;
 <span class="k">--ease-out</span>: <span class="s">cubic-bezier(0.22, 1, 0.36, 1)</span>;</pre>
+
+          <!-- RESPONSIVE -->
+          <h3 id="responsive">2.7 &nbsp; Responsive · mobile rules</h3>
+          <p>
+            Same tokens; smaller values. The system has three breakpoints &mdash; lifted from what the codebase already uses
+            (<code>900px</code>, <code>768px</code>, <code>480px</code>) and renamed. Below the <code>md</code> breakpoint, the type and spacing
+            scales each take <b>one step down</b> automatically via <code>:root</code> overrides; components don't need media queries.
+          </p>
+
+          <div class="card" style="margin-top: var(--space-4);">
+            <div class="space-row" style="grid-template-columns: 100px 1fr 220px;">
+              <span class="name">--bp-sm</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">phones &mdash; portrait, narrow tablets</span>
+              <span class="usage">&le; 480px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 100px 1fr 220px;">
+              <span class="name">--bp-md</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">phones landscape, small tablets</span>
+              <span class="usage">&le; 768px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 100px 1fr 220px;">
+              <span class="name">--bp-lg</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">tablets, narrow desktop</span>
+              <span class="usage">&le; 900px</span>
+            </div>
+          </div>
+
+          <h4 style="margin: var(--space-6) 0 var(--space-3); font-size: var(--fs-body); font-weight: var(--fw-semibold); color: var(--text-2);">Type · mobile shifts down one step</h4>
+          <div class="card">
+            <div class="type-row">
+              <span class="name">display-1</span>
+              <span class="specimen" style="font-family: var(--font-mono); font-size: var(--fs-body-sm); color: var(--text-2);">desktop&nbsp; <b style="color: var(--text-1);">56px</b> &nbsp;&rarr;&nbsp; mobile&nbsp; <b style="color: var(--text-1);">40px</b></span>
+              <span class="props">letter-spacing -0.02em on mobile</span>
+            </div>
+            <div class="type-row">
+              <span class="name">display-2</span>
+              <span class="specimen" style="font-family: var(--font-mono); font-size: var(--fs-body-sm); color: var(--text-2);">desktop&nbsp; <b style="color: var(--text-1);">36px</b> &nbsp;&rarr;&nbsp; mobile&nbsp; <b style="color: var(--text-1);">28px</b></span>
+              <span class="props">page titles</span>
+            </div>
+            <div class="type-row">
+              <span class="name">title</span>
+              <span class="specimen" style="font-family: var(--font-mono); font-size: var(--fs-body-sm); color: var(--text-2);">desktop&nbsp; <b style="color: var(--text-1);">24px</b> &nbsp;&rarr;&nbsp; mobile&nbsp; <b style="color: var(--text-1);">20px</b></span>
+              <span class="props">card titles</span>
+            </div>
+            <div class="type-row">
+              <span class="name">subtitle</span>
+              <span class="specimen" style="font-family: var(--font-mono); font-size: var(--fs-body-sm); color: var(--text-2);">desktop&nbsp; <b style="color: var(--text-1);">18px</b> &nbsp;&rarr;&nbsp; mobile&nbsp; <b style="color: var(--text-1);">16px</b></span>
+              <span class="props">sub-heading</span>
+            </div>
+            <div class="type-row">
+              <span class="name">body / body-sm / label / overline</span>
+              <span class="specimen" style="font-family: var(--font-mono); font-size: var(--fs-body-sm); color: var(--text-2);"><b style="color: var(--text-1);">unchanged</b> &mdash; 15 / 13 / 12 / 11</span>
+              <span class="props">readability floor</span>
+            </div>
+          </div>
+          <p style="font-size: var(--fs-body-sm); color: var(--text-3); margin-top: var(--space-3);">
+            Body sizes don't shrink &mdash; <b style="color: var(--text-2);">13px is the minimum readable size</b> in the system.
+            Only <i>display</i> sizes step down so heroes and titles don't overpower the small screen.
+          </p>
+
+          <h4 style="margin: var(--space-6) 0 var(--space-3); font-size: var(--fs-body); font-weight: var(--fw-semibold); color: var(--text-2);">Spacing · big steps shrink on mobile, micro stays</h4>
+          <div class="card">
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-0 → 3</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">2 / 4 / 8 / 12 px</span>
+              <span class="usage">unchanged on mobile</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-4</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">card / panel padding</span>
+              <span class="usage"><b style="color: var(--text-1);">16</b> → <b style="color: var(--text-1);">12</b> px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-5</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">section interior</span>
+              <span class="usage"><b style="color: var(--text-1);">20</b> → <b style="color: var(--text-1);">16</b> px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-6</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">between sections</span>
+              <span class="usage"><b style="color: var(--text-1);">24</b> → <b style="color: var(--text-1);">20</b> px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-7</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">page gutter</span>
+              <span class="usage"><b style="color: var(--text-1);">32</b> → <b style="color: var(--text-1);">20</b> px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-8</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">hero / between blocks</span>
+              <span class="usage"><b style="color: var(--text-1);">48</b> → <b style="color: var(--text-1);">32</b> px</span>
+            </div>
+          </div>
+
+          <h4 style="margin: var(--space-6) 0 var(--space-3); font-size: var(--fs-body); font-weight: var(--fw-semibold); color: var(--text-2);">Components · what changes on touch</h4>
+          <div class="grid cols-3" style="margin-top: var(--space-3);">
+            <div class="card pad">
+              <div class="eyebrow-label">Hit targets</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                Every tappable element is <b style="color: var(--text-1);">&ge; 44 × 44 px</b> on touch. Button.md (40px) becomes <b style="color: var(--text-1);">44px</b> below <code>--bp-md</code>; icon buttons too. Below 480px, sm buttons get bumped to md to satisfy this.
+              </p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Radii</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                Full-bleed cards drop their radius to <b style="color: var(--text-1);">0</b> when they hit screen edges (current <code>Board</code> already does this). Other radii unchanged.
+              </p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Card grids</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                Below <code>--bp-md</code>, 2- and 3-column card grids collapse to single column. Below <code>--bp-lg</code>, 3-column becomes 2.
+              </p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Dialogs</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                Below <code>--bp-sm</code>, dialog actions stack <b style="color: var(--text-1);">column-reverse</b> (primary on top) and buttons go full width.
+              </p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Game board</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                <b style="color: var(--text-1);">Min cell size 36px</b> on touch (current code uses ~32px which is below the 44px hit-target rule &mdash; long-press flagging compensates).
+              </p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Sticky CTAs</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                On mobile, primary page CTAs (Start, Continue) become <b style="color: var(--text-1);">sticky-bottom</b> with safe-area padding &mdash; Lobby already does this.
+              </p>
+            </div>
+          </div>
+
+          <h4 style="margin: var(--space-6) 0 var(--space-3); font-size: var(--fs-body); font-weight: var(--fw-semibold); color: var(--text-2);">Implementation</h4>
+          <p style="font-size: var(--fs-body-sm); color: var(--text-2);">
+            The whole responsive layer is <b>two media queries on <code>:root</code></b>. Components reference the same tokens; nothing else changes.
+          </p>
+          <pre class="code"><span class="c">/* tokens.css \u2014 the entire responsive system */</span>
+:root {
+  <span class="c">/* breakpoints (for use in component media queries when needed) */</span>
+  <span class="k">--bp-sm</span>: <span class="s">480px</span>;
+  <span class="k">--bp-md</span>: <span class="s">768px</span>;
+  <span class="k">--bp-lg</span>: <span class="s">900px</span>;
+}
+
+@media (max-width: <span class="v">768px</span>) {
+  :root {
+    <span class="c">/* type \u2014 displays shrink, body stays */</span>
+    <span class="k">--fs-display-1</span>: <span class="s">40px</span>;
+    <span class="k">--fs-display-2</span>: <span class="s">28px</span>;
+    <span class="k">--fs-title</span>:     <span class="s">20px</span>;
+    <span class="k">--fs-subtitle</span>:  <span class="s">16px</span>;
+
+    <span class="c">/* spacing \u2014 large steps shrink, micro stays */</span>
+    <span class="k">--space-4</span>: <span class="s">12px</span>;
+    <span class="k">--space-5</span>: <span class="s">16px</span>;
+    <span class="k">--space-6</span>: <span class="s">20px</span>;
+    <span class="k">--space-7</span>: <span class="s">20px</span>;
+    <span class="k">--space-8</span>: <span class="s">32px</span>;
+
+    <span class="c">/* hit-target floor for buttons */</span>
+    <span class="k">--btn-h-md</span>: <span class="s">44px</span>;
+    <span class="k">--btn-h-sm</span>: <span class="s">40px</span>;  <span class="c">/* sm bumps to "md desktop" */</span>
+  }
+}
+
+@media (max-width: <span class="v">480px</span>) {
+  :root {
+    <span class="k">--fs-display-1</span>: <span class="s">32px</span>;
+  }
+}</pre>
+          <p style="font-size: var(--fs-body-sm); color: var(--text-3); margin-top: var(--space-3);">
+            <b style="color: var(--text-2);">Rule of thumb for new components:</b> never hardcode a <code>font-size</code> or padding inside a <code>@media</code> query.
+            If a value needs to shift on mobile, it belongs on the token. Components express intent (<code>--fs-title</code>) &mdash; the token decides the pixel.
+          </p>
+
         </section>
 
-        <!-- ───────── COMPONENTS ───────── -->
+        <!-- \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 COMPONENTS \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 -->
         <section class="s" id="components">
           <header>
             <span class="num">03</span>
@@ -1723,7 +1920,7 @@
                 <li><span>radius</span><b>--radius-4</b></li>
                 <li><span>border</span><b>1px var(--border)</b></li>
                 <li><span>padding</span><b>--space-5</b></li>
-                <li><span>bg</span><b>var(--surface-1)</b></li>
+                <li><span>bg</span><b>var(--surface-2)</b></li>
                 <li><span>gap (stack)</span><b>--space-4</b></li>
                 <li><span>state: hover</span><b>elev-2 · border-strong</b></li>
                 <li><span>state: selected</span><b>ring-emphasis · accent-14 wash</b></li>
@@ -1754,7 +1951,7 @@
               <h5 style="margin-top: var(--space-4);">Variants</h5>
               <ul>
                 <li><span>primary</span><b>gradient accent</b></li>
-                <li><span>secondary</span><b>surface-2 + border</b></li>
+                <li><span>secondary</span><b>surface-3 + border</b></li>
                 <li><span>ghost</span><b>transparent</b></li>
                 <li><span>danger</span><b>danger-14 + danger-48</b></li>
               </ul>
@@ -1783,9 +1980,9 @@
             <div class="anatomy">
               <h5>Anatomy</h5>
               <ul>
-                <li><span>track</span><b>surface-3 · radius-3 · 4px inset pad</b></li>
+                <li><span>track</span><b>surface-1 · radius-3 · 4px inset pad</b></li>
                 <li><span>seg</span><b>36px · radius 10</b></li>
-                <li><span>selected</span><b>surface-elev · elev-1</b></li>
+                <li><span>selected</span><b>surface-4 · elev-1</b></li>
                 <li><span>label</span><b>body-sm · semibold</b></li>
               </ul>
             </div>
@@ -1832,7 +2029,7 @@
                 <li><span>label</span><b>overline · text-3</b></li>
                 <li><span>value</span><b>mono · subtitle · semibold</b></li>
                 <li><span>padding</span><b>12 / 16</b></li>
-                <li><span>bg</span><b>surface-2 · border</b></li>
+                <li><span>bg</span><b>surface-3 · border</b></li>
                 <li><span>variants</span><b>default · compact</b></li>
               </ul>
             </div>
@@ -1934,7 +2131,7 @@
             <div class="anatomy">
               <h5>Composition</h5>
               <ul>
-                <li><span>track</span><b>surface-2 · radius-3</b></li>
+                <li><span>track</span><b>surface-3 · radius-3</b></li>
                 <li><span>readout</span><b>StatTile.compact (mono)</b></li>
                 <li><span>toolbar</span><b>icon-button cluster · 30px</b></li>
                 <li><span>gap</span><b>--space-3</b></li>
@@ -2075,11 +2272,11 @@
             <div class="panel">
               <header class="after-tag"></header>
               <div class="stage">
-                <div style="width: 100%; max-width: 460px; background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-4); overflow: hidden;">
+                <div style="width: 100%; max-width: 460px; background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-4); overflow: hidden;">
                   <div style="display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-3); padding: var(--space-3) var(--space-4); align-items: center; background: var(--accent-08); box-shadow: inset 2px 0 0 var(--accent);">
                     <span class="mono" style="font-size: var(--fs-body-sm); color: var(--accent); font-weight: 600;">#03</span>
                     <div style="display: flex; gap: var(--space-3); align-items: center;">
-                      <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--surface-elev);"></div>
+                      <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--surface-4);"></div>
                       <div>
                         <div style="display: flex; align-items: center; gap: var(--space-2);">
                           <strong style="font-size: var(--fs-body); font-weight: var(--fw-semibold);">dazzling_yao</strong>
