@@ -95,7 +95,7 @@ export const saveDailyAttempt = async (
     elapsedMs: input.elapsedMs,
   });
 
-  const streak = await getMyDailyStreakSummary(userId, getDailyKey());
+  const streak = await getMyDailyStreakSummary(userId, input.dailyKey);
 
   revalidatePath(ROUTES.ACCOUNT);
 
