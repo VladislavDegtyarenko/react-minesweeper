@@ -1446,7 +1446,7 @@
                 <code>14px</code>, <code>18px</code>, <code>20px</code> &mdash; in 40+ places.
               </p>
               <div class="examples">
-                e.g. <code>SetupCard</code>: <b>12px</b>, <b>10px</b>, <b>8px</b>, <b>5px</b>, <b>4px</b>, <b>6px</b>, <b>7px</b>
+                e.g. <code>LobbyCard</code>: <b>12px</b>, <b>10px</b>, <b>8px</b>, <b>5px</b>, <b>4px</b>, <b>6px</b>, <b>7px</b>
                 &middot; <code>GameHeader</code>: <b>4px</b>, <b>6px</b>, <b>8px</b>, <b>12px</b>
               </div>
             </div>
@@ -1459,7 +1459,7 @@
               </p>
               <div class="examples">
                 Segmented control: <b>SelectLevelToggleGroup · SelectDigFlag · ModeToggle · Leaderboard tabs</b><br />
-                Badge / pill: <b>DailyBadge · youBadge · SetupCard.badge · GameStatus.statusPill</b><br />
+                Badge / pill: <b>DailyBadge · youBadge · LobbyCard.badge · GameStatus.statusPill</b><br />
                 Stat tile: <b>DailyCard.stat · ContinueBanner.stat · LevelCard.meta · BestScores.scoreRow</b><br />
                 Dialog: <b>LevelChangeDialog · ContinueBanner.dialog</b> (same <code>@keyframes dialogEnter</code> defined twice)
               </div>
@@ -1472,7 +1472,7 @@
                 Same for <code>rgba(255, 92, 122, 0.X)</code> (danger). Tokens can't be swapped or themed.
               </p>
               <div class="examples">
-                <b>rgba(77, 163, 255, …)</b> in: <code>Button</code>, <code>Switch</code>, <code>SetupCard</code>,
+                <b>rgba(77, 163, 255, …)</b> in: <code>Button</code>, <code>Switch</code>, <code>LobbyCard</code>,
                 <code>ContinueBanner</code>, <code>LeaderboardPage</code>, <code>OnboardingTour</code>, …<br />
                 Fix: ship a <b>token opacity ramp</b> — <code>--accent-14</code>, <code>--accent-24</code>, <code>--accent-48</code>.
               </div>
@@ -1482,12 +1482,12 @@
               <div class="h"><span class="tag info">POLISH</span><h4>Font-weight inflation</h4></div>
               <p>
                 Weights <b>400 / 600 / 700 / 800 / 900</b> all appear, often without semantic intent &mdash;
-                an "eyebrow" is 800 in <code>LevelCard</code>, 700 in <code>SetupCard</code>, 900 in <code>ContinueBanner</code>.
+                an "eyebrow" is 800 in <code>LevelCard</code>, 700 in <code>LobbyCard</code>, 900 in <code>ContinueBanner</code>.
                 Standardize to <b>regular / medium / semibold / bold</b>.
               </p>
               <div class="examples">
-                <code>900</code>: SetupCard.eyebrow, LevelCard.meta, ContinueBanner.statLabel, .statValue, .actionButton<br />
-                <code>800</code>: SetupCard.eyebrow (also!), DailyBadge, DailyCard.stat dd, ToggleGroup.label<br />
+                <code>900</code>: LobbyCard.eyebrow, LevelCard.meta, ContinueBanner.statLabel, .statValue, .actionButton<br />
+                <code>800</code>: LobbyCard.eyebrow (also!), DailyBadge, DailyCard.stat dd, ToggleGroup.label<br />
                 <i>Same role, two weights, different files.</i>
               </div>
             </div>
@@ -1900,7 +1900,7 @@
 
           <!-- CARD -->
           <h3 id="c-card">3.1 &nbsp; Surface · Card</h3>
-          <p>Replaces every hand-rolled surface: <code>PageShell.card</code>, <code>SetupCard</code>, <code>AccountPage.section</code>, <code>LeaderboardPage.column</code>, <code>ContinueBanner.savedCard</code>.</p>
+          <p>Replaces every hand-rolled surface: <code>PageShell.card</code>, <code>LobbyCard</code>, <code>AccountPage.section</code>, <code>LeaderboardPage.column</code>, <code>ContinueBanner.savedCard</code>.</p>
           <div class="specimen-wrap">
             <div class="preview">
               <div class="surface-card" style="width: 280px;">
@@ -1990,7 +1990,7 @@
 
           <!-- BADGE -->
           <h3 id="c-badge">3.4 &nbsp; Badge</h3>
-          <p>Replaces <code>DailyBadge</code>, <code>youBadge</code> (LeaderboardPage), <code>badge</code> (SetupCard), <code>statusPill</code> (GameStatus). Four tones, two shapes.</p>
+          <p>Replaces <code>DailyBadge</code>, <code>youBadge</code> (LeaderboardPage), <code>badge</code> (LobbyCard), <code>statusPill</code> (GameStatus). Four tones, two shapes.</p>
           <div class="specimen-wrap">
             <div class="preview">
               <span class="badge accent">Recommended</span>
@@ -2148,7 +2148,7 @@
             <p>Same screens, rebuilt from the primitives above. No new pixels — just consolidated ones.</p>
           </header>
 
-          <h3>4.1 &nbsp; SetupCard (Lobby)</h3>
+          <h3>4.1 &nbsp; LobbyCard (Lobby)</h3>
           <div class="ba">
             <div class="panel before">
               <header class="before-tag"></header>
@@ -2338,13 +2338,13 @@
               <tr>
                 <td class="prio"><span class="prio-pill p1">P1</span></td>
                 <td><code>ui/Card</code></td>
-                <td><code>PageShell.card</code>, <code>AccountPage.section</code>, <code>LeaderboardPage.column</code>, <code>SetupCard</code>, <code>ContinueBanner.savedCard</code></td>
+                <td><code>PageShell.card</code>, <code>AccountPage.section</code>, <code>LeaderboardPage.column</code>, <code>LobbyCard</code>, <code>ContinueBanner.savedCard</code></td>
                 <td>Variants: <code>interactive</code>, <code>selected</code>. Default padding <code>--space-5</code>.</td>
               </tr>
               <tr>
                 <td class="prio"><span class="prio-pill p1">P1</span></td>
                 <td><code>ui/Badge</code></td>
-                <td><code>DailyBadge</code>, leaderboard <code>youBadge</code>, <code>SetupCard.badge</code>, <code>GameStatus.statusPill</code></td>
+                <td><code>DailyBadge</code>, leaderboard <code>youBadge</code>, <code>LobbyCard.badge</code>, <code>GameStatus.statusPill</code></td>
                 <td>Tones: <code>accent · success · danger · neutral</code>. Shapes: <code>square · pill</code>.</td>
               </tr>
               <tr>
@@ -2380,7 +2380,7 @@
               <tr>
                 <td class="prio"><span class="prio-pill p3">P3</span></td>
                 <td><code>ui/EyebrowLabel</code></td>
-                <td><code>SetupCard.eyebrow</code>, <code>OnboardingTour.eyebrow</code>, <code>DailyCard.eyebrow</code>, <code>BestScores.scoresHeader span</code>, <code>ContinueBanner.statLabel</code></td>
+                <td><code>LobbyCard.eyebrow</code>, <code>OnboardingTour.eyebrow</code>, <code>DailyCard.eyebrow</code>, <code>BestScores.scoresHeader span</code>, <code>ContinueBanner.statLabel</code></td>
                 <td>Canonical uppercase label. Locks <code>letter-spacing: 0.08em</code>, <code>fw: 600</code>, <code>size: 11px</code>.</td>
               </tr>
               <tr>
