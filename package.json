@@ -3,8 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "rm -rf .next && next dev",
-    "build": "next build --webpack",
+    "check:env": "node scripts/check-env.js",
+    "dev": "node scripts/check-env.js --mode development && rm -rf .next && next dev",
+    "build": "node scripts/check-env.js --mode production && next build",
     "start": "next start",
     "lint": "next lint",
     "db:push": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs push",
