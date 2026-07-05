@@ -5,6 +5,7 @@ import {
 } from '@/utils/seo';
 import ROUTES from '@/config/routes.json';
 import type { GameSearchParams } from '@/components/Game/types';
+import { Suspense } from 'react';
 
 export const metadata = buildMetadata({
   title: 'Play',
@@ -26,7 +27,9 @@ export default async function GamePage(props: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: generateGameJsonLd() }}
       />
-      <GameClient searchParams={searchParams} />
+      <Suspense fallback={<div>Loading GameClient...</div>}>
+        <GameClient searchParams={searchParams} />
+      </Suspense>
     </>
   );
 }
