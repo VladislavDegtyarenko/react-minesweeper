@@ -2,7 +2,7 @@ import { LOCAL_STORAGE_KEYS, LEVELS_CONFIG } from '@/constants';
 import type { Level, LevelId, TBoard } from '@/types';
 import { localStorageService } from '@/utils';
 import { DAILY_SEED_VERSION, getDailyKey } from '@/utils/daily';
-import type { GameMode, GameState } from '../store';
+import type { GameState } from '../store';
 import type { GameSnapshotRouteParams, GameSnapshotV1 } from './types';
 
 const GAME_SNAPSHOT_VERSION = 1;

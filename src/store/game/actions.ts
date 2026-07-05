@@ -275,6 +275,12 @@ export const setOnboardingTourOpen = (isOnboardingTourOpen: boolean) => {
   useGameStore.setState({ isOnboardingTourOpen });
 };
 
+export const setOnboardingTourFlagOnlyCell = (
+  onboardingTourFlagOnlyCell: { rowIndex: number; cellIndex: number } | null,
+) => {
+  useGameStore.setState({ onboardingTourFlagOnlyCell });
+};
+
 export const resumeFromSnapshot = (snapshot: GameSnapshotV1) => {
   suppressNextLevelReset();
   restoreTimerElapsed(snapshot.elapsedMs);

@@ -15,6 +15,8 @@ export const selectGameStatusBeforeLevelChange = (state: GameState) =>
   state.gameStatusBeforeLevelChange;
 export const selectIsOnboardingTourOpen = (state: GameState) =>
   state.isOnboardingTourOpen;
+export const selectOnboardingTourFlagOnlyCell = (state: GameState) =>
+  state.onboardingTourFlagOnlyCell;
 export const selectIsGameIdle = (state: GameState) =>
   state.gameStatus === "idle";
 export const selectIsGamePlaying = (state: GameState) =>

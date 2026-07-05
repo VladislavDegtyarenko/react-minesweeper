@@ -36,6 +36,7 @@ export type GameState = {
   dailyKey: string | null; // UTC daily key (YYYY-MM-DD) of the current daily board, when in daily mode
   dailySeedVersion: number | null; // seed version used to generate the current daily board, when in daily mode
   isOnboardingTourOpen: boolean; // suppresses background auto-pause while the interactive tour needs the board
+  onboardingTourFlagOnlyCell: { rowIndex: number; cellIndex: number } | null; // while set, this cell can be flagged but not opened
 };
 
 const buildInitialGameState = (): GameState => {
@@ -61,6 +62,7 @@ const buildInitialGameState = (): GameState => {
       dailyKey,
       dailySeedVersion: DAILY_SEED_VERSION,
       isOnboardingTourOpen: false,
+      onboardingTourFlagOnlyCell: null,
     };
   }
 
@@ -80,6 +82,7 @@ const buildInitialGameState = (): GameState => {
     dailyKey: null,
     dailySeedVersion: null,
     isOnboardingTourOpen: false,
+    onboardingTourFlagOnlyCell: null,
   };
 };
 

@@ -1,10 +1,10 @@
 .resumeFlow {
-  width: min(560px, 100%);
-  margin-inline: auto;
 }
 
 .savedCard {
-  gap: 12px;
+  flex-direction: row;
+  width: min(42rem, 100%);
+  margin-inline: auto;
   padding: clamp(0.9rem, 2vw, 1.1rem);
   border-color: rgba(77, 163, 255, 0.38);
   background:
@@ -27,6 +27,7 @@
 
   position: relative;
   display: block;
+  flex: 0 0 15rem;
   overflow: hidden;
   aspect-ratio: 1;
   filter: opacity(0.5);
@@ -34,6 +35,14 @@
   > * {
     height: 100%;
   }
+}
+
+.summary {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2);
 }
 
 .stats {
@@ -83,8 +92,6 @@
 .startNewButton {
   width: 100%;
   border-color: transparent;
-  background: transparent;
-  color: var(--text-secondary);
   font-weight: 800;
 }
 
@@ -160,6 +167,15 @@
 }
 
 @media screen and (max-width: 560px) {
+  .savedCard {
+    flex-direction: column;
+  }
+
+  .previewWrap {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
   .stats {
     grid-template-columns: 1fr;
   }

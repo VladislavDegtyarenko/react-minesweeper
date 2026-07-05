@@ -77,17 +77,21 @@ const getNextMarker = (
 
 const shouldOpenCell = (row: number, col: number): boolean => {
   const state = useGameStore.getState();
-  const { board } = state;
+  const { board, onboardingTourFlagOnlyCell } = state;
   const gameStatus = selectGameStatus(state);
   const isCellOpened = board[row][col].isOpened;
   const isCellFlagged = board[row][col].marker === CELL_MARKERS.FLAG;
+  const isFlagOnlyCell =
+    onboardingTourFlagOnlyCell?.rowIndex === row &&
+    onboardingTourFlagOnlyCell?.cellIndex === col;
 
   if (
     gameStatus === 'won' ||
     gameStatus === 'lost' ||
     gameStatus === 'paused' ||
     isCellOpened ||
-    isCellFlagged
+    isCellFlagged ||
+    isFlagOnlyCell
   ) {
     return false;
   }

@@ -2,7 +2,7 @@ import { CalendarIcon, PlayIcon } from '@radix-ui/react-icons';
 import { createCx } from '@/utils';
 import { MODE_OPTIONS } from '../../constants';
 import type { IntroMode } from '../../types';
-import SetupCard from '../SetupCard';
+import LobbyCard from '../LobbyCard';
 import SetupLabel from '../SetupLabel';
 import styles from './styles.module.scss';
 
@@ -25,7 +25,7 @@ const ModeSelector = ({ selectedMode, onModeChange }: ModeSelectorProps) => {
           const Icon = value === 'daily' ? CalendarIcon : PlayIcon;
 
           return (
-            <SetupCard
+            <LobbyCard
               key={value}
               ariaLabel={`${label}: ${description}`}
               badge={badge}

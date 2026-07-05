@@ -17,6 +17,13 @@ export const useResumableSnapshot = () => {
     INITIAL_RESUMABLE_SNAPSHOT_STATE,
   );
 
+  const clearSnapshot = () => {
+    setState({
+      isLoaded: true,
+      snapshot: null,
+    });
+  };
+
   useEffect(() => {
     setState({
       isLoaded: true,
@@ -24,5 +31,5 @@ export const useResumableSnapshot = () => {
     });
   }, []);
 
-  return state;
+  return { ...state, clearSnapshot };
 };

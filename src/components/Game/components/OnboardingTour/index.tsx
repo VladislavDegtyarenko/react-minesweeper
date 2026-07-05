@@ -3,11 +3,15 @@ import { Cross2Icon } from '@radix-ui/react-icons';
 import Button from '@/components/ui/Button';
 import { LOCAL_STORAGE_KEYS } from '@/constants';
 import { useGameStore } from '@/store/game';
-import { setOnboardingTourOpen } from '@/store/game/actions';
+import {
+  setOnboardingTourFlagOnlyCell,
+  setOnboardingTourOpen,
+} from '@/store/game/actions';
 import { ControlModes, DigFlag, useSettingsStore } from '@/store/settings';
 import {
   selectControlMode,
   selectDigFlag,
+  selectIsSettingsOpened,
   selectIsTouchScreen,
 } from '@/store/settings/selectors';
 import { createCx, localStorageService } from '@/utils';
@@ -23,7 +27,6 @@ import {
   findRevealedNumberTarget,
   getTourBlockerStyles,
   getTourCardStyle,
-  getTourCellSelector,
   getTourStepContent,
   getTourTargetRect,
   isCellFlagged,
@@ -56,9 +59,13 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
   const controlMode = useSettingsStore(selectControlMode);
   const digFlag = useSettingsStore(selectDigFlag);
   const isTouchScreen = useSettingsStore(selectIsTouchScreen);
+  const isSettingsOpened = useSettingsStore(selectIsSettingsOpened);
   const [isOpen, setIsOpen] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [targetRect, setTargetRect] = useState<TourTargetRect | null>(null);
+  const [numberCellRect, setNumberCellRect] = useState<TourTargetRect | null>(
+    null,
+  );
   const [openCellTarget, setOpenCellTarget] = useState<TourCellTarget | null>(
     null,
   );
@@ -145,11 +152,17 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
     },
     [clearStepTransitionDelay, pendingStepIndex, stepIndex],
   );
+  const closeTour = useCallback(() => {
+    clearStepTransitionDelay();
+    markTourSeen();
+    setIsOpen(false);
+  }, [clearStepTransitionDelay]);
 
   useEffect(
     () => () => {
       clearStepTransitionDelay(false);
       setOnboardingTourOpen(false);
+      setOnboardingTourFlagOnlyCell(null);
     },
     [clearStepTransitionDelay],
   );
@@ -212,6 +225,20 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
   }, [board, flagCellTarget, flagPhase, isOpen, minesLeft, stepId]);
 
   useEffect(() => {
+    const isFlagCellStep =
+      isOpen && stepId === 'place-flag' && flagPhase === 'cell';
+
+    setOnboardingTourFlagOnlyCell(
+      isFlagCellStep && flagCellTarget
+        ? {
+            rowIndex: flagCellTarget.rowIndex,
+            cellIndex: flagCellTarget.cellIndex,
+          }
+        : null,
+    );
+  }, [flagCellTarget, flagPhase, isOpen, stepId]);
+
+  useEffect(() => {
     if (
       !isOpen ||
       stepId !== 'open-cell' ||
@@ -256,31 +283,21 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
   ]);
 
   useEffect(() => {
-    if (!isOpen || stepId !== 'read-number' || !numberCellTarget) {
+    if (!isOpen || stepId !== 'settings' || !isSettingsOpened) {
       return undefined;
     }
 
-    const selector = getTourCellSelector(numberCellTarget);
-    const handlePointerUp = (event: PointerEvent) => {
-      const target = event.target;
-
-      if (!(target instanceof Element) || !target.closest(selector)) {
-        return undefined;
-      }
-
-      moveToStep(2);
-    };
-
-    document.addEventListener('pointerup', handlePointerUp, true);
-
-    return () => {
-      document.removeEventListener('pointerup', handlePointerUp, true);
-    };
-  }, [isOpen, moveToStep, numberCellTarget, stepId]);
+    closeTour();
+  }, [closeTour, isOpen, isSettingsOpened, stepId]);
 
   const updateTargetRect = useCallback(() => {
     setTargetRect(getTourTargetRect(stepContent.target));
-  }, [stepContent.target]);
+    setNumberCellRect(
+      stepId === 'read-number' && numberCellTarget
+        ? getTourTargetRect(numberCellTarget)
+        : null,
+    );
+  }, [numberCellTarget, stepContent.target, stepId]);
 
   useResizeObserver(
     () => [document.body],
@@ -294,12 +311,6 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
   if (!isOpen) {
     return null;
   }
-
-  const closeTour = () => {
-    clearStepTransitionDelay();
-    markTourSeen();
-    setIsOpen(false);
-  };
 
   const handleNextClick = () => {
     if (!stepContent.canUseNext) {
@@ -337,6 +348,30 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
             left: targetRect.left,
             width: targetRect.width,
             height: targetRect.height,
+          }}
+        />
+      ) : null}
+
+      {stepId === 'read-number' && targetRect ? (
+        <div
+          className={cx('interactionBlocker')}
+          style={{
+            top: targetRect.top,
+            left: targetRect.left,
+            width: targetRect.width,
+            height: targetRect.height,
+          }}
+        />
+      ) : null}
+
+      {stepId === 'read-number' && numberCellRect ? (
+        <div
+          className={cx('centerHighlight')}
+          style={{
+            top: numberCellRect.top,
+            left: numberCellRect.left,
+            width: numberCellRect.width,
+            height: numberCellRect.height,
           }}
         />
       ) : null}

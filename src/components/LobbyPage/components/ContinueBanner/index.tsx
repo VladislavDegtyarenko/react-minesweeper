@@ -5,7 +5,7 @@ import Button from '@/components/ui/Button';
 import type { GameSnapshotV1 } from '@/store/game/snapshot/types';
 import { createCx, getTimeDiff } from '@/utils';
 import PreviewBoard from '../PreviewBoard';
-import SetupCard from '../SetupCard';
+import LobbyCard from '../LobbyCard';
 import { getModeLabel } from './utils';
 import styles from './styles.module.scss';
 
@@ -35,50 +35,52 @@ const ContinueBanner = ({
 
   return (
     <section className={cx('resumeFlow')} aria-label="Saved game">
-      <SetupCard
+      <LobbyCard
         ariaLabel="Saved game"
         className={cx('savedCard')}
-        descriptionPlacement="beforeMedia"
         eyebrow="Saved game"
         isSelected={true}
-        showSelectionMark={false}
-        title={gameTitle}
         media={
           <span className={cx('previewWrap')}>
             <PreviewBoard board={snapshot.board} level={snapshot.level} />
           </span>
         }
+        showSelectionMark={false}
+        title={gameTitle}
+        variant="horizontal"
       >
-        <div className={cx('stats')} aria-label="Saved game stats">
-          <span className={cx('stat')}>
-            <span className={cx('statLabel')}>Elapsed</span>
-            <span className={cx('statValue')}>{elapsedLabel}</span>
-          </span>
-          <span className={cx('stat')}>
-            <span className={cx('statLabel')}>Mines left</span>
-            <span className={cx('statValue')}>{minesLeft}</span>
-          </span>
-        </div>
+        <div className={cx('summary')}>
+          <div className={cx('stats')} aria-label="Saved game stats">
+            <span className={cx('stat')}>
+              <span className={cx('statLabel')}>Elapsed</span>
+              <span className={cx('statValue')}>{elapsedLabel}</span>
+            </span>
+            <span className={cx('stat')}>
+              <span className={cx('statLabel')}>Mines left</span>
+              <span className={cx('statValue')}>{minesLeft}</span>
+            </span>
+          </div>
 
-        <div className={cx('actions')}>
-          <Button
-            className={cx('actionButton')}
-            type="button"
-            variant="primary"
-            onClick={onContinue}
-          >
-            <ResumeIcon /> Continue Game
-          </Button>
-          <Button
-            className={cx('startNewButton')}
-            type="button"
-            variant="ghost"
-            onClick={() => setIsConfirmOpen(true)}
-          >
-            Start New Game
-          </Button>
+          <div className={cx('actions')}>
+            <Button
+              className={cx('actionButton')}
+              type="button"
+              variant="primary"
+              onClick={onContinue}
+            >
+              <ResumeIcon /> Continue Game
+            </Button>
+            <Button
+              className={cx('startNewButton')}
+              type="button"
+              variant="secondary"
+              onClick={() => setIsConfirmOpen(true)}
+            >
+              Start New Game
+            </Button>
+          </div>
         </div>
-      </SetupCard>
+      </LobbyCard>
 
       <Dialog.Root open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
         <Dialog.Portal>

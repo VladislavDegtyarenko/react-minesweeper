@@ -2,7 +2,7 @@ import type { Level } from '@/types';
 import { createCx } from '@/utils';
 import { LEVEL_DETAILS } from '../../constants';
 import PreviewBoard from '../PreviewBoard';
-import SetupCard from '../SetupCard';
+import LobbyCard from '../LobbyCard';
 import styles from './styles.module.scss';
 
 const cx = createCx(styles);
@@ -17,7 +17,7 @@ const LevelCard = ({ level, isSelected, onSelect }: LevelCardProps) => {
   const details = LEVEL_DETAILS[level.id];
 
   return (
-    <SetupCard
+    <LobbyCard
       ariaLabel={`${level.label} difficulty: ${details.description}`}
       badge={details.badge}
       description={details.description}
@@ -43,7 +43,7 @@ const LevelCard = ({ level, isSelected, onSelect }: LevelCardProps) => {
           <span className={cx('metaValue')}>{level.totalMines}</span>
         </span>
       </span>
-    </SetupCard>
+    </LobbyCard>
   );
 };
 
