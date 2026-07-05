@@ -1,0 +1,25 @@
+.preview {
+  --board-cell-gap: 0.5cqi;
+  --board-cell-hit-inset: calc(var(--board-cell-gap) / 2);
+  --cell-size: calc((100cqi / var(--preview-cols)) - var(--board-cell-gap));
+
+  align-items: center;
+  aspect-ratio: var(--preview-cols) / var(--preview-rows);
+  box-sizing: border-box;
+  container-type: inline-size;
+  display: flex;
+  justify-content: center;
+  padding: 6px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.row {
+  display: flex;
+  font-size: 0;
+  line-height: 0;
+}

@@ -2,6 +2,7 @@
 
 import { useAuth } from '@clerk/nextjs';
 import { useEffect } from 'react';
+import { setDailySignedIn } from '@/store/daily';
 import { syncStatsWithUser } from '@/store/stats/actions';
 
 const ClerkAuthBridge = () => {
@@ -13,6 +14,7 @@ const ClerkAuthBridge = () => {
     }
 
     void syncStatsWithUser(Boolean(isSignedIn));
+    void setDailySignedIn(Boolean(isSignedIn));
   }, [isLoaded, isSignedIn]);
 
   return null;

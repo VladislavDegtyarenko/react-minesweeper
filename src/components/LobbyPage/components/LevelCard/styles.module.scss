@@ -1,0 +1,35 @@
+.previewWrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  aspect-ratio: 1;
+  width: 100%;
+  filter: opacity(0.825);
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.meta > span {
+  display: flex;
+  border-radius: 10px;
+  background: var(--surface-2);
+  padding: 8px 10px;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.metaLabel {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.metaValue {
+  font-weight: 900;
+}

@@ -1,7 +1,6 @@
 import { useGameStore } from '@/store/game';
-import { selectIsGameLost } from '@/store/game/selectors';
 import { useStatsStore } from '@/store/stats';
-import { CSSProperties, PropsWithChildren, useState } from 'react';
+import type { CSSProperties, PropsWithChildren } from 'react';
 import { setIsWinDialogOpen } from '@/store/stats/actions';
 import { createCx } from '@/utils';
 import styles from './styles.module.scss';
@@ -9,12 +8,17 @@ import styles from './styles.module.scss';
 const cx = createCx(styles);
 
 type Props = PropsWithChildren<{
+  cellSize: string;
+  dailyCardHeight: number;
   gameFooterHeight: number;
 }>;
 
-const BoardWrapper = ({ gameFooterHeight, children }: Props) => {
-  const isGameLost = useGameStore(selectIsGameLost);
-
+const BoardWrapper = ({
+  cellSize,
+  children,
+  dailyCardHeight,
+  gameFooterHeight,
+}: Props) => {
   const handleBoardAreaClick = () => {
     const { gameStatus } = useGameStore.getState();
     const { hasPresentedWinDialog, isWinDialogOpen } = useStatsStore.getState();
@@ -23,16 +27,17 @@ const BoardWrapper = ({ gameFooterHeight, children }: Props) => {
       return undefined;
     }
 
-    // Open the win dialog
     setIsWinDialogOpen(true);
   };
 
   return (
     <div
-      className={cx('boardArea', isGameLost ? 'no-pointer-events' : '')}
+      className={cx('boardArea')}
       onClick={handleBoardAreaClick}
       style={
         {
+          '--cell-size': cellSize,
+          '--daily-card-height': dailyCardHeight + 'px',
           '--game-footer-height': gameFooterHeight + 'px',
         } as CSSProperties
       }

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import ROUTES from '@/config/routes.json';
 import Button from '@/components/ui/Button';
 import { createCx } from '@/utils';
-import { deleteAccount } from '@/app/account/actions';
+import { deleteAccount } from '@/app/(pages)/account/actions';
 import { useAccountSessionActions } from './hooks/useAccountSessionActions';
 import DeleteAccountDialog from '../DeleteAccountDialog';
 import styles from './styles.module.scss';

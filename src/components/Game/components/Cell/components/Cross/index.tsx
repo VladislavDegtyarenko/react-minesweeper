@@ -1,18 +1,16 @@
-import { selectIsGameLost } from '@/store/game/selectors';
 import styles from '../../styles.module.scss';
 import { createCx } from '@/utils';
-import { useGameStore } from '@/store/game';
 
 const cx = createCx(styles);
 
 type Props = {
+  isGameLost?: boolean;
   isFlagged: boolean;
   isMine: boolean;
 };
 
-const Cross = ({ isFlagged, isMine }: Props) => {
-  const isLost = useGameStore(selectIsGameLost);
-  const isFlagNotCorrect = isLost && isFlagged && !isMine;
+const Cross = ({ isGameLost = false, isFlagged, isMine }: Props) => {
+  const isFlagNotCorrect = isGameLost && isFlagged && !isMine;
 
   if (isFlagNotCorrect) {
     return (

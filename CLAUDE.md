@@ -52,6 +52,10 @@ From `AGENTS.md`:
 - Empty line before `return` unless it's the only statement in scope. No empty `return` statements.
 - Aim for components ≤ 120 lines; split when they grow beyond that.
 
+## Styling
+
+- Do not add `min-width: 0`, fixed `width`/`height`, or `min-*`/`max-*` width/height values in CSS/SCSS unless the user explicitly asks for it or an unavoidable third-party override requires it. Prefer fluid layout with flex/grid behavior, intrinsic sizing, padding, gap, and `aspect-ratio`.
+
 ## Legal Pages
 
 Whenever you change account, authentication, leaderboard, avatar, profile, database schema, local storage, cookies, analytics, third-party providers, or any user-data handling, review the legal pages and update them if needed:

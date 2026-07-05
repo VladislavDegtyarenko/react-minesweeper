@@ -7,11 +7,14 @@ export {
   selectIsWinDialogOpen,
   selectLastWinSummary,
   selectScoreSource,
+  selectScoreSyncState,
 } from './selectors';
 export type {
   BestTimesByLevel,
   LastWinSummary,
   ScoreSource,
+  ScoreSyncState,
+  ScoreSyncStatus,
   StatsState,
 } from './types';
 

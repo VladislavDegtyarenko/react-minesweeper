@@ -11,19 +11,36 @@ import styles from './styles.module.scss';
 
 const cx = createCx(styles);
 
-const TITLE = 'Change difficulty?';
-const DESCRIPTION =
+const LEVEL_CHANGE_TITLE = 'Change difficulty?';
+const LEVEL_CHANGE_DESCRIPTION =
   'Your current game will be lost if you switch to a different difficulty.';
+const MODE_CHANGE_TITLE = 'Switch mode?';
+const MODE_CHANGE_DESCRIPTION =
+  'Your current game will be reset if you switch between Free Play and Daily Challenge.';
+const MODE_LABELS = {
+  daily: 'Daily Challenge',
+  free: 'Free Play',
+} as const;
 
 const LevelChangeDialog = () => {
   const isLevelChangeDialogOpen = useGameStore(
     (state) => state.isLevelChangeDialogOpen,
   );
   const pendingLevelId = useGameStore((state) => state.pendingLevelId);
+  const pendingMode = useGameStore((state) => state.pendingMode);
 
+  const isModeChange = Boolean(pendingMode);
+  const nextModeLabel = pendingMode ? MODE_LABELS[pendingMode] : null;
   const nextLevelLabel = LEVELS_CONFIG.find(
     (level) => level.id === pendingLevelId,
   )?.label;
+  const title = isModeChange ? MODE_CHANGE_TITLE : LEVEL_CHANGE_TITLE;
+  const description = isModeChange
+    ? MODE_CHANGE_DESCRIPTION
+    : LEVEL_CHANGE_DESCRIPTION;
+  const primaryActionLabel = isModeChange
+    ? 'Switch mode'
+    : 'Change difficulty';
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       cancelLevelChange();
@@ -37,12 +54,18 @@ const LevelChangeDialog = () => {
 
         <Dialog.Content className={cx('dialogContent')}>
           <div className={cx('dialogBody')}>
-            <Dialog.Title className={cx('title')}>{TITLE}</Dialog.Title>
+            <Dialog.Title className={cx('title')}>{title}</Dialog.Title>
             <Dialog.Description className={cx('description')}>
-              {DESCRIPTION}
+              {description}
             </Dialog.Description>
 
-            {nextLevelLabel && (
+            {nextModeLabel && (
+              <p className={cx('nextLevel')}>
+                Switch to <strong>{nextModeLabel}</strong>?
+              </p>
+            )}
+
+            {!nextModeLabel && nextLevelLabel && (
               <p className={cx('nextLevel')}>
                 Switch to <strong>{nextLevelLabel}</strong>?
               </p>
@@ -61,7 +84,7 @@ const LevelChangeDialog = () => {
                 className={cx('actionButton', 'primaryAction')}
                 onClick={confirmLevelChange}
               >
-                Change difficulty
+                {primaryActionLabel}
               </Button>
             </div>
           </div>

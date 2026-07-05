@@ -11,16 +11,21 @@
 
 .board {
   box-sizing: border-box;
-  --cell-size: 2rem;
   background-color: var(--surface-1);
   border: 1px solid var(--border);
-  border-radius: var(--radius-card);
+  // border-radius: var(--radius-card);
+  border-radius: 8px;
   padding: 0;
   overflow: auto;
   position: relative;
   margin: 0 auto;
+  width: max-content;
   max-width: 100%;
-  max-height: calc(100dvh - 260px);
+  // 110px reserves the header (~67px) + board-area padding/margins (~43px).
+  // The footer slot already covers the dynamic footer + DailyCard height.
+  max-height: calc(
+    100dvh - var(--daily-card-height) - var(--game-footer-height, 150px)
+  );
   transition: border-color var(--duration-hover) var(--easing-standard);
 
   &::-webkit-scrollbar {
@@ -38,6 +43,11 @@
   }
 }
 
+.pausedBoard {
+  overflow: hidden;
+  touch-action: none;
+}
+
 // Inner wrapper so horizontal scroll extent includes end padding (padding on
 // overflow containers does not reliably widen scrollWidth in all engines).
 .boardContent {
@@ -53,20 +63,24 @@
   padding-bottom: var(--space-1);
   display: flex;
   justify-content: center;
+  position: relative;
   --game-header-height: 67px;
   --game-footer-height: 0px; // changed in JSX if Dig/Flag buttons are visible
   max-height: calc(
-    100% - var(--game-footer-height) - var(--game-header-height)
+    100% - var(--game-footer-height) - var(--game-header-height) - var(
+        --daily-card-height
+      )
   );
 
-  &.no-pointer-events {
-    pointer-events: none;
-  }
 }
 
 @media screen and (max-width: 768px) {
   .board {
-    max-height: calc(100dvh - 188px);
+    // 70px reserves the mobile header (~57px) + board-area padding (~13px).
+    max-height: calc(
+      100dvh -
+        70px - var(--game-footer-height, 118px) - var(--daily-card-height)
+    );
     border: none;
     border-radius: 0;
   }
@@ -76,7 +90,7 @@
   }
 
   .boardArea {
-    padding: 0;
+    padding: var(--space-1);
     --game-header-height: 57px;
   }
 }

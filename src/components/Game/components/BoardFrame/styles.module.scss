@@ -1,0 +1,11 @@
+.previewBoard {
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+  scrollbar-width: none;
+  touch-action: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,10 +1,11 @@
 import 'server-only';
 
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, eq, gt } from 'drizzle-orm';
 import type { LevelId } from '@/types';
 import { db } from '../index';
 import { bestScores } from '../schema';
 import type { BestScore } from '../types';
+import { validateUserBestScoreInput } from './utils';
 
 export const getUserBestScores = async (
   userId: string,
@@ -23,9 +24,7 @@ export const getUserBestScoreForLevel = async (
   const [row] = await db
     .select()
     .from(bestScores)
-    .where(
-      and(eq(bestScores.userId, userId), eq(bestScores.levelId, levelId)),
-    )
+    .where(and(eq(bestScores.userId, userId), eq(bestScores.levelId, levelId)))
     .limit(1);
 
   return row ?? null;
@@ -37,31 +36,57 @@ type SaveUserBestScoreInput = {
   bestTimeMs: number;
 };
 
+type SaveUserBestScoreResult = {
+  didSave: boolean;
+  score: BestScore;
+};
+
 export const saveUserBestScore = async (
   input: SaveUserBestScoreInput,
-): Promise<BestScore> => {
+): Promise<SaveUserBestScoreResult> => {
+  const validatedInput = validateUserBestScoreInput(input);
   const now = new Date();
 
   const [row] = await db
     .insert(bestScores)
     .values({
-      userId: input.userId,
-      levelId: input.levelId,
-      bestTimeMs: input.bestTimeMs,
+      userId: validatedInput.userId,
+      levelId: validatedInput.levelId,
+      bestTimeMs: validatedInput.bestTimeMs,
       achievedAt: now,
       updatedAt: now,
     })
     .onConflictDoUpdate({
       target: [bestScores.userId, bestScores.levelId],
       set: {
-        bestTimeMs: input.bestTimeMs,
+        bestTimeMs: validatedInput.bestTimeMs,
         achievedAt: now,
         updatedAt: now,
       },
+      setWhere: gt(bestScores.bestTimeMs, validatedInput.bestTimeMs),
     })
     .returning();
 
-  return row;
+  if (row) {
+    return {
+      didSave: true,
+      score: row,
+    };
+  }
+
+  const existingScore = await getUserBestScoreForLevel(
+    validatedInput.userId,
+    validatedInput.levelId,
+  );
+
+  if (!existingScore) {
+    throw new Error('Failed to save best score.');
+  }
+
+  return {
+    didSave: false,
+    score: existingScore,
+  };
 };
 
 export const deleteUserScores = async (userId: string): Promise<void> => {

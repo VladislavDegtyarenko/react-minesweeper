@@ -1,0 +1,66 @@
+.setupSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.startArea {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+.capitalized {
+  text-transform: capitalize;
+}
+
+.selectedInfo {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.disabledHint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.startButton {
+  width: min(360px, 100%);
+  min-height: 52px;
+  gap: 9px;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+@media screen and (max-width: 560px) {
+  .startArea {
+    position: sticky;
+    bottom: 8px;
+    z-index: 2;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--surface-1) 88%, transparent);
+    padding: 8px;
+    backdrop-filter: blur(12px);
+  }
+
+  .startButton {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}

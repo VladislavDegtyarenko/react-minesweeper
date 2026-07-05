@@ -1,4 +1,5 @@
 import { useGameStore } from '@/store/game';
+import { selectIsGameLost } from '@/store/game/selectors';
 import Cell from '../Cell';
 import { memo } from 'react';
 import type { OpenedMineCell } from '@/types';
@@ -13,6 +14,7 @@ const Row = ({ rowIndex }: { rowIndex: number }) => {
   // Immer structural sharing guarantees this reference is stable when no cell
   // in this row changed — so Row only re-renders when its own cells are affected.
   const row = useGameStore((state) => state.board[rowIndex]);
+  const isGameLost = useGameStore(selectIsGameLost);
 
   if (!row) return null;
 
@@ -27,6 +29,7 @@ const Row = ({ rowIndex }: { rowIndex: number }) => {
           isOpened={cell.isOpened}
           marker={cell.marker}
           highlight={(cell as OpenedMineCell).highlight}
+          isGameLost={isGameLost}
         />
       ))}
     </div>

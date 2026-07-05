@@ -6,6 +6,11 @@ alwaysApply: true
 
 ## Project Structure
 
+- Routes live in `src/app`
+  - Root (game) page live in `src/app/(game)`
+  - Other routes live in `src/app/(pages)`
+  - auth pages `src/app/login` and `src/app/signup`
+
 - Feature components live in `src/components/`
 - Reusable UI parts live in `src/components/ui/`
 - Component folder structure: `ComponentName/index.tsx` + `styles.module.scss`
@@ -30,6 +35,10 @@ alwaysApply: true
 - Prefer `props: Props` param and destructure props on the first line, except when no props are used
 - Prefer single quotes in JS/TS/TSX
 - Omit empty returns: use `return undefined` in functions and `return null` in React components
+
+## Styling
+
+- Do not add `min-width: 0`, fixed `width`/`height`, or `min-*`/`max-*` width/height values in CSS/SCSS unless the user explicitly asks for it or an unavoidable third-party override requires it. Prefer fluid layout with flex/grid behavior, intrinsic sizing, padding, gap, and `aspect-ratio`.
 
 ## SEO
 

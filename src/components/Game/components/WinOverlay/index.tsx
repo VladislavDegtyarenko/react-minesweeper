@@ -7,7 +7,6 @@ const cx = createCx(styles);
 
 const WinOverlay = () => {
   const { gameStatus, presentation, setConfettiCanvas } = useWinOverlay();
-  console.log('presentation: ', presentation);
 
   if (gameStatus !== 'won') {
     return null;

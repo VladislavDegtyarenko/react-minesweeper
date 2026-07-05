@@ -1,0 +1,152 @@
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-2);
+  margin: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 132, 255, 0.18),
+    rgba(160, 90, 255, 0.18)
+  );
+  border: none;
+  border-radius: 0;
+  color: var(--text-primary);
+
+  &.completed {
+    background: linear-gradient(
+      135deg,
+      rgba(56, 178, 117, 0.22),
+      rgba(99, 132, 255, 0.22)
+    );
+  }
+
+  &.practice {
+    background: linear-gradient(
+      135deg,
+      rgba(77, 163, 255, 0.16),
+      rgba(251, 191, 36, 0.14)
+    );
+  }
+
+  &.syncFailed {
+    background: linear-gradient(
+      135deg,
+      rgba(251, 191, 36, 0.18),
+      rgba(239, 68, 68, 0.12)
+    );
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.dateRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.date {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.separator {
+  color: var(--text-secondary);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.status {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.countdown {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.stats {
+  display: flex;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+
+  dt {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  dd {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.retryButton {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-button);
+  background-color: rgba(16, 22, 34, 0.54);
+  color: var(--text-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 7px 10px;
+}
+
+@media screen and (max-width: 480px) {
+  .card {
+    padding: var(--space-1) var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .date {
+    font-size: 0.95rem;
+  }
+
+  .status {
+    font-size: 0.78rem;
+  }
+
+  .stats {
+    gap: var(--space-2);
+  }
+
+  .stat dd {
+    font-size: 1.1rem;
+  }
+
+  .retryButton {
+    padding-inline: 8px;
+  }
+}

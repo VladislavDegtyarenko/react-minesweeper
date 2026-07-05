@@ -13,16 +13,27 @@ import QuestionMark from './components/Question';
 const cx = createCx(styles);
 
 type Props = {
+  as?: 'div' | 'span';
   rowIndex: number;
   cellIndex: number;
   value: GameCell['value'];
   isOpened: boolean;
   marker: CellMarkerState;
   highlight: 'red' | 'green' | undefined;
+  isGameLost?: boolean;
 };
 
 const Cell = (props: Props) => {
-  const { rowIndex, cellIndex, value, isOpened, marker, highlight } = props;
+  const {
+    as: Component = 'div',
+    rowIndex,
+    cellIndex,
+    value,
+    isOpened,
+    marker,
+    highlight,
+    isGameLost = false,
+  } = props;
 
   const isMine = value === 'mine';
   const isFlagged = marker === CELL_MARKERS.FLAG;
@@ -31,28 +42,37 @@ const Cell = (props: Props) => {
     typeof value === 'number' ? CELL_NUMBERS_COLORS[value] : null;
 
   return (
-    <div
-      className={cx(
-        'cell',
-        cellNumberClass || undefined,
-        highlight === 'red' && 'red',
-      )}
+    <Component
+      className={cx('cell')}
       data-row={rowIndex}
       data-cell={cellIndex}
+      data-tour-cell={`${rowIndex}-${cellIndex}`}
     >
-      {isMine && isOpened && <Bomb />}
+      <Component
+        className={cx(
+          'cellSurface',
+          cellNumberClass || undefined,
+          highlight === 'red' && 'red',
+        )}
+      >
+        {isMine && isOpened && <Bomb />}
 
-      {typeof value === 'number' && isOpened && <Number value={value} />}
+        {typeof value === 'number' && isOpened && <Number value={value} />}
 
-      {!isOpened && (
-        <Overlay isMine={value === 'mine'} highlight={highlight}>
-          {isFlagged && <Flag />}
-          {isQuestionMarked && <QuestionMark />}
-        </Overlay>
-      )}
+        {!isOpened && (
+          <Overlay
+            as={Component}
+            isMine={value === 'mine'}
+            highlight={highlight}
+          >
+            {isFlagged && <Flag />}
+            {isQuestionMarked && <QuestionMark />}
+          </Overlay>
+        )}
 
-      <Cross isFlagged={isFlagged} isMine={isMine} />
-    </div>
+        <Cross isGameLost={isGameLost} isFlagged={isFlagged} isMine={isMine} />
+      </Component>
+    </Component>
   );
 };
 

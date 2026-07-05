@@ -1,5 +1,6 @@
 {
-  "GAME": "/",
+  "LOBBY": "/",
+  "GAME": "/game",
   "LEADERBOARD": "/leaderboard",
   "LOGIN": "/login",
   "SIGNUP": "/signup",

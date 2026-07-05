@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { createCx } from '@/utils';
 import NicknamePrompt from './components/NicknamePrompt';
+import ScoreSyncNotice from './components/ScoreSyncNotice';
 import { isClerkComponentNode } from './utils';
 import ShareSheet from '../ShareSheet';
 import styles from './styles.module.scss';
@@ -12,15 +13,26 @@ type WinDialogProps = Pick<
   WinOverlayPresentation,
   | 'copyFallbackVisible'
   | 'copyState'
+  | 'dailyStreakCount'
   | 'dialogDescription'
   | 'dialogTitle'
+  | 'dailySyncMessage'
   | 'handleDialogOpenChange'
   | 'handleNewGameClick'
+  | 'handleRetryDailySyncClick'
+  | 'handleRetryScoreSyncClick'
   | 'handleShareActionClick'
   | 'handleShareClick'
+  | 'isDailyPracticeWin'
+  | 'isDailySyncFailed'
+  | 'isDailySyncRetrying'
+  | 'isDailyWin'
   | 'isDialogOpen'
   | 'isNewBest'
+  | 'isScoreSyncFailed'
+  | 'isScoreSyncRetrying'
   | 'isShareSheetOpen'
+  | 'scoreSyncMessage'
   | 'shareActionItems'
   | 'sharePayload'
   | 'shouldShowLeaderboardPrompt'
@@ -29,15 +41,26 @@ type WinDialogProps = Pick<
 const WinDialog = ({
   copyFallbackVisible,
   copyState,
+  dailyStreakCount,
   dialogDescription,
   dialogTitle,
+  dailySyncMessage,
   handleDialogOpenChange,
   handleNewGameClick,
+  handleRetryDailySyncClick,
+  handleRetryScoreSyncClick,
   handleShareActionClick,
   handleShareClick,
+  isDailyPracticeWin,
+  isDailySyncFailed,
+  isDailySyncRetrying,
+  isDailyWin,
   isDialogOpen,
   isNewBest,
+  isScoreSyncFailed,
+  isScoreSyncRetrying,
   isShareSheetOpen,
+  scoreSyncMessage,
   shareActionItems,
   sharePayload,
   shouldShowLeaderboardPrompt,
@@ -53,6 +76,9 @@ const WinDialog = ({
       event.preventDefault();
     }
   };
+
+  const shouldShowNicknamePrompt =
+    !isDailyWin && !isDailyPracticeWin && shouldShowLeaderboardPrompt;
 
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
@@ -75,11 +101,48 @@ const WinDialog = ({
                 <dd>{sharePayload.currentTimeLabel}</dd>
               </div>
 
-              <div className={cx('statsRow')}>
-                <dt>Best time</dt>
-                <dd>{sharePayload.bestTimeLabel}</dd>
-              </div>
+              {!isDailyWin && !isDailyPracticeWin && (
+                <div className={cx('statsRow')}>
+                  <dt>Best time</dt>
+                  <dd>{sharePayload.bestTimeLabel}</dd>
+                </div>
+              )}
+
+              {isDailyWin && (
+                <div className={cx('statsRow')}>
+                  <dt>Daily streak</dt>
+                  <dd>{dailyStreakCount}</dd>
+                </div>
+              )}
+
+              {isDailyPracticeWin && (
+                <div className={cx('statsRow')}>
+                  <dt>Daily result</dt>
+                  <dd>Practice</dd>
+                </div>
+              )}
             </dl>
+
+            {isDailyWin && (isDailySyncFailed || isDailySyncRetrying) && (
+              <ScoreSyncNotice
+                isRetrying={isDailySyncRetrying}
+                message={isDailySyncRetrying ? null : dailySyncMessage}
+                retryingButtonLabel="Syncing"
+                retryingMessage="Saving your daily result to your account..."
+                title="Daily result not synced"
+                onRetry={handleRetryDailySyncClick}
+              />
+            )}
+
+            {!isDailyWin &&
+              !isDailyPracticeWin &&
+              (isScoreSyncFailed || isScoreSyncRetrying) && (
+                <ScoreSyncNotice
+                  isRetrying={isScoreSyncRetrying}
+                  message={scoreSyncMessage}
+                  onRetry={handleRetryScoreSyncClick}
+                />
+              )}
 
             <div className={cx('actions')}>
               <button
@@ -99,7 +162,7 @@ const WinDialog = ({
               </button>
             </div>
 
-            {shouldShowLeaderboardPrompt ? (
+            {shouldShowNicknamePrompt ? (
               <section className={cx('leaderboardPrompt')}>
                 <div className={cx('leaderboardPromptBody')}>
                   <p className={cx('leaderboardPromptTitle')}>
@@ -121,6 +184,8 @@ const WinDialog = ({
                 copyState={copyState}
                 dialogTitle={dialogTitle}
                 handleShareActionClick={handleShareActionClick}
+                isDailyPracticeWin={isDailyPracticeWin}
+                isDailyWin={isDailyWin}
                 shareActionItems={shareActionItems}
                 sharePayload={sharePayload}
               />

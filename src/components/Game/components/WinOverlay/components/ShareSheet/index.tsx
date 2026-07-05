@@ -11,24 +11,31 @@ type ShareSheetProps = Pick<
   | 'copyState'
   | 'dialogTitle'
   | 'handleShareActionClick'
+  | 'isDailyPracticeWin'
+  | 'isDailyWin'
   | 'shareActionItems'
   | 'sharePayload'
 >;
+
+const isCopyChannel = (channel: ShareActionItem['channel']) =>
+  channel === 'copy';
 
 const renderShareButton = (
   item: ShareActionItem,
   copyState: ShareSheetProps['copyState'],
   handleShareActionClick: ShareSheetProps['handleShareActionClick'],
 ) => {
-  const isCopyButton = item.channel === 'copy';
-  const buttonLabel =
-    isCopyButton && copyState === 'copied' ? 'Copied' : item.label;
+  const isCopy = isCopyChannel(item.channel);
+  const buttonLabel = isCopy && copyState === 'copied' ? 'Copied' : item.label;
 
   return (
     <button
       key={item.channel}
       type="button"
-      className={cx('shareActionButton', isCopyButton && 'copyButton')}
+      className={cx(
+        'shareActionButton',
+        item.channel === 'copy' && 'copyButton',
+      )}
       onClick={() => void handleShareActionClick(item.channel)}
     >
       {buttonLabel}
@@ -41,6 +48,8 @@ const ShareSheet = ({
   copyState,
   dialogTitle,
   handleShareActionClick,
+  isDailyPracticeWin,
+  isDailyWin,
   shareActionItems,
   sharePayload,
 }: ShareSheetProps) => {
@@ -53,7 +62,13 @@ const ShareSheet = ({
       className={cx('shareSheet')}
       aria-label={getShareSheetHeading(dialogTitle)}
     >
-      <p className={cx('shareSheetTitle')}>Share your result</p>
+      <p className={cx('shareSheetTitle')}>
+        {isDailyWin
+          ? 'Share your daily result'
+          : isDailyPracticeWin
+            ? 'Share your practice result'
+            : 'Share your result'}
+      </p>
 
       <div className={cx('shareSheetGrid')}>
         {shareActionItems.map((item) =>
@@ -62,7 +77,7 @@ const ShareSheet = ({
       </div>
 
       {copyState === 'copied' && (
-        <p className={cx('shareFeedback')}>Link copied</p>
+        <p className={cx('shareFeedback')}>Copied to clipboard</p>
       )}
 
       {copyFallbackVisible && (

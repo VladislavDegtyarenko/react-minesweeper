@@ -12,6 +12,13 @@ export type LastWinSummary = {
 
 export type ScoreSource = 'guest' | 'account';
 
+export type ScoreSyncStatus = 'idle' | 'syncing' | 'failed';
+
+export type ScoreSyncState = {
+  message: string | null;
+  status: ScoreSyncStatus;
+};
+
 export type StatsState = {
   bestTimesByLevel: BestTimesByLevel;
   guestBestTimesByLevel: BestTimesByLevel;
@@ -20,4 +27,5 @@ export type StatsState = {
   isWinDialogOpen: boolean;
   lastWinSummary: LastWinSummary | null;
   scoreSource: ScoreSource;
+  scoreSyncState: ScoreSyncState;
 };

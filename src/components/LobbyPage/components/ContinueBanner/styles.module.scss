@@ -1,0 +1,190 @@
+.resumeFlow {
+}
+
+.savedCard {
+  flex-direction: row;
+  width: min(42rem, 100%);
+  margin-inline: auto;
+  padding: clamp(0.9rem, 2vw, 1.1rem);
+  border-color: rgba(77, 163, 255, 0.38);
+  background:
+    linear-gradient(180deg, rgba(77, 163, 255, 0.1), rgba(77, 163, 255, 0.035)),
+    var(--surface-1);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.16),
+    0 0 0 1px rgba(77, 163, 255, 0.1);
+}
+
+.savedCard:hover {
+  border-color: rgba(77, 163, 255, 0.38);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.16),
+    0 0 0 1px rgba(77, 163, 255, 0.1);
+}
+
+.previewWrap {
+  --cell-closed-hover: var(--cell-closed);
+
+  position: relative;
+  display: block;
+  flex: 0 0 15rem;
+  overflow: hidden;
+  aspect-ratio: 1;
+  filter: opacity(0.5);
+
+  > * {
+    height: 100%;
+  }
+}
+
+.summary {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-1);
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-button);
+  background: rgba(16, 22, 34, 0.28);
+  padding: 8px 10px;
+}
+
+.statLabel {
+  color: var(--text-muted);
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.statValue {
+  color: var(--text-primary);
+  font-size: 0.98rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.actionButton {
+  width: 100%;
+  gap: 8px;
+  font-weight: 900;
+}
+
+.startNewButton {
+  width: 100%;
+  border-color: transparent;
+  font-weight: 800;
+}
+
+.startNewButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: none;
+}
+
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(11, 16, 25, 0.58);
+  backdrop-filter: blur(4px);
+}
+
+.dialogContent {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 91;
+  width: min(30rem, calc(100vw - 2rem));
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-card);
+  background: linear-gradient(
+    180deg,
+    var(--surface-1) 0%,
+    var(--surface-2) 100%
+  );
+  box-shadow: var(--shadow-card);
+  animation: dialogEnter 180ms ease;
+}
+
+.dialogBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.dialogTitle,
+.dialogDescription {
+  margin: 0;
+}
+
+.dialogTitle {
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.dialogDescription {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-1);
+}
+
+@keyframes dialogEnter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .savedCard {
+    flex-direction: column;
+  }
+
+  .previewWrap {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dialogActions {
+    flex-direction: column;
+  }
+
+  .dialogBody {
+    padding: var(--space-2);
+  }
+}

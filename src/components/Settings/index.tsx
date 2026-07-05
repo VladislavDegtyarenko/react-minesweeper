@@ -26,7 +26,7 @@ const Settings = () => {
   const isTouchScreen = useSettingsStore(selectIsTouchScreen);
 
   const triggerButton = (
-    <Button isIcon aria-label="Open settings">
+    <Button isIcon aria-label="Open settings" data-tour-id="settings-trigger">
       <img
         src="/themes/blue-graphite/icons/Settings.png"
         alt={SETTINGS_LABEL}

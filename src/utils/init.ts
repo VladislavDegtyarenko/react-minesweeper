@@ -1,6 +1,10 @@
 import { DIRECTIONS } from '../constants';
 import type { GameCell, Level, TBoard } from '../types';
 
+type RandomSource = () => number;
+
+const defaultRandom: RandomSource = Math.random;
+
 const createBoard = (rows: number, cols: number) => {
   const board: TBoard = [];
 
@@ -24,7 +28,8 @@ const fillBoardWithMines = (
   rows: number,
   cols: number,
   totalMines: number,
-  excludeFlatIndex?: number,
+  excludeFlatIndex: number | undefined,
+  random: RandomSource,
 ) => {
   const total = rows * cols;
 
@@ -41,7 +46,7 @@ const fillBoardWithMines = (
 
   // Partial Fisher-Yates shuffle — O(totalMines), no collision retries needed.
   for (let i = 0; i < totalMines; i++) {
-    const j = i + Math.floor(Math.random() * (available - i));
+    const j = i + Math.floor(random() * (available - i));
     const tmp = indices[i];
     indices[i] = indices[j];
     indices[j] = tmp;
@@ -81,23 +86,44 @@ const fillBoardWithNumbers = (board: TBoard) => {
   return board;
 };
 
+export type InitBoardOptions = {
+  excludeCell?: { row: number; col: number };
+  random?: RandomSource;
+};
+
 export const initBoard = (
   level: Omit<Level, 'id' | 'label'>,
-  excludeCell?: { row: number; col: number },
+  optionsOrExcludeCell?: InitBoardOptions | { row: number; col: number },
 ) => {
   const { rows, cols, totalMines } = level;
+  const options: InitBoardOptions =
+    optionsOrExcludeCell && 'row' in optionsOrExcludeCell
+      ? { excludeCell: optionsOrExcludeCell }
+      : optionsOrExcludeCell ?? {};
+  const random = options.random ?? defaultRandom;
+  const excludeCell = options.excludeCell;
 
   const excludeFlatIndex =
     excludeCell !== undefined ? excludeCell.row * cols + excludeCell.col : undefined;
 
   const emptyBoard = createBoard(rows, cols);
-  const boardWithMines = fillBoardWithMines(emptyBoard, rows, cols, totalMines, excludeFlatIndex);
+  const boardWithMines = fillBoardWithMines(
+    emptyBoard,
+    rows,
+    cols,
+    totalMines,
+    excludeFlatIndex,
+    random,
+  );
   const gameBoard = fillBoardWithNumbers(boardWithMines);
 
   return gameBoard;
 };
 
-export const initGame = (level: Omit<Level, 'id' | 'label'>) => {
+export const initGame = (
+  level: Omit<Level, 'id' | 'label'>,
+  options?: InitBoardOptions,
+) => {
   // const boardInStorage = localStorage.getItem(LOCAL_STORAGE_KEYS.gameBoard);
   // console.log("boardInStorage: ", boardInStorage);
 
@@ -113,11 +139,14 @@ export const initGame = (level: Omit<Level, 'id' | 'label'>) => {
   // const totalRows = isPortrait && rows !== cols ? cols : rows;
   // const totalCols = isPortrait && rows !== cols ? rows : cols;
 
-  return initBoard({
-    // rows: totalRows,
-    // cols: totalCols,
-    rows,
-    cols,
-    totalMines,
-  });
+  return initBoard(
+    {
+      // rows: totalRows,
+      // cols: totalCols,
+      rows,
+      cols,
+      totalMines,
+    },
+    options,
+  );
 };

@@ -1,0 +1,2470 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Minesweeper · Design System Proposal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─── Proposed tokens (the spec itself uses them) ────────────── */
+      :root {
+        /* App palette — kept from current app, lightly recalibrated */
+        --app-bg: #0e1420;
+        --surface-1: #121828;  /* sunken — recessed wells, board, input bg, segmented track */
+        --surface-2: #161e2e;  /* base — default card background */
+        --surface-3: #1d273b;  /* raised — nested card, active segment, game header */
+        --surface-4: #26324a;  /* overlay — popover / dropdown / dialog */
+        --border: rgba(255, 255, 255, 0.07);
+        --border-strong: rgba(255, 255, 255, 0.14);
+        --border-emphasis: rgba(255, 255, 255, 0.22);
+
+        --text-1: rgba(255, 255, 255, 0.94);
+        --text-2: rgba(255, 255, 255, 0.68);
+        --text-3: rgba(255, 255, 255, 0.46);
+        --text-code: #b8c4dc;
+
+        /* Accent ramp — single hue, opacity steps (replaces ad-hoc rgba) */
+        --accent: #4da3ff;
+        --accent-on: #08111d;
+        --accent-08: rgba(77, 163, 255, 0.08);
+        --accent-14: rgba(77, 163, 255, 0.14);
+        --accent-24: rgba(77, 163, 255, 0.24);
+        --accent-48: rgba(77, 163, 255, 0.48);
+
+        --success: #33d69f;
+        --success-14: rgba(51, 214, 159, 0.14);
+        --success-24: rgba(51, 214, 159, 0.24);
+
+        --danger: #ff5c7a;
+        --danger-14: rgba(255, 92, 122, 0.14);
+        --danger-24: rgba(255, 92, 122, 0.24);
+        --danger-48: rgba(255, 92, 122, 0.48);
+
+        --warning: #ffb74d;
+        --warning-14: rgba(255, 183, 77, 0.14);
+
+        /* Spacing — 4px base. 8 steps covers every gap in the codebase. */
+        --space-0: 2px;
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-5: 20px;
+        --space-6: 24px;
+        --space-7: 32px;
+        --space-8: 48px;
+
+        /* Radii — replaces ad-hoc 4/8/10/12/14/16/20px */
+        --radius-1: 6px; /* tags, dot indicators */
+        --radius-2: 10px; /* inputs, small buttons, stat tiles */
+        --radius-3: 14px; /* segmented controls, popovers */
+        --radius-4: 18px; /* cards, panels */
+        --radius-pill: 999px;
+
+        /* Elevation — one canonical ramp; no more inline shadows */
+        --elev-1: 0 1px 2px rgba(0, 0, 0, 0.18);
+        --elev-2: 0 6px 16px rgba(0, 0, 0, 0.22);
+        --elev-3: 0 12px 30px rgba(0, 0, 0, 0.32);
+        --elev-4: 0 22px 56px rgba(0, 0, 0, 0.44);
+        --ring-focus: 0 0 0 2px var(--accent-24);
+        --ring-emphasis: 0 0 0 1px var(--accent-48);
+
+        /* Type — one canonical scale. */
+        --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        --font-ui: var(--font-display);
+        --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+        --fs-display-1: 56px; /* hero / lobby h1 */
+        --fs-display-2: 36px; /* page title */
+        --fs-title: 24px;     /* card title, section h2 */
+        --fs-subtitle: 18px;  /* sub-heading */
+        --fs-body: 15px;      /* default body */
+        --fs-body-sm: 13px;   /* secondary body, helper text */
+        --fs-label: 12px;     /* labels, badges */
+        --fs-overline: 11px;  /* eyebrows — ALL CAPS */
+        --fs-micro: 10px;     /* legal, micro chrome */
+
+        --lh-tight: 1.12;
+        --lh-snug: 1.28;
+        --lh-normal: 1.5;
+
+        --fw-regular: 400;
+        --fw-medium: 500;
+        --fw-semibold: 600;
+        --fw-bold: 700;
+
+        /* Motion */
+        --dur-1: 80ms;   /* press */
+        --dur-2: 140ms;  /* hover, micro */
+        --dur-3: 220ms;  /* enter / exit */
+        --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+        --ease-std: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* ─── Spec page chrome ────────────────────────────────────── */
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        background: var(--app-bg);
+        color: var(--text-1);
+        font-family: var(--font-ui);
+        font-size: var(--fs-body);
+        line-height: var(--lh-normal);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        background-image:
+          radial-gradient(900px 600px at 18% -10%, var(--accent-14), transparent 60%),
+          radial-gradient(900px 600px at 110% 10%, rgba(160, 90, 255, 0.08), transparent 55%);
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        max-width: 1320px;
+        margin: 0 auto;
+        gap: var(--space-7);
+        padding: var(--space-7);
+      }
+
+      nav.toc {
+        position: sticky;
+        top: var(--space-6);
+        align-self: start;
+        padding: var(--space-5);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        background: linear-gradient(180deg, var(--surface-2), var(--surface-1));
+        box-shadow: var(--elev-2);
+        height: max-content;
+      }
+      .toc .brand {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        margin-bottom: var(--space-5);
+      }
+      .toc .brand .dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        background:
+          linear-gradient(135deg, var(--accent), #7bc1ff);
+        box-shadow: var(--elev-1), inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+        position: relative;
+      }
+      .toc .brand .dot::after {
+        content: '';
+        position: absolute;
+        inset: 6px;
+        background: var(--app-bg);
+        border-radius: 3px;
+      }
+      .toc .brand strong {
+        font-size: var(--fs-body);
+        font-weight: var(--fw-semibold);
+        letter-spacing: -0.01em;
+      }
+      .toc .brand small {
+        display: block;
+        font-size: var(--fs-overline);
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: var(--fw-semibold);
+      }
+      .toc ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .toc > ol {
+        counter-reset: section;
+      }
+      .toc > ol > li {
+        counter-increment: section;
+      }
+      .toc a {
+        display: flex;
+        gap: var(--space-3);
+        align-items: baseline;
+        padding: var(--space-2) var(--space-3);
+        border-radius: var(--radius-2);
+        color: var(--text-2);
+        text-decoration: none;
+        font-size: var(--fs-body-sm);
+        font-weight: var(--fw-medium);
+      }
+      .toc a::before {
+        content: counter(section, decimal-leading-zero);
+        font-family: var(--font-mono);
+        color: var(--text-3);
+        font-size: var(--fs-label);
+        letter-spacing: 0;
+      }
+      .toc a:hover {
+        background: var(--accent-08);
+        color: var(--text-1);
+      }
+      .toc .subnav {
+        list-style: none;
+        margin: var(--space-1) 0 var(--space-2) 32px;
+        padding: 0;
+        border-left: 1px solid var(--border);
+      }
+      .toc .subnav a {
+        padding: 4px var(--space-3);
+        font-size: var(--fs-label);
+      }
+      .toc .subnav a::before {
+        content: none;
+      }
+
+      main {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-8);
+        padding-bottom: var(--space-8);
+      }
+
+      /* ─── Hero ──────────────────────────────────────────────── */
+      header.hero {
+        position: relative;
+        padding: var(--space-8) var(--space-7);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        background:
+          radial-gradient(700px 320px at 18% 0%, var(--accent-14), transparent 55%),
+          linear-gradient(180deg, var(--surface-2) 0%, var(--surface-1) 100%);
+        box-shadow: var(--elev-3);
+        overflow: hidden;
+      }
+      .hero .eyebrow {
+        font-family: var(--font-mono);
+        font-size: var(--fs-overline);
+        color: var(--accent);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: var(--fw-semibold);
+        margin: 0 0 var(--space-4);
+      }
+      .hero h1 {
+        margin: 0;
+        font-size: var(--fs-display-1);
+        font-weight: var(--fw-bold);
+        letter-spacing: -0.025em;
+        line-height: var(--lh-tight);
+      }
+      .hero h1 .accent {
+        color: var(--accent);
+      }
+      .hero .lede {
+        margin: var(--space-5) 0 0;
+        max-width: 56ch;
+        color: var(--text-2);
+        font-size: var(--fs-subtitle);
+        line-height: 1.45;
+      }
+      .hero .meta {
+        margin-top: var(--space-6);
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-5);
+        font-family: var(--font-mono);
+        font-size: var(--fs-label);
+        color: var(--text-3);
+      }
+      .hero .meta b {
+        color: var(--text-1);
+        font-weight: var(--fw-medium);
+      }
+
+      /* ─── Section primitive ──────────────────────────────────── */
+      section.s {
+        scroll-margin-top: var(--space-6);
+      }
+      section.s > header {
+        display: flex;
+        align-items: baseline;
+        gap: var(--space-4);
+        margin-bottom: var(--space-5);
+        padding-bottom: var(--space-3);
+        border-bottom: 1px solid var(--border);
+      }
+      section.s > header .num {
+        font-family: var(--font-mono);
+        font-size: var(--fs-label);
+        color: var(--text-3);
+        letter-spacing: 0.04em;
+      }
+      section.s > header h2 {
+        margin: 0;
+        font-size: var(--fs-display-2);
+        font-weight: var(--fw-bold);
+        letter-spacing: -0.02em;
+        line-height: var(--lh-tight);
+      }
+      section.s > header p {
+        margin: 0;
+        margin-left: auto;
+        max-width: 36ch;
+        color: var(--text-2);
+        font-size: var(--fs-body-sm);
+        text-align: right;
+      }
+      section.s > h3 {
+        margin: var(--space-7) 0 var(--space-4);
+        font-size: var(--fs-subtitle);
+        font-weight: var(--fw-semibold);
+        letter-spacing: -0.005em;
+      }
+      section.s > p {
+        margin: 0 0 var(--space-4);
+        color: var(--text-2);
+        max-width: 72ch;
+      }
+
+      /* ─── Reusable doc primitives (used to RENDER the spec) ───── */
+      .card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        background: var(--surface-2);
+        box-shadow: var(--elev-1);
+      }
+      .card.pad {
+        padding: var(--space-5);
+      }
+      .grid {
+        display: grid;
+        gap: var(--space-4);
+      }
+      .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      @media (max-width: 920px) {
+        .cols-3, .cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .cols-2 { grid-template-columns: 1fr; }
+        .shell { grid-template-columns: 1fr; }
+        nav.toc { display: none; }
+      }
+
+      .eyebrow-label {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-family: var(--font-mono);
+        font-size: var(--fs-overline);
+        font-weight: var(--fw-semibold);
+        color: var(--text-3);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .eyebrow-label::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 2px;
+        background: var(--accent);
+      }
+
+      code, .mono {
+        font-family: var(--font-mono);
+        font-size: 0.92em;
+        color: var(--text-code);
+      }
+      pre.code {
+        margin: 0;
+        padding: var(--space-4);
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-3);
+        font-family: var(--font-mono);
+        font-size: var(--fs-body-sm);
+        color: var(--text-code);
+        overflow-x: auto;
+        line-height: 1.55;
+      }
+      pre.code .k { color: #8ab7ff; }    /* keyword/property */
+      pre.code .s { color: #8de0c2; }    /* value */
+      pre.code .c { color: var(--text-3); font-style: italic; }
+      pre.code .v { color: #ffd28a; }    /* var() */
+
+      /* ─── Audit table ───────────────────────────────────────── */
+      .audit {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-4);
+      }
+      @media (max-width: 920px) {
+        .audit { grid-template-columns: 1fr; }
+      }
+      .finding {
+        padding: var(--space-5);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        background: var(--surface-2);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+      }
+      .finding .h {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+      }
+      .finding .h .tag {
+        display: inline-flex;
+        align-items: center;
+        height: 22px;
+        padding: 0 var(--space-2);
+        border-radius: var(--radius-1);
+        background: var(--danger-14);
+        color: var(--danger);
+        font-family: var(--font-mono);
+        font-size: var(--fs-micro);
+        font-weight: var(--fw-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .finding .h .tag.warn {
+        background: var(--warning-14);
+        color: var(--warning);
+      }
+      .finding .h .tag.info {
+        background: var(--accent-14);
+        color: var(--accent);
+      }
+      .finding h4 {
+        margin: 0;
+        font-size: var(--fs-subtitle);
+        font-weight: var(--fw-semibold);
+      }
+      .finding p {
+        margin: 0;
+        color: var(--text-2);
+        font-size: var(--fs-body-sm);
+      }
+      .finding .examples {
+        font-family: var(--font-mono);
+        font-size: var(--fs-label);
+        color: var(--text-3);
+        padding: var(--space-3);
+        background: var(--surface-1);
+        border-radius: var(--radius-2);
+        line-height: 1.7;
+      }
+      .finding .examples b {
+        color: var(--danger);
+        font-weight: var(--fw-regular);
+      }
+
+      /* ─── Color swatches ─────────────────────────────────────── */
+      .swatch {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-3);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        background: var(--surface-2);
+      }
+      .swatch .chip {
+        height: 84px;
+        position: relative;
+      }
+      .swatch .chip::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+      }
+      .swatch .meta {
+        padding: var(--space-3) var(--space-4);
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: var(--space-3);
+        border-top: 1px solid var(--border);
+      }
+      .swatch .meta .name {
+        font-size: var(--fs-body-sm);
+        font-weight: var(--fw-semibold);
+      }
+      .swatch .meta .val {
+        font-family: var(--font-mono);
+        font-size: var(--fs-label);
+        color: var(--text-3);
+      }
+
+      /* ─── Type specimen ──────────────────────────────────────── */
+      .type-row {
+        display: grid;
+        grid-template-columns: 200px 1fr 220px;
+        align-items: baseline;
+        gap: var(--space-5);
+        padding: var(--space-4) var(--space-5);
+        border-top: 1px solid var(--border);
+      }
+      .type-row:first-child { border-top: 0; }
+      .type-row .name {
+        font-family: var(--font-mono);
+        font-size: var(--fs-label);
+        color: var(--text-3);
+      }
+      .type-row .specimen {
+        font-family: var(--font-display);
+        color: var(--text-1);
+      }
+      .type-row .props {
+        font-family: var(--font-mono);
+        font-size: var(--fs-micro);
+        color: var(--text-3);
+        text-align: right;
+        line-height: 1.6;
+      }
+      @media (max-width: 920px) {
+        .type-row {
+          grid-template-columns: 1fr;
+          gap: var(--space-2);
+        }
+        .type-row .props { text-align: left; }
+      }
+
+      /* ─── Spacing & radius rulers ────────────────────────────── */
+      .space-row {
+        display: grid;
+        grid-template-columns: 100px 1fr 140px;
+        align-items: center;
+        gap: var(--space-5);
+        padding: var(--space-3) var(--space-5);
+        border-top: 1px solid var(--border);
+      }
+      .space-row:first-child { border-top: 0; }
+      .space-row .bar {
+        height: 14px;
+        border-radius: 3px;
+        background: var(--accent);
+        opacity: 0.78;
+      }
+      .space-row .name {
+        font-family: var(--font-mono);
+        font-size: var(--fs-body-sm);
+        color: var(--text-1);
+        font-weight: var(--fw-medium);
+      }
+      .space-row .usage {
+        font-family: var(--font-mono);
+        font-size: var(--fs-label);
+        color: var(--text-3);
+        text-align: right;
+      }
+
+      .radius-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: var(--space-4);
+      }
+      @media (max-width: 920px) {
+        .radius-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      .radius-tile {
+        padding: var(--space-4);
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        text-align: center;
+      }
+      .radius-tile .shape {
+        height: 80px;
+        background: linear-gradient(180deg, var(--accent-24), var(--accent-14));
+        border: 1px solid var(--accent-48);
+        margin-bottom: var(--space-3);
+      }
+      .radius-tile .label {
+        font-family: var(--font-mono);
+        font-size: var(--fs-label);
+        color: var(--text-1);
+      }
+      .radius-tile .px {
+        font-family: var(--font-mono);
+        font-size: var(--fs-micro);
+        color: var(--text-3);
+        margin-top: 2px;
+      }
+
+      /* ─── Elevation tiles ────────────────────────────────────── */
+      .elev-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--space-4);
+      }
+      @media (max-width: 920px) {
+        .elev-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      .elev-tile {
+        height: 130px;
+        border-radius: var(--radius-3);
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        padding: var(--space-4);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      .elev-tile.e1 { box-shadow: var(--elev-1); }
+      .elev-tile.e2 { box-shadow: var(--elev-2); }
+      .elev-tile.e3 { box-shadow: var(--elev-3); }
+      .elev-tile.e4 { box-shadow: var(--elev-4); }
+      .elev-tile .name {
+        font-family: var(--font-mono);
+        font-size: var(--fs-body-sm);
+        font-weight: var(--fw-semibold);
+      }
+      .elev-tile .use {
+        font-family: var(--font-mono);
+        font-size: var(--fs-micro);
+        color: var(--text-3);
+      }
+
+      /* ─── Component specimens ─────────────────────────────── */
+      .specimen-wrap {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: var(--space-5);
+      }
+      @media (max-width: 920px) {
+        .specimen-wrap { grid-template-columns: 1fr; }
+      }
+      .preview {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        background:
+          repeating-linear-gradient(
+            45deg,
+            transparent 0,
+            transparent 12px,
+            rgba(255, 255, 255, 0.012) 12px,
+            rgba(255, 255, 255, 0.012) 13px
+          ),
+          var(--surface-1);
+        padding: var(--space-6);
+        min-height: 200px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-4);
+        align-items: center;
+        justify-content: center;
+      }
+      .preview.col {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .anatomy {
+        font-family: var(--font-mono);
+        font-size: var(--fs-label);
+        color: var(--text-2);
+        line-height: 1.8;
+        padding: var(--space-5);
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+      }
+      .anatomy h5 {
+        margin: 0 0 var(--space-3);
+        font-family: var(--font-ui);
+        font-size: var(--fs-body-sm);
+        font-weight: var(--fw-semibold);
+        color: var(--text-1);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .anatomy ul {
+        padding-left: 0;
+        list-style: none;
+        margin: 0;
+      }
+      .anatomy li {
+        padding: 4px 0;
+        border-top: 1px dashed var(--border);
+        display: flex;
+        justify-content: space-between;
+        gap: var(--space-3);
+      }
+      .anatomy li:first-child { border-top: 0; }
+      .anatomy li b { color: var(--text-1); font-weight: var(--fw-medium); }
+
+      /* ── Component: Button ───────────────────── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        min-height: 40px;
+        padding: 0 var(--space-4);
+        border: 1px solid transparent;
+        border-radius: var(--radius-2);
+        font-family: var(--font-ui);
+        font-size: var(--fs-body-sm);
+        font-weight: var(--fw-semibold);
+        line-height: 1;
+        letter-spacing: 0;
+        cursor: pointer;
+        transition: background-color var(--dur-2) var(--ease-std),
+          border-color var(--dur-2) var(--ease-std),
+          box-shadow var(--dur-2) var(--ease-std),
+          transform var(--dur-1) var(--ease-std);
+      }
+      .btn:focus-visible { outline: none; box-shadow: var(--ring-focus); }
+      .btn:active { transform: translateY(1px); }
+
+      .btn.primary {
+        background: linear-gradient(180deg, #66b1ff, var(--accent));
+        color: var(--accent-on);
+        box-shadow: var(--elev-1), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+      .btn.primary:hover {
+        background: linear-gradient(180deg, #80c0ff, #5db0ff);
+        box-shadow: var(--elev-2), inset 0 1px 0 rgba(255, 255, 255, 0.36);
+      }
+      .btn.primary:active {
+        background: linear-gradient(180deg, #5db0ff, #4097f0);
+      }
+      .btn.secondary {
+        background: var(--surface-3);
+        border-color: var(--border);
+        color: var(--text-1);
+      }
+      .btn.secondary:hover { background: var(--surface-4); border-color: var(--border-strong); }
+      .btn.ghost {
+        background: transparent;
+        color: var(--text-1);
+      }
+      .btn.ghost:hover { background: rgba(255, 255, 255, 0.04); }
+      .btn.danger {
+        background: var(--danger-14);
+        border-color: var(--danger-48);
+        color: #ffd0d8;
+      }
+      .btn.danger:hover { background: var(--danger-24); }
+      .btn.lg { min-height: 48px; padding: 0 var(--space-5); font-size: var(--fs-body); }
+      .btn.sm { min-height: 32px; padding: 0 var(--space-3); font-size: var(--fs-label); }
+      .btn.icon { width: 40px; padding: 0; }
+      .btn[disabled], .btn.disabled { opacity: 0.45; cursor: not-allowed; }
+
+      /* ── Component: Badge ────────────────────── */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+        height: 22px;
+        padding: 0 var(--space-2);
+        border-radius: var(--radius-1);
+        font-family: var(--font-ui);
+        font-size: var(--fs-overline);
+        font-weight: var(--fw-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        line-height: 1;
+        white-space: nowrap;
+      }
+      .badge.accent {
+        background: var(--accent-14);
+        color: var(--accent);
+        box-shadow: inset 0 0 0 1px var(--accent-24);
+      }
+      .badge.success {
+        background: var(--success-14);
+        color: var(--success);
+        box-shadow: inset 0 0 0 1px var(--success-24);
+      }
+      .badge.danger {
+        background: var(--danger-14);
+        color: var(--danger);
+        box-shadow: inset 0 0 0 1px var(--danger-24);
+      }
+      .badge.neutral {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text-2);
+        box-shadow: inset 0 0 0 1px var(--border);
+      }
+      .badge.pill { border-radius: var(--radius-pill); padding: 0 var(--space-3); }
+      .badge .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      /* ── Component: SegmentedControl ────────── */
+      .segmented {
+        display: inline-flex;
+        padding: 4px;
+        gap: 2px;
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-3);
+      }
+      .segmented button {
+        appearance: none;
+        font-family: inherit;
+        height: 36px;
+        padding: 0 var(--space-4);
+        border: 0;
+        background: transparent;
+        color: var(--text-2);
+        border-radius: calc(var(--radius-3) - 4px);
+        font-size: var(--fs-body-sm);
+        font-weight: var(--fw-semibold);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+      .segmented button[aria-selected='true'] {
+        background: var(--surface-4);
+        color: var(--text-1);
+        box-shadow: var(--elev-1), inset 0 0 0 1px var(--border-strong);
+      }
+      .segmented button:hover:not([aria-selected='true']) {
+        color: var(--text-1);
+      }
+
+      /* ── Component: Field ──────────────────── */
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+      }
+      .field > label {
+        font-size: var(--fs-body-sm);
+        font-weight: var(--fw-medium);
+        color: var(--text-2);
+      }
+      .field > input,
+      .field > select,
+      .field > textarea {
+        height: 44px;
+        padding: 0 var(--space-4);
+        border-radius: var(--radius-2);
+        border: 1px solid var(--border);
+        background: var(--surface-1);
+        color: var(--text-1);
+        font-family: inherit;
+        font-size: var(--fs-body);
+        outline: 0;
+        transition: border-color var(--dur-2) var(--ease-std), box-shadow var(--dur-2) var(--ease-std);
+      }
+      .field > input:focus,
+      .field > select:focus {
+        border-color: var(--accent);
+        box-shadow: var(--ring-focus);
+      }
+      .field .hint {
+        font-size: var(--fs-label);
+        color: var(--text-3);
+      }
+
+      /* ── Component: Switch ─────────────────── */
+      .switch {
+        appearance: none;
+        width: 40px;
+        height: 24px;
+        border-radius: var(--radius-pill);
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        position: relative;
+        cursor: pointer;
+        transition: background-color var(--dur-2) var(--ease-std);
+      }
+      .switch::before {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--text-1);
+        transition: transform var(--dur-2) var(--ease-out);
+      }
+      .switch[aria-checked='true'] {
+        background: var(--accent-24);
+        border-color: var(--accent-48);
+      }
+      .switch[aria-checked='true']::before { transform: translateX(16px); }
+
+      /* ── Component: StatTile ──────────────── */
+      .stat-tile {
+        padding: var(--space-3) var(--space-4);
+        border-radius: var(--radius-2);
+        background: var(--surface-3);
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 120px;
+      }
+      .stat-tile .label {
+        font-size: var(--fs-overline);
+        font-weight: var(--fw-semibold);
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .stat-tile .value {
+        font-family: var(--font-mono);
+        font-size: var(--fs-subtitle);
+        font-weight: var(--fw-semibold);
+        color: var(--text-1);
+        line-height: var(--lh-tight);
+        font-variant-numeric: tabular-nums;
+      }
+      .stat-tile.compact .value { font-size: var(--fs-body); }
+
+      /* ── Component: SurfaceCard ──────────────── */
+      .surface-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        background: var(--surface-2);
+        padding: var(--space-5);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        transition: border-color var(--dur-2) var(--ease-std), box-shadow var(--dur-2) var(--ease-std), transform var(--dur-2) var(--ease-std);
+      }
+      .surface-card.interactive:hover {
+        border-color: var(--border-strong);
+        box-shadow: var(--elev-2);
+        transform: translateY(-1px);
+      }
+      .surface-card.selected {
+        border-color: var(--accent-48);
+        background: linear-gradient(180deg, var(--accent-14), var(--accent-08)), var(--surface-2);
+        box-shadow: var(--elev-2), var(--ring-emphasis);
+      }
+      .surface-card.interactive.selected:hover {
+        /* Keep the accent border on hover — never downgrade to --border-strong */
+        border-color: var(--accent);
+        box-shadow: var(--elev-3), var(--ring-emphasis);
+      }
+      .surface-card .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-3);
+      }
+      .surface-card .title {
+        font-size: var(--fs-title);
+        font-weight: var(--fw-bold);
+        letter-spacing: -0.01em;
+        margin: 0;
+      }
+      .surface-card .desc {
+        color: var(--text-2);
+        font-size: var(--fs-body-sm);
+        margin: 0;
+      }
+
+      /* ── Component: Dialog ─────────────────── */
+      .dialog {
+        width: min(440px, 100%);
+        border-radius: var(--radius-4);
+        background: var(--surface-2);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--elev-4);
+        padding: var(--space-5);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+      .dialog h4 {
+        margin: 0;
+        font-size: var(--fs-title);
+        font-weight: var(--fw-bold);
+        letter-spacing: -0.01em;
+      }
+      .dialog p {
+        margin: 0;
+        color: var(--text-2);
+        font-size: var(--fs-body-sm);
+      }
+      .dialog .actions {
+        display: flex;
+        gap: var(--space-2);
+        justify-content: flex-end;
+      }
+
+      /* ── Component: Tabs ────────────────────── */
+      .tabs {
+        display: inline-flex;
+        gap: var(--space-1);
+        padding: 4px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-2);
+        background: var(--surface-1);
+      }
+      .tabs button {
+        appearance: none;
+        font-family: inherit;
+        background: transparent;
+        border: 0;
+        height: 32px;
+        padding: 0 var(--space-3);
+        border-radius: 6px;
+        color: var(--text-2);
+        font-size: var(--fs-body-sm);
+        font-weight: var(--fw-semibold);
+        cursor: pointer;
+      }
+      .tabs button[aria-selected='true'] {
+        color: var(--text-1);
+        background: var(--surface-4);
+      }
+
+      /* ── Component: NoticeBar (replaces ContinueBanner ad-hoc) ── */
+      .notice {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        padding: var(--space-3) var(--space-4);
+        border-radius: var(--radius-2);
+        background: var(--accent-08);
+        border: 1px solid var(--accent-24);
+      }
+      .notice .icon {
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-2);
+        background: var(--accent-14);
+        color: var(--accent);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        font-family: var(--font-mono);
+        font-weight: var(--fw-semibold);
+      }
+      .notice .body { flex: 1; }
+      .notice .body strong {
+        display: block;
+        font-size: var(--fs-body-sm);
+        font-weight: var(--fw-semibold);
+        color: var(--text-1);
+      }
+      .notice .body span {
+        font-size: var(--fs-label);
+        color: var(--text-2);
+      }
+
+      /* ─── Before/after frames ─────────────────────────── */
+      .ba {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-4);
+      }
+      @media (max-width: 920px) { .ba { grid-template-columns: 1fr; } }
+      .ba .panel {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-4);
+        background: var(--surface-1);
+        padding: var(--space-5);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+      .ba .panel.before { background: repeating-linear-gradient(45deg, transparent 0, transparent 14px, rgba(255, 92, 122, 0.04) 14px, rgba(255, 92, 122, 0.04) 15px), var(--surface-1); }
+      .ba .panel header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-family: var(--font-mono);
+        font-size: var(--fs-label);
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .ba .panel header.before-tag::before {
+        content: 'BEFORE';
+        color: var(--danger);
+        font-weight: var(--fw-semibold);
+      }
+      .ba .panel header.after-tag::before {
+        content: 'AFTER';
+        color: var(--success);
+        font-weight: var(--fw-semibold);
+      }
+      .ba .stage {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-4);
+        min-height: 220px;
+      }
+
+      /* "before" — recreate the ad-hoc styles roughly, for visual comparison */
+      .legacy-card {
+        border: 1px solid rgba(255, 255, 255, 0.085);
+        border-radius: 20px;
+        background: #1a2233;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        font-family: var(--font-ui);
+        width: 100%;
+      }
+      .legacy-card .eyebrow {
+        color: #4da3ff;
+        font-size: 0.875rem;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .legacy-card .title {
+        font-size: 1.5rem;
+        font-weight: 900;
+        line-height: 1;
+        margin: 0;
+      }
+      .legacy-card .desc {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.92rem;
+      }
+      .legacy-card .meta {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .legacy-card .meta span {
+        border-radius: 10px;
+        background: #212b40;
+        padding: 8px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .legacy-card .meta b {
+        font-weight: 900;
+      }
+      .legacy-card .meta i {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        font-weight: 800;
+        font-style: normal;
+        letter-spacing: 0.04em;
+      }
+      .legacy-game-header {
+        background: #212b40;
+        border: 1px solid rgba(255, 255, 255, 0.085);
+        border-radius: 12px;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        font-weight: 600;
+      }
+      .legacy-game-header .label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 32px;
+        padding: 0 12px;
+        background: #1a2233;
+        border-radius: 12px;
+        font-variant-numeric: tabular-nums;
+        font-size: 0.9rem;
+      }
+      .legacy-game-header .group {
+        display: flex;
+        background: #1a2233;
+        border: 1px solid rgba(255, 255, 255, 0.085);
+        border-radius: 12px;
+        padding: 4px;
+      }
+      .legacy-game-header .group button {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: transparent;
+        border: 0;
+        color: rgba(255, 255, 255, 0.92);
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      /* ── Component: GameTopBar — proposed unified game header ── */
+      .game-bar {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: var(--space-3);
+        align-items: center;
+        padding: var(--space-3) var(--space-4);
+        background: var(--surface-3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-3);
+        width: 100%;
+      }
+      .game-bar .readout {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        height: 36px;
+        padding: 0 var(--space-3);
+        border-radius: var(--radius-2);
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
+        font-size: var(--fs-body-sm);
+        font-weight: var(--fw-semibold);
+        color: var(--text-1);
+      }
+      .game-bar .readout .glyph {
+        font-family: var(--font-ui);
+        font-size: var(--fs-label);
+        color: var(--text-3);
+      }
+      .game-bar .toolbar {
+        justify-self: center;
+        display: inline-flex;
+        gap: 2px;
+        padding: 3px;
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-2);
+      }
+      .game-bar .toolbar button {
+        appearance: none;
+        width: 34px;
+        height: 30px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--text-1);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+      .game-bar .toolbar button:hover { background: var(--surface-4); }
+      .game-bar .actions { justify-self: end; display: inline-flex; gap: 2px; padding: 3px; background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-2); }
+      .game-bar .actions button {
+        appearance: none;
+        width: 34px;
+        height: 30px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--text-1);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .game-bar .actions button:hover { background: var(--surface-4); }
+
+      /* ─── Migration table ────────────────────────────────── */
+      table.migration {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--fs-body-sm);
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-3);
+        overflow: hidden;
+      }
+      table.migration th,
+      table.migration td {
+        text-align: left;
+        padding: var(--space-3) var(--space-4);
+        border-top: 1px solid var(--border);
+        vertical-align: top;
+      }
+      table.migration thead th {
+        border-top: 0;
+        font-size: var(--fs-overline);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-3);
+        font-weight: var(--fw-semibold);
+        background: var(--surface-1);
+      }
+      table.migration code { font-size: 11px; }
+      table.migration td.path { color: var(--text-1); font-family: var(--font-mono); font-size: 12px; }
+      table.migration td.prio { width: 80px; }
+      .prio-pill {
+        display: inline-flex;
+        align-items: center;
+        height: 20px;
+        padding: 0 8px;
+        border-radius: var(--radius-1);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: var(--fw-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .prio-pill.p1 { background: var(--danger-14); color: var(--danger); }
+      .prio-pill.p2 { background: var(--warning-14); color: var(--warning); }
+      .prio-pill.p3 { background: var(--accent-14); color: var(--accent); }
+
+      .checklist {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-3);
+      }
+      @media (max-width: 920px) { .checklist { grid-template-columns: 1fr; } }
+      .checklist li {
+        display: flex;
+        gap: var(--space-3);
+        align-items: flex-start;
+        padding: var(--space-3) var(--space-4);
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-2);
+      }
+      .checklist li::before {
+        content: '';
+        flex: 0 0 auto;
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        background: var(--accent-14);
+        box-shadow: inset 0 0 0 1px var(--accent-48);
+        margin-top: 2px;
+        position: relative;
+      }
+      .checklist li b { display: block; color: var(--text-1); font-weight: var(--fw-semibold); margin-bottom: 2px; }
+      .checklist li span { font-size: var(--fs-body-sm); color: var(--text-2); }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <!-- ───────── Sidebar TOC ───────── -->
+      <nav class="toc">
+        <div class="brand">
+          <div class="dot"></div>
+          <div>
+            <strong>Minesweeper</strong>
+            <small>Design system · v1.0 draft</small>
+          </div>
+        </div>
+        <ol>
+          <li><a href="#audit">The audit</a></li>
+          <li>
+            <a href="#foundations">Foundations</a>
+            <ul class="subnav">
+              <li><a href="#color">Color</a></li>
+              <li><a href="#type">Type</a></li>
+              <li><a href="#space">Spacing</a></li>
+              <li><a href="#radius">Radii</a></li>
+              <li><a href="#elev">Elevation</a></li>
+              <li><a href="#motion">Motion</a></li>
+              <li><a href="#responsive">Responsive</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#components">Components</a>
+            <ul class="subnav">
+              <li><a href="#c-card">Surface / Card</a></li>
+              <li><a href="#c-button">Button</a></li>
+              <li><a href="#c-segmented">Segmented</a></li>
+              <li><a href="#c-badge">Badge</a></li>
+              <li><a href="#c-stat">Stat tile</a></li>
+              <li><a href="#c-field">Field</a></li>
+              <li><a href="#c-dialog">Dialog</a></li>
+              <li><a href="#c-tabs">Tabs</a></li>
+              <li><a href="#c-gamebar">Game top bar</a></li>
+            </ul>
+          </li>
+          <li><a href="#compositions">Before / after</a></li>
+          <li><a href="#migration">Migration plan</a></li>
+        </ol>
+      </nav>
+
+      <!-- ───────── Main ───────── -->
+      <main>
+        <!-- HERO -->
+        <header class="hero">
+          <p class="eyebrow">Internal · Design system proposal</p>
+          <h1>One system. <span class="accent">One feel.</span><br />A polished minesweeper.</h1>
+          <p class="lede">
+            The app has the bones of a great UI &mdash; the palette is right, the radii are friendly, the layout is sound.
+            What it lacks is a system: a single typography ramp, a single space scale, a single set of primitives that every screen reuses.
+            This document proposes that system, derived from what you already have, with the inconsistencies cleaned up.
+          </p>
+          <div class="meta">
+            <span>SCOPE · <b>Lobby, Game, Account, Leaderboard, Auth</b></span>
+            <span>FILES TOUCHED · <b>~24 SCSS modules</b></span>
+            <span>NEW PRIMITIVES · <b>9</b></span>
+            <span>BREAKING TOKEN CHANGES · <b>0</b> (additive)</span>
+          </div>
+        </header>
+
+        <!-- ───────── AUDIT ───────── -->
+        <section class="s" id="audit">
+          <header>
+            <span class="num">01</span>
+            <h2>The audit</h2>
+            <p>What's actually inconsistent today, by category. Five real findings traced back to specific files.</p>
+          </header>
+
+          <div class="audit">
+            <div class="finding">
+              <div class="h"><span class="tag">CRITICAL</span><h4>No type scale</h4></div>
+              <p>
+                Every component picks its own <code>font-size</code> in <code>rem</code>. There's no canonical body, label,
+                or title size, so 20+ near-duplicate sizes appear across the app.
+              </p>
+              <div class="examples">
+                Sizes in the wild: <b>0.64</b>, <b>0.65</b>, <b>0.7</b>, <b>0.72</b>, <b>0.75</b>, <b>0.76</b>, <b>0.78</b>,
+                <b>0.8</b>, <b>0.82</b>, <b>0.84</b>, <b>0.86</b>, <b>0.875</b>, <b>0.9</b>, <b>0.92</b>, <b>0.94</b>,
+                <b>0.95</b>, <b>0.98</b>, <b>1</b>, <b>1.1</b>, <b>1.2</b>, <b>1.25</b>, <b>1.5</b>, <b>1.9</b>, <b>2</b>+
+              </div>
+            </div>
+
+            <div class="finding">
+              <div class="h"><span class="tag">CRITICAL</span><h4>No spacing scale</h4></div>
+              <p>
+                Tokens exist (<code>--space-1/2/3</code>) but only cover 8/16/24px.
+                Everything in between is hardcoded — <code>4px</code>, <code>6px</code>, <code>10px</code>, <code>12px</code>,
+                <code>14px</code>, <code>18px</code>, <code>20px</code> &mdash; in 40+ places.
+              </p>
+              <div class="examples">
+                e.g. <code>LobbyCard</code>: <b>12px</b>, <b>10px</b>, <b>8px</b>, <b>5px</b>, <b>4px</b>, <b>6px</b>, <b>7px</b>
+                &middot; <code>GameHeader</code>: <b>4px</b>, <b>6px</b>, <b>8px</b>, <b>12px</b>
+              </div>
+            </div>
+
+            <div class="finding">
+              <div class="h"><span class="tag warn">REPETITION</span><h4>Same component, 4 implementations</h4></div>
+              <p>
+                Pattern duplicated across the app with slightly different paddings, radii, and shadows each time.
+                These should be primitives.
+              </p>
+              <div class="examples">
+                Segmented control: <b>SelectLevelToggleGroup · SelectDigFlag · ModeToggle · Leaderboard tabs</b><br />
+                Badge / pill: <b>DailyBadge · youBadge · LobbyCard.badge · GameStatus.statusPill</b><br />
+                Stat tile: <b>DailyCard.stat · ContinueBanner.stat · LevelCard.meta · BestScores.scoreRow</b><br />
+                Dialog: <b>LevelChangeDialog · ContinueBanner.dialog</b> (same <code>@keyframes dialogEnter</code> defined twice)
+              </div>
+            </div>
+
+            <div class="finding">
+              <div class="h"><span class="tag warn">REPETITION</span><h4>Accent colors hardcoded as rgba</h4></div>
+              <p>
+                <code>--accent-blue</code> exists but <code>rgba(77, 163, 255, 0.X)</code> is written inline 30+ times.
+                Same for <code>rgba(255, 92, 122, 0.X)</code> (danger). Tokens can't be swapped or themed.
+              </p>
+              <div class="examples">
+                <b>rgba(77, 163, 255, …)</b> in: <code>Button</code>, <code>Switch</code>, <code>LobbyCard</code>,
+                <code>ContinueBanner</code>, <code>LeaderboardPage</code>, <code>OnboardingTour</code>, …<br />
+                Fix: ship a <b>token opacity ramp</b> — <code>--accent-14</code>, <code>--accent-24</code>, <code>--accent-48</code>.
+              </div>
+            </div>
+
+            <div class="finding">
+              <div class="h"><span class="tag info">POLISH</span><h4>Font-weight inflation</h4></div>
+              <p>
+                Weights <b>400 / 600 / 700 / 800 / 900</b> all appear, often without semantic intent &mdash;
+                an "eyebrow" is 800 in <code>LevelCard</code>, 700 in <code>LobbyCard</code>, 900 in <code>ContinueBanner</code>.
+                Standardize to <b>regular / medium / semibold / bold</b>.
+              </p>
+              <div class="examples">
+                <code>900</code>: LobbyCard.eyebrow, LevelCard.meta, ContinueBanner.statLabel, .statValue, .actionButton<br />
+                <code>800</code>: LobbyCard.eyebrow (also!), DailyBadge, DailyCard.stat dd, ToggleGroup.label<br />
+                <i>Same role, two weights, different files.</i>
+              </div>
+            </div>
+
+            <div class="finding">
+              <div class="h"><span class="tag info">POLISH</span><h4>Eyebrow letter-spacing drift</h4></div>
+              <p>
+                Uppercase eyebrow labels exist on most surfaces, but every implementation picks a different
+                <code>letter-spacing</code> &mdash; <code>0.04em</code>, <code>0.06em</code>, <code>0.08em</code>,
+                <code>0.1em</code>, <code>0.12em</code>. Tiny inconsistency, big "off" feeling.
+              </p>
+              <div class="examples">
+                Canon: every uppercase label uses <b>letter-spacing: 0.08em</b>, <b>font-weight: 600</b>, <b>size: 11px</b>.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── FOUNDATIONS ───────── -->
+        <section class="s" id="foundations">
+          <header>
+            <span class="num">02</span>
+            <h2>Foundations</h2>
+            <p>Tokens. Every component below is built only from these.</p>
+          </header>
+
+          <!-- COLOR -->
+          <h3 id="color">2.1 &nbsp; Color</h3>
+          <p>
+            The palette is preserved &mdash; same hue, same vibe. Three adjustments:
+            <b>(a)</b> surfaces are renumbered so the index follows elevation (<code>--surface-1</code> is the most sunken, <code>--surface-4</code> sits on top &mdash; today's <code>-1 / -2 / -3</code> ordering is non-monotonic and confusing);
+            <b>(b)</b> accent &amp; danger ship as <b>opacity steps</b> (<code>-14, -24, -48</code>) so the rgba inline-fills can be retired;
+            <b>(c)</b> text colors collapse to three roles (<code>text-1 / 2 / 3</code>).
+          </p>
+
+          <p class="eyebrow-label" style="margin-top: var(--space-3);">Surfaces · numbered by elevation (low &rarr; high)</p>
+          <div class="grid" style="margin-top: var(--space-3); grid-template-columns: repeat(5, minmax(0, 1fr));">
+            <div class="swatch"><div class="chip" style="background: var(--app-bg);"></div><div class="meta"><span class="name">app-bg</span><span class="val">#0E1420</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--surface-1);"></div><div class="meta"><span class="name">surface-1</span><span class="val">#121828</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--surface-2);"></div><div class="meta"><span class="name">surface-2</span><span class="val">#161E2E</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--surface-3);"></div><div class="meta"><span class="name">surface-3</span><span class="val">#1D273B</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--surface-4);"></div><div class="meta"><span class="name">surface-4</span><span class="val">#26324A</span></div></div>
+          </div>
+          <p style="font-size: var(--fs-body-sm); color: var(--text-3); margin-top: var(--space-3);">
+            <b style="color: var(--text-2);">app-bg</b> page itself &nbsp;&middot;&nbsp;
+            <b style="color: var(--text-2);">surface-1</b> recessed wells, inputs, segmented tracks &nbsp;&middot;&nbsp;
+            <b style="color: var(--text-2);">surface-2</b> default card &nbsp;&middot;&nbsp;
+            <b style="color: var(--text-2);">surface-3</b> nested card, active segment, game header &nbsp;&middot;&nbsp;
+            <b style="color: var(--text-2);">surface-4</b> popovers, dropdowns, dialogs.
+          </p>
+
+          <p class="eyebrow-label" style="margin-top: var(--space-6);">Accent · brand</p>
+          <div class="grid cols-4" style="margin-top: var(--space-3);">
+            <div class="swatch"><div class="chip" style="background: var(--accent);"></div><div class="meta"><span class="name">accent</span><span class="val">#4DA3FF</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--accent-48); background-color: rgba(77, 163, 255, 0.48);"></div><div class="meta"><span class="name">accent-48</span><span class="val">α 0.48</span></div></div>
+            <div class="swatch"><div class="chip" style="background-color: rgba(77, 163, 255, 0.24);"></div><div class="meta"><span class="name">accent-24</span><span class="val">α 0.24</span></div></div>
+            <div class="swatch"><div class="chip" style="background-color: rgba(77, 163, 255, 0.14);"></div><div class="meta"><span class="name">accent-14</span><span class="val">α 0.14</span></div></div>
+          </div>
+
+          <p class="eyebrow-label" style="margin-top: var(--space-6);">Semantic</p>
+          <div class="grid cols-4" style="margin-top: var(--space-3);">
+            <div class="swatch"><div class="chip" style="background: var(--success);"></div><div class="meta"><span class="name">success</span><span class="val">#33D69F</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--danger);"></div><div class="meta"><span class="name">danger</span><span class="val">#FF5C7A</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--warning);"></div><div class="meta"><span class="name">warning</span><span class="val">#FFB74D</span></div></div>
+            <div class="swatch"><div class="chip" style="background: var(--text-1);"></div><div class="meta"><span class="name">text-1</span><span class="val">rgba 0.94</span></div></div>
+          </div>
+
+          <p class="eyebrow-label" style="margin-top: var(--space-6);">Cell number colors · kept (1 – 8)</p>
+          <div class="grid cols-4" style="margin-top: var(--space-3);">
+            <div class="swatch"><div class="chip" style="background: #4da3ff; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 32px; font-weight: 700; color: #08111d;">1</div><div class="meta"><span class="name">--n-1</span><span class="val">#4DA3FF</span></div></div>
+            <div class="swatch"><div class="chip" style="background: #33d69f; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 32px; font-weight: 700; color: #08111d;">2</div><div class="meta"><span class="name">--n-2</span><span class="val">#33D69F</span></div></div>
+            <div class="swatch"><div class="chip" style="background: #ff5c7a; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 32px; font-weight: 700; color: #08111d;">3</div><div class="meta"><span class="name">--n-3</span><span class="val">#FF5C7A</span></div></div>
+            <div class="swatch"><div class="chip" style="background: #b48cff; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 32px; font-weight: 700; color: #08111d;">4</div><div class="meta"><span class="name">--n-4</span><span class="val">#B48CFF</span></div></div>
+            <div class="swatch"><div class="chip" style="background: #ffb74d; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 32px; font-weight: 700; color: #08111d;">5</div><div class="meta"><span class="name">--n-5</span><span class="val">#FFB74D</span></div></div>
+            <div class="swatch"><div class="chip" style="background: #40c4ff; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 32px; font-weight: 700; color: #08111d;">6</div><div class="meta"><span class="name">--n-6</span><span class="val">#40C4FF</span></div></div>
+            <div class="swatch"><div class="chip" style="background: #182234; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 32px; font-weight: 700; color: rgba(255,255,255,0.92);">7</div><div class="meta"><span class="name">--n-7</span><span class="val">rgba 0.92</span></div></div>
+            <div class="swatch"><div class="chip" style="background: #182234; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 32px; font-weight: 700; color: rgba(255,255,255,0.55);">8</div><div class="meta"><span class="name">--n-8</span><span class="val">rgba 0.55</span></div></div>
+          </div>
+
+          <!-- TYPE -->
+          <h3 id="type">2.2 &nbsp; Typography</h3>
+          <p>
+            One UI family &mdash; <b>Inter</b>, already the de facto pick &mdash; plus <b>JetBrains Mono</b> for any number that ticks
+            (timer, mine counter, score time, leaderboard rank). Everything else uses the seven-step scale below.
+            No more <code>0.92rem</code> vs <code>0.94rem</code> conversations.
+          </p>
+
+          <div class="card">
+            <div class="type-row">
+              <span class="name">display-1</span>
+              <span class="specimen" style="font-size: 56px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.05;">Daily Challenge</span>
+              <span class="props">56 / 1.05 / 700 / -0.025em</span>
+            </div>
+            <div class="type-row">
+              <span class="name">display-2</span>
+              <span class="specimen" style="font-size: 36px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.12;">Best scores</span>
+              <span class="props">36 / 1.12 / 700 / -0.02em</span>
+            </div>
+            <div class="type-row">
+              <span class="name">title</span>
+              <span class="specimen" style="font-size: 24px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;">Free play</span>
+              <span class="props">24 / 1.20 / 700 / -0.01em</span>
+            </div>
+            <div class="type-row">
+              <span class="name">subtitle</span>
+              <span class="specimen" style="font-size: 18px; font-weight: 600;">Pick a difficulty to begin</span>
+              <span class="props">18 / 1.3 / 600 / 0</span>
+            </div>
+            <div class="type-row">
+              <span class="name">body</span>
+              <span class="specimen" style="font-size: 15px;">Reveal every safe cell without hitting a mine. Hold to flag.</span>
+              <span class="props">15 / 1.5 / 400 / 0</span>
+            </div>
+            <div class="type-row">
+              <span class="name">body-sm</span>
+              <span class="specimen" style="font-size: 13px; color: var(--text-2);">Resumed from yesterday's expert run · 42% revealed</span>
+              <span class="props">13 / 1.5 / 400 / 0</span>
+            </div>
+            <div class="type-row">
+              <span class="name">label</span>
+              <span class="specimen" style="font-size: 12px; font-weight: 500;">Username</span>
+              <span class="props">12 / 1.4 / 500 / 0</span>
+            </div>
+            <div class="type-row">
+              <span class="name">overline</span>
+              <span class="specimen" style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);">PERSONAL BEST</span>
+              <span class="props">11 / 1.4 / 600 / 0.08em UPPER</span>
+            </div>
+            <div class="type-row">
+              <span class="name">mono · tabular</span>
+              <span class="specimen mono" style="font-size: 24px; font-weight: 600;">00:42.318</span>
+              <span class="props">JetBrains Mono · tnum</span>
+            </div>
+          </div>
+
+          <pre class="code" style="margin-top: var(--space-4);"><span class="c">/* tokens.css — drop into src/styles/tokens.css and @import once in layout */</span>
+:root {
+  <span class="k">--font-ui</span>:    <span class="s">'Inter', system-ui, sans-serif</span>;
+  <span class="k">--font-mono</span>:  <span class="s">'JetBrains Mono', ui-monospace, monospace</span>;
+
+  <span class="k">--fs-display-1</span>: <span class="s">56px</span>;  <span class="k">--fs-display-2</span>: <span class="s">36px</span>;
+  <span class="k">--fs-title</span>:     <span class="s">24px</span>;  <span class="k">--fs-subtitle</span>:  <span class="s">18px</span>;
+  <span class="k">--fs-body</span>:      <span class="s">15px</span>;  <span class="k">--fs-body-sm</span>:   <span class="s">13px</span>;
+  <span class="k">--fs-label</span>:     <span class="s">12px</span>;  <span class="k">--fs-overline</span>:  <span class="s">11px</span>;
+
+  <span class="k">--fw-regular</span>:  <span class="s">400</span>;
+  <span class="k">--fw-medium</span>:   <span class="s">500</span>;
+  <span class="k">--fw-semibold</span>: <span class="s">600</span>;
+  <span class="k">--fw-bold</span>:     <span class="s">700</span>;
+}</pre>
+
+          <!-- SPACING -->
+          <h3 id="space">2.3 &nbsp; Spacing</h3>
+          <p>Strict 4px-based scale, 9 steps. Every ad-hoc <code>5px</code>, <code>7px</code>, <code>10px</code>, <code>14px</code>, <code>18px</code> in the codebase maps cleanly to one of these.</p>
+
+          <div class="card">
+            <div class="space-row"><span class="name">--space-0</span><div class="bar" style="width: 2px;"></div><span class="usage">2px · hairline gap</span></div>
+            <div class="space-row"><span class="name">--space-1</span><div class="bar" style="width: 4px;"></div><span class="usage">4px · icon gap</span></div>
+            <div class="space-row"><span class="name">--space-2</span><div class="bar" style="width: 8px;"></div><span class="usage">8px · within a chip</span></div>
+            <div class="space-row"><span class="name">--space-3</span><div class="bar" style="width: 12px;"></div><span class="usage">12px · between fields</span></div>
+            <div class="space-row"><span class="name">--space-4</span><div class="bar" style="width: 16px;"></div><span class="usage">16px · card padding</span></div>
+            <div class="space-row"><span class="name">--space-5</span><div class="bar" style="width: 20px;"></div><span class="usage">20px · section interior</span></div>
+            <div class="space-row"><span class="name">--space-6</span><div class="bar" style="width: 24px;"></div><span class="usage">24px · between sections</span></div>
+            <div class="space-row"><span class="name">--space-7</span><div class="bar" style="width: 32px;"></div><span class="usage">32px · page gutter</span></div>
+            <div class="space-row"><span class="name">--space-8</span><div class="bar" style="width: 48px;"></div><span class="usage">48px · hero / between blocks</span></div>
+          </div>
+
+          <!-- RADIUS -->
+          <h3 id="radius">2.4 &nbsp; Radii</h3>
+          <p>5 steps. Current code uses 8 different radii (<code>4 / 8 / 10 / 12 / 14 / 16 / 20 / 999</code>) &mdash; collapsed to four named tiers plus pill.</p>
+          <div class="radius-grid">
+            <div class="radius-tile">
+              <div class="shape" style="border-radius: var(--radius-1);"></div>
+              <div class="label">--radius-1</div>
+              <div class="px">6px · tags, dots</div>
+            </div>
+            <div class="radius-tile">
+              <div class="shape" style="border-radius: var(--radius-2);"></div>
+              <div class="label">--radius-2</div>
+              <div class="px">10px · inputs, buttons</div>
+            </div>
+            <div class="radius-tile">
+              <div class="shape" style="border-radius: var(--radius-3);"></div>
+              <div class="label">--radius-3</div>
+              <div class="px">14px · controls, popovers</div>
+            </div>
+            <div class="radius-tile">
+              <div class="shape" style="border-radius: var(--radius-4);"></div>
+              <div class="label">--radius-4</div>
+              <div class="px">18px · cards, panels</div>
+            </div>
+            <div class="radius-tile">
+              <div class="shape" style="border-radius: var(--radius-pill);"></div>
+              <div class="label">--radius-pill</div>
+              <div class="px">999px · switches, pills</div>
+            </div>
+          </div>
+
+          <!-- ELEVATION -->
+          <h3 id="elev">2.5 &nbsp; Elevation</h3>
+          <p>4 shadows + 2 focus rings. Every <code>box-shadow:</code> in the codebase should resolve to one of these tokens.</p>
+          <div class="elev-grid">
+            <div class="elev-tile e1"><span class="name">elev-1</span><span class="use">subtle lift · cards at rest</span></div>
+            <div class="elev-tile e2"><span class="name">elev-2</span><span class="use">hover · sticky bars</span></div>
+            <div class="elev-tile e3"><span class="name">elev-3</span><span class="use">popovers · floating cards</span></div>
+            <div class="elev-tile e4"><span class="name">elev-4</span><span class="use">modal dialogs · overlays</span></div>
+          </div>
+          <pre class="code" style="margin-top: var(--space-4);"><span class="k">--elev-1</span>: <span class="s">0 1px 2px rgba(0,0,0,.18)</span>;
+<span class="k">--elev-2</span>: <span class="s">0 6px 16px rgba(0,0,0,.22)</span>;
+<span class="k">--elev-3</span>: <span class="s">0 12px 30px rgba(0,0,0,.32)</span>;
+<span class="k">--elev-4</span>: <span class="s">0 22px 56px rgba(0,0,0,.44)</span>;
+<span class="k">--ring-focus</span>:    <span class="s">0 0 0 2px var(--accent-24)</span>;
+<span class="k">--ring-emphasis</span>: <span class="s">0 0 0 1px var(--accent-48)</span>;</pre>
+
+          <!-- MOTION -->
+          <h3 id="motion">2.6 &nbsp; Motion</h3>
+          <p>Three durations cover everything: press, hover/micro, enter/exit. Two easings: standard, out.</p>
+          <pre class="code"><span class="k">--dur-1</span>: <span class="s">80ms</span>   <span class="c">/* press */</span>
+<span class="k">--dur-2</span>: <span class="s">140ms</span>  <span class="c">/* hover, micro */</span>
+<span class="k">--dur-3</span>: <span class="s">220ms</span>  <span class="c">/* dialog enter / exit */</span>
+
+<span class="k">--ease-std</span>: <span class="s">cubic-bezier(0.4, 0, 0.2, 1)</span>;
+<span class="k">--ease-out</span>: <span class="s">cubic-bezier(0.22, 1, 0.36, 1)</span>;</pre>
+
+          <!-- RESPONSIVE -->
+          <h3 id="responsive">2.7 &nbsp; Responsive · mobile rules</h3>
+          <p>
+            Same tokens; smaller values. The system has three breakpoints &mdash; lifted from what the codebase already uses
+            (<code>900px</code>, <code>768px</code>, <code>480px</code>) and renamed. Below the <code>md</code> breakpoint, the type and spacing
+            scales each take <b>one step down</b> automatically via <code>:root</code> overrides; components don't need media queries.
+          </p>
+
+          <div class="card" style="margin-top: var(--space-4);">
+            <div class="space-row" style="grid-template-columns: 100px 1fr 220px;">
+              <span class="name">--bp-sm</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">phones &mdash; portrait, narrow tablets</span>
+              <span class="usage">&le; 480px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 100px 1fr 220px;">
+              <span class="name">--bp-md</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">phones landscape, small tablets</span>
+              <span class="usage">&le; 768px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 100px 1fr 220px;">
+              <span class="name">--bp-lg</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">tablets, narrow desktop</span>
+              <span class="usage">&le; 900px</span>
+            </div>
+          </div>
+
+          <h4 style="margin: var(--space-6) 0 var(--space-3); font-size: var(--fs-body); font-weight: var(--fw-semibold); color: var(--text-2);">Type · mobile shifts down one step</h4>
+          <div class="card">
+            <div class="type-row">
+              <span class="name">display-1</span>
+              <span class="specimen" style="font-family: var(--font-mono); font-size: var(--fs-body-sm); color: var(--text-2);">desktop&nbsp; <b style="color: var(--text-1);">56px</b> &nbsp;&rarr;&nbsp; mobile&nbsp; <b style="color: var(--text-1);">40px</b></span>
+              <span class="props">letter-spacing -0.02em on mobile</span>
+            </div>
+            <div class="type-row">
+              <span class="name">display-2</span>
+              <span class="specimen" style="font-family: var(--font-mono); font-size: var(--fs-body-sm); color: var(--text-2);">desktop&nbsp; <b style="color: var(--text-1);">36px</b> &nbsp;&rarr;&nbsp; mobile&nbsp; <b style="color: var(--text-1);">28px</b></span>
+              <span class="props">page titles</span>
+            </div>
+            <div class="type-row">
+              <span class="name">title</span>
+              <span class="specimen" style="font-family: var(--font-mono); font-size: var(--fs-body-sm); color: var(--text-2);">desktop&nbsp; <b style="color: var(--text-1);">24px</b> &nbsp;&rarr;&nbsp; mobile&nbsp; <b style="color: var(--text-1);">20px</b></span>
+              <span class="props">card titles</span>
+            </div>
+            <div class="type-row">
+              <span class="name">subtitle</span>
+              <span class="specimen" style="font-family: var(--font-mono); font-size: var(--fs-body-sm); color: var(--text-2);">desktop&nbsp; <b style="color: var(--text-1);">18px</b> &nbsp;&rarr;&nbsp; mobile&nbsp; <b style="color: var(--text-1);">16px</b></span>
+              <span class="props">sub-heading</span>
+            </div>
+            <div class="type-row">
+              <span class="name">body / body-sm / label / overline</span>
+              <span class="specimen" style="font-family: var(--font-mono); font-size: var(--fs-body-sm); color: var(--text-2);"><b style="color: var(--text-1);">unchanged</b> &mdash; 15 / 13 / 12 / 11</span>
+              <span class="props">readability floor</span>
+            </div>
+          </div>
+          <p style="font-size: var(--fs-body-sm); color: var(--text-3); margin-top: var(--space-3);">
+            Body sizes don't shrink &mdash; <b style="color: var(--text-2);">13px is the minimum readable size</b> in the system.
+            Only <i>display</i> sizes step down so heroes and titles don't overpower the small screen.
+          </p>
+
+          <h4 style="margin: var(--space-6) 0 var(--space-3); font-size: var(--fs-body); font-weight: var(--fw-semibold); color: var(--text-2);">Spacing · big steps shrink on mobile, micro stays</h4>
+          <div class="card">
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-0 → 3</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">2 / 4 / 8 / 12 px</span>
+              <span class="usage">unchanged on mobile</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-4</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">card / panel padding</span>
+              <span class="usage"><b style="color: var(--text-1);">16</b> → <b style="color: var(--text-1);">12</b> px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-5</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">section interior</span>
+              <span class="usage"><b style="color: var(--text-1);">20</b> → <b style="color: var(--text-1);">16</b> px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-6</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">between sections</span>
+              <span class="usage"><b style="color: var(--text-1);">24</b> → <b style="color: var(--text-1);">20</b> px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-7</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">page gutter</span>
+              <span class="usage"><b style="color: var(--text-1);">32</b> → <b style="color: var(--text-1);">20</b> px</span>
+            </div>
+            <div class="space-row" style="grid-template-columns: 120px 1fr 200px;">
+              <span class="name">--space-8</span>
+              <span style="color: var(--text-2); font-size: var(--fs-body-sm);">hero / between blocks</span>
+              <span class="usage"><b style="color: var(--text-1);">48</b> → <b style="color: var(--text-1);">32</b> px</span>
+            </div>
+          </div>
+
+          <h4 style="margin: var(--space-6) 0 var(--space-3); font-size: var(--fs-body); font-weight: var(--fw-semibold); color: var(--text-2);">Components · what changes on touch</h4>
+          <div class="grid cols-3" style="margin-top: var(--space-3);">
+            <div class="card pad">
+              <div class="eyebrow-label">Hit targets</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                Every tappable element is <b style="color: var(--text-1);">&ge; 44 × 44 px</b> on touch. Button.md (40px) becomes <b style="color: var(--text-1);">44px</b> below <code>--bp-md</code>; icon buttons too. Below 480px, sm buttons get bumped to md to satisfy this.
+              </p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Radii</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                Full-bleed cards drop their radius to <b style="color: var(--text-1);">0</b> when they hit screen edges (current <code>Board</code> already does this). Other radii unchanged.
+              </p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Card grids</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                Below <code>--bp-md</code>, 2- and 3-column card grids collapse to single column. Below <code>--bp-lg</code>, 3-column becomes 2.
+              </p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Dialogs</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                Below <code>--bp-sm</code>, dialog actions stack <b style="color: var(--text-1);">column-reverse</b> (primary on top) and buttons go full width.
+              </p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Game board</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                <b style="color: var(--text-1);">Min cell size 36px</b> on touch (current code uses ~32px which is below the 44px hit-target rule &mdash; long-press flagging compensates).
+              </p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Sticky CTAs</div>
+              <p style="margin: var(--space-3) 0 0; color: var(--text-2); font-size: var(--fs-body-sm);">
+                On mobile, primary page CTAs (Start, Continue) become <b style="color: var(--text-1);">sticky-bottom</b> with safe-area padding &mdash; Lobby already does this.
+              </p>
+            </div>
+          </div>
+
+          <h4 style="margin: var(--space-6) 0 var(--space-3); font-size: var(--fs-body); font-weight: var(--fw-semibold); color: var(--text-2);">Implementation</h4>
+          <p style="font-size: var(--fs-body-sm); color: var(--text-2);">
+            The whole responsive layer is <b>two media queries on <code>:root</code></b>. Components reference the same tokens; nothing else changes.
+          </p>
+          <pre class="code"><span class="c">/* tokens.css \u2014 the entire responsive system */</span>
+:root {
+  <span class="c">/* breakpoints (for use in component media queries when needed) */</span>
+  <span class="k">--bp-sm</span>: <span class="s">480px</span>;
+  <span class="k">--bp-md</span>: <span class="s">768px</span>;
+  <span class="k">--bp-lg</span>: <span class="s">900px</span>;
+}
+
+@media (max-width: <span class="v">768px</span>) {
+  :root {
+    <span class="c">/* type \u2014 displays shrink, body stays */</span>
+    <span class="k">--fs-display-1</span>: <span class="s">40px</span>;
+    <span class="k">--fs-display-2</span>: <span class="s">28px</span>;
+    <span class="k">--fs-title</span>:     <span class="s">20px</span>;
+    <span class="k">--fs-subtitle</span>:  <span class="s">16px</span>;
+
+    <span class="c">/* spacing \u2014 large steps shrink, micro stays */</span>
+    <span class="k">--space-4</span>: <span class="s">12px</span>;
+    <span class="k">--space-5</span>: <span class="s">16px</span>;
+    <span class="k">--space-6</span>: <span class="s">20px</span>;
+    <span class="k">--space-7</span>: <span class="s">20px</span>;
+    <span class="k">--space-8</span>: <span class="s">32px</span>;
+
+    <span class="c">/* hit-target floor for buttons */</span>
+    <span class="k">--btn-h-md</span>: <span class="s">44px</span>;
+    <span class="k">--btn-h-sm</span>: <span class="s">40px</span>;  <span class="c">/* sm bumps to "md desktop" */</span>
+  }
+}
+
+@media (max-width: <span class="v">480px</span>) {
+  :root {
+    <span class="k">--fs-display-1</span>: <span class="s">32px</span>;
+  }
+}</pre>
+          <p style="font-size: var(--fs-body-sm); color: var(--text-3); margin-top: var(--space-3);">
+            <b style="color: var(--text-2);">Rule of thumb for new components:</b> never hardcode a <code>font-size</code> or padding inside a <code>@media</code> query.
+            If a value needs to shift on mobile, it belongs on the token. Components express intent (<code>--fs-title</code>) &mdash; the token decides the pixel.
+          </p>
+
+        </section>
+
+        <!-- \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 COMPONENTS \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 -->
+        <section class="s" id="components">
+          <header>
+            <span class="num">03</span>
+            <h2>Components</h2>
+            <p>Nine primitives. Build everything else by composing these. Each one lives in <code>src/components/ui/</code>.</p>
+          </header>
+
+          <!-- CARD -->
+          <h3 id="c-card">3.1 &nbsp; Surface · Card</h3>
+          <p>Replaces every hand-rolled surface: <code>PageShell.card</code>, <code>LobbyCard</code>, <code>AccountPage.section</code>, <code>LeaderboardPage.column</code>, <code>ContinueBanner.savedCard</code>.</p>
+          <div class="specimen-wrap">
+            <div class="preview">
+              <div class="surface-card" style="width: 280px;">
+                <span class="badge accent">Free play</span>
+                <h4 class="title">Expert</h4>
+                <p class="desc">30 × 16 grid · 99 mines · personal best <span class="mono">02:14.802</span></p>
+              </div>
+              <div class="surface-card interactive selected" style="width: 280px;">
+                <span class="badge accent pill">Daily · selected</span>
+                <h4 class="title">May 20</h4>
+                <p class="desc">Same board for every player. Tap start to play.</p>
+              </div>
+            </div>
+            <div class="anatomy">
+              <h5>Anatomy</h5>
+              <ul>
+                <li><span>radius</span><b>--radius-4</b></li>
+                <li><span>border</span><b>1px var(--border)</b></li>
+                <li><span>padding</span><b>--space-5</b></li>
+                <li><span>bg</span><b>var(--surface-2)</b></li>
+                <li><span>gap (stack)</span><b>--space-4</b></li>
+                <li><span>state: hover</span><b>elev-2 · border-strong</b></li>
+                <li><span>state: selected</span><b>ring-emphasis · accent-14 wash</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- BUTTON -->
+          <h3 id="c-button">3.2 &nbsp; Button</h3>
+          <p>Already a primitive &mdash; just consolidate variants and align with the new height (40px default · 48px lg · 32px sm).</p>
+          <div class="specimen-wrap">
+            <div class="preview">
+              <button class="btn primary">Start game</button>
+              <button class="btn secondary">Restart</button>
+              <button class="btn ghost">Cancel</button>
+              <button class="btn danger">Delete account</button>
+              <button class="btn primary lg">Resume daily</button>
+              <button class="btn secondary sm">Skip</button>
+              <button class="btn secondary icon" aria-label="Pause">❚❚</button>
+            </div>
+            <div class="anatomy">
+              <h5>Sizes</h5>
+              <ul>
+                <li><span>sm</span><b>32 · padding 12 · 12px</b></li>
+                <li><span>md (default)</span><b>40 · padding 16 · 13px</b></li>
+                <li><span>lg</span><b>48 · padding 20 · 15px</b></li>
+              </ul>
+              <h5 style="margin-top: var(--space-4);">Variants</h5>
+              <ul>
+                <li><span>primary</span><b>gradient accent</b></li>
+                <li><span>secondary</span><b>surface-3 + border</b></li>
+                <li><span>ghost</span><b>transparent</b></li>
+                <li><span>danger</span><b>danger-14 + danger-48</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- SEGMENTED -->
+          <h3 id="c-segmented">3.3 &nbsp; SegmentedControl</h3>
+          <p>Unifies <code>SelectLevelToggleGroup</code>, <code>SelectDigFlag</code>, <code>ModeToggle</code>, and <code>LeaderboardPage.tabs</code> into one component.</p>
+          <div class="specimen-wrap">
+            <div class="preview col">
+              <div class="segmented">
+                <button aria-selected="true">Easy</button>
+                <button aria-selected="false">Medium</button>
+                <button aria-selected="false">Expert</button>
+              </div>
+              <div class="segmented">
+                <button aria-selected="true">⛏ Dig</button>
+                <button aria-selected="false">⚑ Flag</button>
+              </div>
+              <div class="segmented">
+                <button aria-selected="false">Free play</button>
+                <button aria-selected="true">Daily challenge</button>
+              </div>
+            </div>
+            <div class="anatomy">
+              <h5>Anatomy</h5>
+              <ul>
+                <li><span>track</span><b>surface-1 · radius-3 · 4px inset pad</b></li>
+                <li><span>seg</span><b>36px · radius 10</b></li>
+                <li><span>selected</span><b>surface-4 · elev-1</b></li>
+                <li><span>label</span><b>body-sm · semibold</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- BADGE -->
+          <h3 id="c-badge">3.4 &nbsp; Badge</h3>
+          <p>Replaces <code>DailyBadge</code>, <code>youBadge</code> (LeaderboardPage), <code>badge</code> (LobbyCard), <code>statusPill</code> (GameStatus). Four tones, two shapes.</p>
+          <div class="specimen-wrap">
+            <div class="preview">
+              <span class="badge accent">Recommended</span>
+              <span class="badge success"><span class="dot"></span>Win</span>
+              <span class="badge danger">Game over</span>
+              <span class="badge neutral">Beta</span>
+              <span class="badge accent pill">Daily</span>
+              <span class="badge success pill"><span class="dot"></span>Synced</span>
+              <span class="badge neutral pill">12 / 64</span>
+            </div>
+            <div class="anatomy">
+              <h5>Anatomy</h5>
+              <ul>
+                <li><span>height</span><b>22px</b></li>
+                <li><span>radius (square)</span><b>--radius-1</b></li>
+                <li><span>radius (pill)</span><b>--radius-pill</b></li>
+                <li><span>type</span><b>overline · semibold · 0.08em</b></li>
+                <li><span>bg / border</span><b>{tone}-14 / {tone}-24</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- STAT TILE -->
+          <h3 id="c-stat">3.5 &nbsp; StatTile</h3>
+          <p>One component for every number-with-a-label in the app: timer, mines, personal best, daily streaks, win rate.</p>
+          <div class="specimen-wrap">
+            <div class="preview">
+              <div class="stat-tile"><span class="label">Personal best</span><span class="value">02:14.802</span></div>
+              <div class="stat-tile"><span class="label">Streak</span><span class="value">17 days</span></div>
+              <div class="stat-tile"><span class="label">Win rate</span><span class="value">68%</span></div>
+              <div class="stat-tile compact"><span class="label">Mines left</span><span class="value">38</span></div>
+            </div>
+            <div class="anatomy">
+              <h5>Anatomy</h5>
+              <ul>
+                <li><span>label</span><b>overline · text-3</b></li>
+                <li><span>value</span><b>mono · subtitle · semibold</b></li>
+                <li><span>padding</span><b>12 / 16</b></li>
+                <li><span>bg</span><b>surface-3 · border</b></li>
+                <li><span>variants</span><b>default · compact</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- FIELD -->
+          <h3 id="c-field">3.6 &nbsp; Field</h3>
+          <p>Form field primitive. Replaces the SCSS <code>@mixin field</code> &mdash; same look, but a real React component everyone imports.</p>
+          <div class="specimen-wrap">
+            <div class="preview col">
+              <div class="field" style="max-width: 320px;">
+                <label>Username</label>
+                <input type="text" value="dazzling_yao" />
+                <span class="hint">Visible on the leaderboard.</span>
+              </div>
+              <div style="display: flex; gap: var(--space-4); align-items: center;">
+                <span style="font-size: var(--fs-body-sm); color: var(--text-2);">SFX enabled</span>
+                <button class="switch" role="switch" aria-checked="true"></button>
+              </div>
+            </div>
+            <div class="anatomy">
+              <h5>Anatomy</h5>
+              <ul>
+                <li><span>input height</span><b>44px</b></li>
+                <li><span>radius</span><b>--radius-2</b></li>
+                <li><span>label</span><b>body-sm · medium · text-2</b></li>
+                <li><span>focus</span><b>accent border + ring-focus</b></li>
+                <li><span>hint</span><b>label · text-3</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- DIALOG -->
+          <h3 id="c-dialog">3.7 &nbsp; Dialog</h3>
+          <p>One Radix-backed shell. Replaces the duplicated <code>LevelChangeDialog</code> and <code>ContinueBanner</code> dialogs (both define the same <code>@keyframes dialogEnter</code>).</p>
+          <div class="specimen-wrap">
+            <div class="preview">
+              <div class="dialog">
+                <h4>Change difficulty?</h4>
+                <p>You're partway through an expert run. Switching to medium will discard your current board.</p>
+                <div class="actions">
+                  <button class="btn ghost">Keep playing</button>
+                  <button class="btn primary">Switch &amp; restart</button>
+                </div>
+              </div>
+            </div>
+            <div class="anatomy">
+              <h5>Anatomy</h5>
+              <ul>
+                <li><span>width</span><b>min(440px, 100%)</b></li>
+                <li><span>radius</span><b>--radius-4</b></li>
+                <li><span>border</span><b>1px border-strong</b></li>
+                <li><span>shadow</span><b>--elev-4</b></li>
+                <li><span>enter</span><b>dur-3 / ease-out</b></li>
+                <li><span>actions align</span><b>right · gap-2</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- TABS -->
+          <h3 id="c-tabs">3.8 &nbsp; Tabs</h3>
+          <p>Lighter than SegmentedControl &mdash; for top-level navigation inside a page (e.g. Leaderboard's daily/streak split).</p>
+          <div class="specimen-wrap">
+            <div class="preview">
+              <div class="tabs">
+                <button aria-selected="true">Best times</button>
+                <button aria-selected="false">Daily streaks</button>
+                <button aria-selected="false">Friends</button>
+              </div>
+            </div>
+            <div class="anatomy">
+              <h5>Notes</h5>
+              <ul>
+                <li><span>Use when</span><b>page-level filter</b></li>
+                <li><span>vs Segmented</span><b>shorter, less padding</b></li>
+                <li><span>tab</span><b>32px · radius 6</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- GAME TOP BAR -->
+          <h3 id="c-gamebar">3.9 &nbsp; GameTopBar (composition)</h3>
+          <p>Not a primitive &mdash; a composition of <b>StatTile · Button · SegmentedControl</b>. Worth specifying because it's the most-seen surface in the app.</p>
+          <div class="specimen-wrap">
+            <div class="preview">
+              <div class="game-bar">
+                <div class="readout"><span>💣</span>38</div>
+                <div class="toolbar">
+                  <button title="New game">＋</button>
+                  <button title="Restart">↻</button>
+                  <button title="Pause">❚❚</button>
+                </div>
+                <div class="actions">
+                  <button title="Mode">⛏</button>
+                  <button title="Settings">⚙</button>
+                </div>
+              </div>
+            </div>
+            <div class="anatomy">
+              <h5>Composition</h5>
+              <ul>
+                <li><span>track</span><b>surface-3 · radius-3</b></li>
+                <li><span>readout</span><b>StatTile.compact (mono)</b></li>
+                <li><span>toolbar</span><b>icon-button cluster · 30px</b></li>
+                <li><span>gap</span><b>--space-3</b></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── BEFORE / AFTER ───────── -->
+        <section class="s" id="compositions">
+          <header>
+            <span class="num">04</span>
+            <h2>Before / after</h2>
+            <p>Same screens, rebuilt from the primitives above. No new pixels — just consolidated ones.</p>
+          </header>
+
+          <h3>4.1 &nbsp; LobbyCard (Lobby)</h3>
+          <div class="ba">
+            <div class="panel before">
+              <header class="before-tag"></header>
+              <div class="stage">
+                <div class="legacy-card" style="max-width: 320px;">
+                  <span class="eyebrow">FREE PLAY · CHOOSE</span>
+                  <p class="title">Medium</p>
+                  <p class="desc">16 × 16 grid with 40 mines.<br />A balanced challenge.</p>
+                  <div class="meta">
+                    <span><i>BOARD</i><b>16 × 16</b></span>
+                    <span><i>MINES</i><b>40</b></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <header class="after-tag"></header>
+              <div class="stage">
+                <div class="surface-card interactive selected" style="max-width: 320px;">
+                  <span class="eyebrow-label">Free play · choose</span>
+                  <h4 class="title">Medium</h4>
+                  <p class="desc">16 × 16 grid with 40 mines. A balanced challenge.</p>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2);">
+                    <div class="stat-tile compact"><span class="label">Board</span><span class="value">16 × 16</span></div>
+                    <div class="stat-tile compact"><span class="label">Mines</span><span class="value">40</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>4.2 &nbsp; GameHeader</h3>
+          <div class="ba">
+            <div class="panel before">
+              <header class="before-tag"></header>
+              <div class="stage">
+                <div class="legacy-game-header">
+                  <span class="label">💣 &nbsp; 38</span>
+                  <div class="group">
+                    <button>＋</button>
+                    <button>↻</button>
+                    <button>❚❚</button>
+                  </div>
+                  <span class="label" style="background: transparent; font-variant-numeric: tabular-nums;">⏱ 01:23</span>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <header class="after-tag"></header>
+              <div class="stage">
+                <div class="game-bar">
+                  <div class="readout"><span class="glyph">MINES</span>38</div>
+                  <div class="toolbar">
+                    <button title="New">＋</button>
+                    <button title="Restart">↻</button>
+                    <button title="Pause">❚❚</button>
+                  </div>
+                  <div class="readout mono" style="font-variant-numeric: tabular-nums;"><span class="glyph">⏱</span>01:23</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>4.3 &nbsp; ContinueBanner</h3>
+          <div class="ba">
+            <div class="panel before">
+              <header class="before-tag"></header>
+              <div class="stage">
+                <div class="legacy-card" style="max-width: 360px; border-color: rgba(77, 163, 255, 0.38); background: linear-gradient(180deg, rgba(77, 163, 255, 0.1), rgba(77, 163, 255, 0.035)), #1a2233;">
+                  <span class="eyebrow" style="font-weight: 900;">RESUME · 42% DONE</span>
+                  <p class="title" style="font-size: 1.25rem;">Expert · in progress</p>
+                  <div class="meta">
+                    <span><i style="font-weight: 900;">TIME</i><b>00:42</b></span>
+                    <span><i style="font-weight: 900;">MINES</i><b>74 left</b></span>
+                  </div>
+                  <button style="background: linear-gradient(135deg, #4da3ff, #7bc1ff); border: 0; color: #08111d; border-radius: 12px; height: 44px; font-weight: 900; cursor: pointer;">Continue</button>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <header class="after-tag"></header>
+              <div class="stage">
+                <div class="surface-card selected" style="max-width: 360px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);">
+                    <span class="eyebrow-label">Resume · 42% done</span>
+                    <span class="badge accent pill"><span class="dot"></span>Saved</span>
+                  </div>
+                  <h4 class="title">Expert · in progress</h4>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2);">
+                    <div class="stat-tile"><span class="label">Time</span><span class="value">00:42</span></div>
+                    <div class="stat-tile"><span class="label">Mines left</span><span class="value">74</span></div>
+                  </div>
+                  <button class="btn primary lg">Continue game</button>
+                  <button class="btn ghost sm">Start fresh instead</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>4.4 &nbsp; Leaderboard row</h3>
+          <div class="ba">
+            <div class="panel before">
+              <header class="before-tag"></header>
+              <div class="stage">
+                <div style="width: 100%; max-width: 460px; background: #151c2b; border: 1px solid rgba(255, 255, 255, 0.085); border-radius: 16px; overflow: hidden;">
+                  <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 12px; padding: 14px 16px; align-items: center; background: rgba(56, 189, 248, 0.12); box-shadow: inset 3px 0 0 #4da3ff;">
+                    <span style="font-weight: 700; color: #4da3ff;">#3</span>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                      <div style="width: 40px; height: 40px; border-radius: 50%; background: #26324a;"></div>
+                      <div>
+                        <strong>dazzling_yao</strong>
+                        <span style="border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 12px; color: #4da3ff; font-size: 0.72rem; font-weight: 700; padding: 3px 6px; margin-left: 6px;">YOU</span>
+                        <p style="color: rgba(255, 255, 255, 0.5); font-size: 0.8rem; margin: 0;">Spain · 2 days ago</p>
+                      </div>
+                    </div>
+                    <span style="font-weight: 700;">02:14.802</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <header class="after-tag"></header>
+              <div class="stage">
+                <div style="width: 100%; max-width: 460px; background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-4); overflow: hidden;">
+                  <div style="display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-3); padding: var(--space-3) var(--space-4); align-items: center; background: var(--accent-08); box-shadow: inset 2px 0 0 var(--accent);">
+                    <span class="mono" style="font-size: var(--fs-body-sm); color: var(--accent); font-weight: 600;">#03</span>
+                    <div style="display: flex; gap: var(--space-3); align-items: center;">
+                      <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--surface-4);"></div>
+                      <div>
+                        <div style="display: flex; align-items: center; gap: var(--space-2);">
+                          <strong style="font-size: var(--fs-body); font-weight: var(--fw-semibold);">dazzling_yao</strong>
+                          <span class="badge accent">You</span>
+                        </div>
+                        <p style="margin: 0; color: var(--text-3); font-size: var(--fs-label);">Spain · 2 days ago</p>
+                      </div>
+                    </div>
+                    <span class="mono" style="font-size: var(--fs-body); font-weight: 600; font-variant-numeric: tabular-nums;">02:14.802</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── MIGRATION ───────── -->
+        <section class="s" id="migration">
+          <header>
+            <span class="num">05</span>
+            <h2>Migration plan</h2>
+            <p>Concrete steps. Each line is a real file in the repo. No big-bang refactor — ship the tokens first, then sweep components.</p>
+          </header>
+
+          <h3>5.1 &nbsp; Phase 1 · Tokens (1 PR)</h3>
+          <ul class="checklist">
+            <li>
+              <div>
+                <b>Create <code>src/styles/tokens.css</code></b>
+                <span>Single source of truth. Imported once from <code>app/layout.tsx</code>.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Move all <code>:root</code> from <code>src/index.css</code></b>
+                <span>Leave only resets + body bg + Clerk override in <code>index.css</code>.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Add new tokens (additive — no breaking changes)</b>
+                <span>Spacing 0–8, font scale, fw scale, radius 1–4, elev 1–4, focus rings, accent / danger opacity steps.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Add Google Fonts import for JetBrains Mono</b>
+                <span>In <code>app/layout.tsx</code> via <code>next/font</code>. Wire to <code>--font-mono</code>.</span>
+              </div>
+            </li>
+          </ul>
+
+          <h3>5.2 &nbsp; Phase 2 · Primitives (1 PR per component)</h3>
+          <table class="migration">
+            <thead>
+              <tr><th>Priority</th><th>New component</th><th>Replaces</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="prio"><span class="prio-pill p1">P1</span></td>
+                <td><code>ui/Card</code></td>
+                <td><code>PageShell.card</code>, <code>AccountPage.section</code>, <code>LeaderboardPage.column</code>, <code>LobbyCard</code>, <code>ContinueBanner.savedCard</code></td>
+                <td>Variants: <code>interactive</code>, <code>selected</code>. Default padding <code>--space-5</code>.</td>
+              </tr>
+              <tr>
+                <td class="prio"><span class="prio-pill p1">P1</span></td>
+                <td><code>ui/Badge</code></td>
+                <td><code>DailyBadge</code>, leaderboard <code>youBadge</code>, <code>LobbyCard.badge</code>, <code>GameStatus.statusPill</code></td>
+                <td>Tones: <code>accent · success · danger · neutral</code>. Shapes: <code>square · pill</code>.</td>
+              </tr>
+              <tr>
+                <td class="prio"><span class="prio-pill p1">P1</span></td>
+                <td><code>ui/SegmentedControl</code></td>
+                <td><code>SelectLevelToggleGroup</code>, <code>SelectDigFlag</code>, <code>ModeToggle</code></td>
+                <td>Already wraps Radix ToggleGroup. Collapse the three identical SCSS modules.</td>
+              </tr>
+              <tr>
+                <td class="prio"><span class="prio-pill p2">P2</span></td>
+                <td><code>ui/StatTile</code></td>
+                <td><code>DailyCard.stat</code>, <code>ContinueBanner.stat</code>, <code>LevelCard.meta</code>, <code>BestScores.scoreRow</code></td>
+                <td>Variants: <code>default · compact</code>. Always mono value, overline label.</td>
+              </tr>
+              <tr>
+                <td class="prio"><span class="prio-pill p2">P2</span></td>
+                <td><code>ui/Dialog</code></td>
+                <td><code>LevelChangeDialog</code>, <code>ContinueBanner.dialog</code></td>
+                <td>Wraps Radix Dialog. Removes the duplicated <code>@keyframes dialogEnter</code>.</td>
+              </tr>
+              <tr>
+                <td class="prio"><span class="prio-pill p2">P2</span></td>
+                <td><code>ui/Field</code></td>
+                <td><code>@mixin field</code> in <code>src/styles/_form.scss</code></td>
+                <td>Now a real component. Delete the mixin. Used by Account &amp; Auth forms.</td>
+              </tr>
+              <tr>
+                <td class="prio"><span class="prio-pill p2">P2</span></td>
+                <td><code>ui/Tabs</code></td>
+                <td><code>LeaderboardPage.tabs</code></td>
+                <td>Distinct from SegmentedControl &mdash; lighter, page-level.</td>
+              </tr>
+              <tr>
+                <td class="prio"><span class="prio-pill p3">P3</span></td>
+                <td><code>ui/EyebrowLabel</code></td>
+                <td><code>LobbyCard.eyebrow</code>, <code>OnboardingTour.eyebrow</code>, <code>DailyCard.eyebrow</code>, <code>BestScores.scoresHeader span</code>, <code>ContinueBanner.statLabel</code></td>
+                <td>Canonical uppercase label. Locks <code>letter-spacing: 0.08em</code>, <code>fw: 600</code>, <code>size: 11px</code>.</td>
+              </tr>
+              <tr>
+                <td class="prio"><span class="prio-pill p3">P3</span></td>
+                <td><code>ui/NoticeBar</code></td>
+                <td>One-off banners in Account, Leaderboard, Daily sync-failed states</td>
+                <td>Inline informational message. Tones match Badge.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>5.3 &nbsp; Phase 3 · Sweep (search &amp; replace)</h3>
+          <ul class="checklist">
+            <li>
+              <div>
+                <b>Replace <code>rgba(77, 163, 255, …)</code> globally</b>
+                <span>Use <code>--accent-14 / 24 / 48</code>. ~30 occurrences across 12 files.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Replace <code>rgba(255, 92, 122, …)</code> globally</b>
+                <span>Use <code>--danger-14 / 24 / 48</code>. ~10 occurrences.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Snap all <code>font-size: 0.XXrem</code> to the scale</b>
+                <span>Tool: ripgrep + a one-time codemod. Map the 20+ sizes to the 7 canonical ones.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Snap all spacings to <code>--space-N</code></b>
+                <span>5/7/9/10/14/18px → nearest scale step. Keep cell-internal pixel values (board math) untouched.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Collapse box-shadows to elevation tokens</b>
+                <span>4 destinations: <code>elev-1/2/3/4</code>. Remove every inline <code>0 12px 30px rgba(0,0,0,…)</code>.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Normalize font-weights to 4 steps</b>
+                <span>Anything 800/900 → 700. 600 stays. 500 introduced where 600 is too heavy (eyebrows).</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Wrap timers / scores / mine counts in <code>--font-mono</code></b>
+                <span>Lock <code>font-variant-numeric: tabular-nums</code>. Single mono class, applied via StatTile.</span>
+              </div>
+            </li>
+            <li>
+              <div>
+                <b>Delete duplicate <code>@keyframes</code></b>
+                <span>Move to <code>tokens.css</code>: <code>dialogEnter</code>, <code>popoverEnter</code>, <code>fadeIn</code>, <code>sheetUp</code>.</span>
+              </div>
+            </li>
+          </ul>
+
+          <h3>5.4 &nbsp; What this buys</h3>
+          <div class="grid cols-3" style="margin-top: var(--space-4);">
+            <div class="card pad">
+              <div class="eyebrow-label">Coherence</div>
+              <p style="margin-top: var(--space-3); margin-bottom: 0; color: var(--text-2); font-size: var(--fs-body-sm);">Every screen pulls from the same 30-ish tokens. The "AI generated" smell &mdash; near-but-not-quite consistent spacing and weight &mdash; disappears.</p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Velocity</div>
+              <p style="margin-top: var(--space-3); margin-bottom: 0; color: var(--text-2); font-size: var(--fs-body-sm);">New screens compose from <code>Card</code> + <code>StatTile</code> + <code>Badge</code> + <code>Button</code>. No new SCSS module per feature.</p>
+            </div>
+            <div class="card pad">
+              <div class="eyebrow-label">Themability</div>
+              <p style="margin-top: var(--space-3); margin-bottom: 0; color: var(--text-2); font-size: var(--fs-body-sm);">A light mode or seasonal palette becomes a tokens-only change. Today it would be a 24-file change.</p>
+            </div>
+          </div>
+        </section>
+
+        <footer style="opacity: 0.7; font-size: var(--fs-label); color: var(--text-3); padding-top: var(--space-6); border-top: 1px solid var(--border);">
+          Design system proposal · drafted for the Minesweeper codebase · ready to fork into <code>src/styles/tokens.css</code> + <code>src/components/ui/*</code>.
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
