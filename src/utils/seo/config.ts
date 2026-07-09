@@ -1,11 +1,16 @@
+import { trimTrailingSlashes } from './utils';
+
 /**
  * Base URL for the site. Used for canonical URLs, OG images, sitemap, etc.
  *
  * TODO: SEO Note: When you buy a custom domain, update NEXT_PUBLIC_SITE_URL env variable.
  * Then add noindex for the old vercel.app domain to avoid duplicate content.
  */
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://playminesweepergame.com';
+const DEFAULT_SITE_URL = 'https://playminesweepergame.com';
+
+export const SITE_URL = trimTrailingSlashes(
+  process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL,
+);
 
 /**
  * Default site name used across all pages.
