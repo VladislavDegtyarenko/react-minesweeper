@@ -40,11 +40,11 @@ const LobbyNewGameSection = ({ onStartNew }: Props) => {
 
   const handleStart = () => {
     if (selectedMode && selectedLevelId) {
-      initSFX();
-      onStartNew();
       router.push(
         `${ROUTES.GAME}?mode=${selectedMode}&level=${selectedLevelId}`,
       );
+      initSFX(); // FIXME: For some reason, loading sounds blocks router.push() from happening.
+      onStartNew();
     }
   };
 
