@@ -1,5 +1,5 @@
 // Styles
-import '@/index.css';
+import '@/styles/globals.scss';
 
 import { ClerkProvider } from '@clerk/nextjs';
 import { generateMetadata } from '@/lib/seo';
