@@ -6,12 +6,6 @@ alwaysApply: false
 
 # Alias Imports
 
-Prefer `@/` alias imports for files under `src/` instead of relative paths.
+Canonical rule: the `Imports` section of `.codex/rules/code-style.md`.
 
-```typescript
-// ✅ Good
-import { useGameStore } from '@/store/game';
-
-// ❌ Avoid
-import { useGameStore } from '../../store/game';
-```
+In short: use `@/` alias imports for anything under `src/`; use relative paths only within a component's own folder.

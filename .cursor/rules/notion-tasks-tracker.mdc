@@ -11,8 +11,6 @@ database and summarize relevant items (In Progress, Next, Blocked, or related
 tags). If the user says "check Tasks Tracker first", interpret that as querying
 this database before any coding.
 
-Database:
-
-- Name: Tasks Tracker
-- Page: https://www.notion.so/2f9ca6160f2b8017939ee024933e9a00
-- Data source: collection://2f9ca616-0f2b-80b5-b22e-000b20e5fc56
+All identifiers (page URLs, data source, properties, statuses) live in the
+`Notion` section of `AGENTS.md` — the canonical reference. Do not restate them
+here.
