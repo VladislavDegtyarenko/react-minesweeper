@@ -10,3 +10,10 @@ export const ROUTES = {
   TERMS_OF_SERVICE: '/terms-of-service',
   BLOG: '/blog',
 } as const;
+
+export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
+
+export const HIDDEN_ROUTES = [ROUTES.BLOG] as const satisfies readonly RoutePath[];
+
+export const isHiddenRoute = (pathname: string): boolean =>
+  (HIDDEN_ROUTES as readonly string[]).includes(pathname);

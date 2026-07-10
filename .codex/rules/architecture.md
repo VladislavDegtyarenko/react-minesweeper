@@ -29,7 +29,7 @@ System map and design principles for this repo. Read this before planning (archi
 
 - New page: add its path to `src/config/routes.ts` and generate metadata with `generateMetadata()` from `@/lib/seo`.
 - Public (indexable) page: add it to `PUBLIC_PAGES` in `src/lib/seo/publicPages.ts`.
-- Hidden page: add it to `HIDDEN_ROUTES` in `src/proxy.ts` and set `noIndex: true` in its metadata.
+- Hidden page: add it to `HIDDEN_ROUTES` in `src/config/routes.ts` and set `noIndex: true` in its metadata.
 - The production URL comes from the `NEXT_PUBLIC_SITE_URL` env variable.
 
 ## What Counts As Non-Trivial

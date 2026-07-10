@@ -1,12 +1,8 @@
-import { ROUTES } from '@/config/routes';
+import { ROUTES, isHiddenRoute } from '@/config/routes';
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
-const HIDDEN_ROUTES: string[] = [ROUTES.BLOG];
-
 const isProtectedRoute = createRouteMatcher([`${ROUTES.ACCOUNT}(.*)`]);
-
-const isHiddenRoute = (pathname: string) => HIDDEN_ROUTES.includes(pathname);
 
 export default clerkMiddleware(async (auth, request) => {
   const { pathname } = request.nextUrl;
