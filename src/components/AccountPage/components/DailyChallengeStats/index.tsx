@@ -1,7 +1,7 @@
 import { LEVELS_CONFIG } from '@/constants';
-import type { DailyAttempt, DailyStreakSummary } from '@/utils/db';
+import type { DailyAttempt, DailyStreakSummary } from '@/server/db';
 import { createCx, formatDate, getTimeDiff } from '@/utils';
-import { formatDailyKey } from '@/utils/daily';
+import { formatDailyKey } from '@/game/daily';
 import styles from './styles.module.scss';
 
 const cx = createCx(styles);

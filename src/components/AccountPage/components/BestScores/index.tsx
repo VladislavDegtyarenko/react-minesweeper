@@ -1,5 +1,5 @@
 import { LEVELS_CONFIG } from '@/constants';
-import type { BestScore } from '@/utils/db';
+import type { BestScore } from '@/server/db';
 import { createCx, formatDate, getTimeDiff } from '@/utils';
 import styles from './styles.module.scss';
 

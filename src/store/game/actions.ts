@@ -4,8 +4,8 @@ import {
   DAILY_SEED_VERSION,
   generateDailyBoard,
   getDailyKey,
-} from '@/utils/daily';
-import { getLevelById } from '@/utils/getLevelById';
+} from '@/game/daily';
+import { getLevelById } from '@/game/getLevelById';
 import {
   resetTimer,
   restoreTimerElapsed,

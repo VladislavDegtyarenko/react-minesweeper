@@ -1,5 +1,5 @@
 import type { LevelId } from '@/types';
-import type { DailyAttemptStatus } from '@/utils/db/constants';
+import type { DailyAttemptStatus } from '@/game/daily';
 
 export type DailyHistoryEntry = {
   dailyKey: string;

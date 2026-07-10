@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { CELL_MARKERS } from '@/constants';
 import type { TBoard } from '@/types';
-import { applyOpenedCells, revealEmptyCells } from '@/utils/board/revealEmptyCells';
+import { applyOpenedCells, revealEmptyCells } from '@/game/board/revealEmptyCells';
 
 describe('revealEmptyCells', () => {
   it('returns the empty cascade plus bordering numbers, skipping flagged cells', () => {

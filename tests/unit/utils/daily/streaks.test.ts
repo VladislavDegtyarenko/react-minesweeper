@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { computeStreaks } from '@/utils/daily';
+import { computeStreaks } from '@/game/daily';
 
 describe('computeStreaks', () => {
   it('deduplicates win days and counts a current streak through today', () => {

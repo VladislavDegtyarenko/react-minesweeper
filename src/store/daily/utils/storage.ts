@@ -1,18 +1,17 @@
-import { LOCAL_STORAGE_KEYS } from '@/constants';
-import type { LevelId } from '@/types';
-import { localStorageService } from '@/utils';
-import {
-  DAILY_HISTORY_MAX_ENTRIES,
-  DAILY_HISTORY_VERSION,
-} from '@/utils/daily';
+import { LEVELS_CONFIG, LOCAL_STORAGE_KEYS } from '@/constants';
 import {
   DAILY_ATTEMPT_STATUSES,
-  LEVEL_IDS,
+  DAILY_HISTORY_MAX_ENTRIES,
+  DAILY_HISTORY_VERSION,
   type DailyAttemptStatus,
-} from '@/utils/db/constants';
+} from '@/game/daily';
+import type { LevelId } from '@/types';
+import { localStorageService } from '@/utils';
 import type { DailyHistoryByKey, DailyHistoryEntry } from '../types';
 
-const VALID_LEVEL_IDS = new Set<string>(LEVEL_IDS);
+const VALID_LEVEL_IDS = new Set<string>(
+  LEVELS_CONFIG.map((level) => level.id),
+);
 const VALID_STATUSES = new Set<string>(DAILY_ATTEMPT_STATUSES);
 
 type StoredDailyHistory = {

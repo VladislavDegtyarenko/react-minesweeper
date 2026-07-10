@@ -1,4 +1,4 @@
-import { getLevelById } from '@/utils/getLevelById';
+import { getLevelById } from '@/game/getLevelById';
 import type { Level, LevelId, LevelsConfig } from '../types';
 
 export const LOCAL_STORAGE_KEYS = {

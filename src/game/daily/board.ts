@@ -1,5 +1,5 @@
 import type { Level, LevelId, TBoard } from '@/types';
-import { initBoard } from '../init';
+import { initBoard } from '@/utils/init';
 import { createSeededRandom, getDailySeed } from './seed';
 
 type GenerateDailyBoardOptions = {

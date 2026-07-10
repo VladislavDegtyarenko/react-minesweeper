@@ -2,8 +2,11 @@ import 'server-only';
 
 import { and, asc, desc, eq, gte } from 'drizzle-orm';
 import type { LevelId } from '@/types';
-import { clampDailyElapsedMs, computeStreaks } from '@/utils/daily';
-import type { DailyAttemptStatus } from '../constants';
+import {
+  clampDailyElapsedMs,
+  computeStreaks,
+  type DailyAttemptStatus,
+} from '@/game/daily';
 import { db } from '../index';
 import { dailyAttempts } from '../schema';
 import type { DailyAttempt, DailyStreakSummary } from '../types';

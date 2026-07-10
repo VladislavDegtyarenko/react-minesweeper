@@ -4,7 +4,7 @@ import {
   createSeededRandom,
   getDailyKey,
   getDailySeed,
-} from '@/utils/daily';
+} from '@/game/daily';
 
 describe('daily seed helpers', () => {
   it('formats keys from UTC dates', () => {

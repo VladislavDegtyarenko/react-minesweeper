@@ -32,5 +32,6 @@ export const db: DrizzleDb = new Proxy({} as DrizzleDb, {
 
 export { schema };
 export * from './types';
-export { DAILY_ATTEMPT_STATUSES, LEVEL_IDS } from './constants';
-export type { DailyAttemptStatus } from './constants';
+export { DAILY_ATTEMPT_STATUSES } from '@/game/daily';
+export type { DailyAttemptStatus } from '@/game/daily';
+export { LEVEL_IDS } from './constants';

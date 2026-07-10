@@ -21,7 +21,7 @@ import {
   setHasPresentedWinDialog,
   setIsWinDialogOpen,
 } from '@/store/stats/actions';
-import { canPublishUserScores } from '@/utils/clerk';
+import { canPublishUserScores } from '@/lib/clerk';
 import {
   selectIsWinDialogOpen,
   selectLastWinSummary,

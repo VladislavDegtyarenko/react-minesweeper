@@ -5,9 +5,9 @@ import type {
   DailyLeaderboardEntry,
   DailyStreakLeaderboardEntry,
   LeaderboardEntry,
-} from '@/utils/db';
+} from '@/server/db';
 import { createCx, getTimeDiff } from '@/utils';
-import { formatDailyKey } from '@/utils/daily';
+import { formatDailyKey } from '@/game/daily';
 import { formatDate } from '@/utils/formatDate';
 import Avatar from '../ui/Avatar';
 import styles from './styles.module.scss';

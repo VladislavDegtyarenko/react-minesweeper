@@ -4,15 +4,15 @@ import { revalidatePath } from 'next/cache';
 import { auth } from '@clerk/nextjs/server';
 import ROUTES from '@/config/routes.json';
 import type { LevelId } from '@/types';
-import { getDailyKey } from '@/utils/daily';
-import type { BestScore, DailyAttempt, DailyAttemptStatus } from '@/utils/db';
+import { getDailyKey } from '@/game/daily';
+import type { BestScore, DailyAttempt, DailyAttemptStatus } from '@/server/db';
 import {
   getMyDailyAttempts,
   getMyDailyStreakSummary,
   getUserBestScores,
   recordDailyAttempt,
   saveUserBestScore,
-} from '@/utils/db/queries';
+} from '@/server/db/queries';
 
 type SaveBestScoreInput = {
   levelId: LevelId;

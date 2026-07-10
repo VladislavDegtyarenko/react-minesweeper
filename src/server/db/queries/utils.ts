@@ -1,9 +1,9 @@
-import type { LevelId } from '@/types';
 import {
   DAILY_ATTEMPT_STATUSES,
-  LEVEL_IDS,
   type DailyAttemptStatus,
-} from '../constants';
+} from '@/game/daily';
+import type { LevelId } from '@/types';
+import { LEVEL_IDS } from '../constants';
 
 const MIN_BEST_TIME_MS = 1;
 const DAILY_KEY_REGEX = /^\d{4}-\d{2}-\d{2}$/;

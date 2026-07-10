@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL, PUBLIC_PAGES } from "../utils/seo";
+import { SITE_URL, PUBLIC_PAGES } from "@/lib/seo";
 
 /**
  * Generates sitemap.xml for search engine discovery.

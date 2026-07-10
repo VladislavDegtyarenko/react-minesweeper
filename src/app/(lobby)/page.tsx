@@ -1,5 +1,5 @@
 import LobbyPage from '@/components/LobbyPage';
-import { generateWebsiteJsonLd, generateGameJsonLd } from '../../utils/seo';
+import { generateWebsiteJsonLd, generateGameJsonLd } from '@/lib/seo';
 
 /**
  * Intro page with JSON-LD structured data for SEO.

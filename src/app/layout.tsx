@@ -2,11 +2,11 @@
 import '@/index.css';
 
 import { ClerkProvider } from '@clerk/nextjs';
-import { generateMetadata } from '../utils/seo';
+import { generateMetadata } from '@/lib/seo';
 import ClerkAuthBridge from '@/components/ClerkAuthBridge';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { CLERK_APPEARANCE } from '@/utils/clerk';
+import { CLERK_APPEARANCE } from '@/lib/clerk';
 import { PropsWithChildren } from 'react';
 import type { Viewport } from 'next';
 

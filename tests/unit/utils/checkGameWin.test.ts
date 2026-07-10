@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { checkGameWin } from '@/utils/checkGameWin';
+import { checkGameWin } from '@/game/checkGameWin';
 
 describe('checkGameWin', () => {
   it('wins when every safe cell is opened', () => {

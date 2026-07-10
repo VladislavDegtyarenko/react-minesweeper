@@ -1,4 +1,4 @@
-import { cropImageToFile, validateImage } from '@/utils/image';
+import { cropImageToFile, validateImage } from '@/lib/image';
 import { useCallback, useState } from 'react';
 import type { Area, Point } from 'react-easy-crop';
 

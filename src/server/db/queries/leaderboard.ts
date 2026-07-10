@@ -2,8 +2,8 @@ import 'server-only';
 
 import { clerkClient } from '@clerk/nextjs/server';
 import { and, asc, desc, eq, gte } from 'drizzle-orm';
-import { getPublicUsername } from '@/utils/clerk';
-import { computeStreaks } from '@/utils/daily';
+import { getPublicUsername } from '@/lib/clerk';
+import { computeStreaks } from '@/game/daily';
 import { db } from '../index';
 import { bestScores, dailyAttempts } from '../schema';
 import type {

@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import AccountPage from '@/components/AccountPage';
 import ROUTES from '@/config/routes.json';
-import { requireUserId } from '@/utils/auth';
-import { getDailyKey } from '@/utils/daily';
+import { requireUserId } from '@/server/auth';
+import { getDailyKey } from '@/game/daily';
 import {
   getMyDailyStreakSummary,
   getUserBestScores,
   getUserDailyAttempts,
-} from '@/utils/db/queries';
-import { generateMetadata as buildMetadata } from '@/utils/seo';
+} from '@/server/db/queries';
+import { generateMetadata as buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Account',

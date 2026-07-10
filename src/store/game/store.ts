@@ -3,7 +3,7 @@ import {
   DAILY_SEED_VERSION,
   generateDailyBoard,
   getDailyKey,
-} from '@/utils/daily';
+} from '@/game/daily';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 

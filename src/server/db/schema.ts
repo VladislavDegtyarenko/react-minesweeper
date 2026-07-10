@@ -7,7 +7,8 @@ import {
   timestamp,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
-import { DAILY_ATTEMPT_STATUSES, LEVEL_IDS } from './constants';
+import { DAILY_ATTEMPT_STATUSES } from '@/game/daily';
+import { LEVEL_IDS } from './constants';
 
 export const levelEnum = pgEnum('level', LEVEL_IDS);
 export const dailyAttemptStatusEnum = pgEnum(

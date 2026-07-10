@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { MAX_IMAGE_FILE_SIZE_BYTES } from '@/utils/image';
+import { MAX_IMAGE_FILE_SIZE_BYTES } from '@/lib/image';
 import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 import { useSettingsStore } from '@/store/settings';

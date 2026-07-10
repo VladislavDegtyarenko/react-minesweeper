@@ -1,5 +1,5 @@
 import LegalDocument from '@/components/LegalDocument';
-import { generateMetadata as buildMetadata } from '@/utils/seo';
+import { generateMetadata as buildMetadata } from '@/lib/seo';
 import ROUTES from '@/config/routes.json';
 
 export const metadata = buildMetadata({

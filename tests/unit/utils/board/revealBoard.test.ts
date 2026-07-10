@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { CELL_MARKERS } from '@/constants';
 import type { TBoard } from '@/types';
-import { revealBoard } from '@/utils/board/revealBoard';
+import { revealBoard } from '@/game/board/revealBoard';
 
 describe('revealBoard', () => {
   it('opens unflagged mines and leaves flagged mines closed', () => {

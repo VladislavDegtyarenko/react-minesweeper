@@ -1,6 +1,6 @@
 import type { GameStatus } from '@/store/game/store';
 import { throttle } from '@/utils';
-import { handleCellInteraction } from '@/utils/board';
+import { handleCellInteraction } from '@/game/board';
 import type { MouseEvent, PointerEvent } from 'react';
 import { useEffect, useRef } from 'react';
 import { getRowAndCellIndex } from '../../Board/utils';

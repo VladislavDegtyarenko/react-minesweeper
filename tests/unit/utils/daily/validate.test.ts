@@ -4,7 +4,7 @@ import {
   DAILY_MAX_ELAPSED_MS,
   DAILY_MIN_ELAPSED_MS,
   clampDailyElapsedMs,
-} from '@/utils/daily';
+} from '@/game/daily';
 
 describe('clampDailyElapsedMs', () => {
   it('rounds finite values inside the accepted range', () => {

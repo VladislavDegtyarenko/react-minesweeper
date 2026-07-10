@@ -1,5 +1,5 @@
 import PageShell from '@/components/PageShell';
-import type { BestScore, DailyAttempt, DailyStreakSummary } from '@/utils/db';
+import type { BestScore, DailyAttempt, DailyStreakSummary } from '@/server/db';
 import { createCx } from '@/utils';
 import AccountActions from './components/AccountActions';
 import AvatarManagement from './components/AvatarManagement';

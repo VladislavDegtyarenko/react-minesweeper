@@ -15,3 +15,6 @@ export const DAILY_MAX_ELAPSED_MS = 60 * 60 * 1000;
 
 export const DAILY_HISTORY_VERSION = 1;
 export const DAILY_HISTORY_MAX_ENTRIES = 365;
+
+export const DAILY_ATTEMPT_STATUSES = ['won', 'lost'] as const;
+export type DailyAttemptStatus = (typeof DAILY_ATTEMPT_STATUSES)[number];
