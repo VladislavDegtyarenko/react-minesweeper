@@ -1,4 +1,4 @@
-import { CELL_MARKERS } from '@/constants';
+import { CELL_MARKERS } from '@/config';
 
 export type CellMarker = (typeof CELL_MARKERS)[keyof typeof CELL_MARKERS];
 export type CellMarkerState = CellMarker | null;

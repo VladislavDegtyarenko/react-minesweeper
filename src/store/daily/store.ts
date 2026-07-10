@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
-import { getDailyKey } from '@/utils/daily';
+import { getDailyKey } from '@/game/daily';
 import type { DailyState } from './types';
 import {
   createEmptyDailyHistory,

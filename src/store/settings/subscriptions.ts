@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE_KEYS } from '@/constants';
+import { LOCAL_STORAGE_KEYS } from '@/config';
 import { localStorageService } from '@/utils';
 import { useSettingsStore } from './store';
 import { getPreferredControlMode, isMobileControlMode } from './utils';

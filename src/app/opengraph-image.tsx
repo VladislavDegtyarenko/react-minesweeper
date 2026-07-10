@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { SITE_NAME } from "../utils/seo";
+import { SITE_NAME } from "@/lib/seo";
 
 /**
  * Open Graph image for social sharing (Facebook, LinkedIn, etc.)

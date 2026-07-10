@@ -56,21 +56,21 @@ the random-board mode, see [Free Play](./free-play.md).
 | `src/components/Game/components/LevelChangeDialog/index.tsx` | Confirms mode switches while a game is playing or paused. |
 | `src/store/game/store.ts` | Stores `mode`, `dailyKey`, and `dailySeedVersion`; builds the initial daily board when preferred mode is daily. |
 | `src/store/game/actions.ts` | Requests mode changes, enters daily mode, exits daily mode, and resets boards for the current mode. |
-| `src/utils/daily/seed.ts` | Builds UTC daily keys and deterministic numeric seeds. |
-| `src/utils/daily/board.ts` | Generates the deterministic daily board from date, difficulty, and seed version. |
+| `src/game/daily/seed.ts` | Builds UTC daily keys and deterministic numeric seeds. |
+| `src/game/daily/board.ts` | Generates the deterministic daily board from date, difficulty, and seed version. |
 | `src/utils/init.ts` | Places mines with a partial Fisher-Yates shuffle and fills number cells. |
-| `src/utils/board/index.ts` | Handles cell opens, marker toggles, win/loss state, and free-play-only first-click protection. |
+| `src/game/board/index.ts` | Handles cell opens, marker toggles, win/loss state, and free-play-only first-click protection. |
 | `src/store/daily/store.ts` | Owns daily client state: history, streak, source, active run kind, sync flags, and pending retry input. |
 | `src/store/daily/actions.ts` | Loads account/guest state, classifies runs, records counted attempts, syncs account attempts, and retries failed sync. |
 | `src/store/daily/subscriptions.ts` | Watches game status transitions and records only counted daily completions. |
 | `src/store/daily/utils/storage.ts` | Reads/writes guest daily history and preserves first-write-wins locally. |
-| `src/utils/daily/streaks.ts` | Computes current and best streaks from winning daily days. |
-| `src/app/(game)/actions.ts` | Server actions for loading and saving account daily state. |
-| `src/utils/db/schema.ts` | Defines `daily_attempts`, including the unique `(user_id, level_id, daily_key)` index. |
-| `src/utils/db/queries/dailyAttempts.ts` | Inserts account attempts, fetches attempts, deletes attempts, and computes server streak summaries. |
-| `src/utils/db/queries/leaderboard.ts` | Fetches public free-play rankings, today's daily winners, and daily streak rankings. |
-| `src/components/LeaderboardPage/index.tsx` | Renders Free Play and Daily leaderboard tabs. |
-| `src/components/AccountPage/components/DailyChallengeStats/index.tsx` | Renders private account daily streaks, today's status, and recent attempts. |
+| `src/game/daily/streaks.ts` | Computes current and best streaks from winning daily days. |
+| `src/app/(lobby)/actions.ts` | Server actions for loading and saving account daily state. |
+| `src/server/db/schema.ts` | Defines `daily_attempts`, including the unique `(user_id, level_id, daily_key)` index. |
+| `src/server/db/queries/dailyAttempts.ts` | Inserts account attempts, fetches attempts, deletes attempts, and computes server streak summaries. |
+| `src/server/db/queries/leaderboard.ts` | Fetches public free-play rankings, today's daily winners, and daily streak rankings. |
+| `src/components/pages/LeaderboardPage/index.tsx` | Renders Free Play and Daily leaderboard tabs. |
+| `src/components/pages/AccountPage/components/DailyChallengeStats/index.tsx` | Renders private account daily streaks, today's status, and recent attempts. |
 | `src/components/Game/components/DailyCard/index.tsx` | Shows daily date, result/practice/sync status, streaks, retry button, and reset countdown. |
 | `src/components/Game/components/WinOverlay/hooks/useWinOverlay.ts` | Chooses daily vs practice win copy, share payloads, and daily sync retry state. |
 | `src/components/Game/components/WinOverlay/utils/share.ts` | Builds daily, practice, and free-play share payloads. |
@@ -192,7 +192,7 @@ daily attempt list includes both wins and losses.
 
 ## Board generation
 
-Daily board generation is deterministic and lives in `src/utils/daily`.
+Daily board generation is deterministic and lives in `src/game/daily`.
 
 1. `getDailyKey(date)` returns a UTC date string in `YYYY-MM-DD` format.
 2. `getDailySeed(dailyKey, levelId, seedVersion)` hashes

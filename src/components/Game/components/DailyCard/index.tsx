@@ -15,7 +15,7 @@ import {
 import { useGameStore } from '@/store/game';
 import { selectGameStatus, selectIsDailyMode } from '@/store/game/selectors';
 import { createCx, getTimeDiff } from '@/utils';
-import { formatDailyKey } from '@/utils/daily';
+import { formatDailyKey } from '@/game/daily';
 import { useDailyResetCountdown } from './hooks/useDailyResetCountdown';
 import styles from './styles.module.scss';
 

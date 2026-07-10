@@ -1,4 +1,4 @@
-import { computeStreaks } from '@/utils/daily';
+import { computeStreaks } from '@/game/daily';
 import type { DailyHistoryByKey, StreakSummary } from '../types';
 
 export {

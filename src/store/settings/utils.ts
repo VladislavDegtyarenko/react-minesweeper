@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE_KEYS } from '@/constants';
+import { LOCAL_STORAGE_KEYS } from '@/config';
 import { isBrowser, localStorageService } from '@/utils';
 import {
   DEFAULT_QUESTION_MARK_ENABLED,

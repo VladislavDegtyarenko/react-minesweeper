@@ -4,8 +4,8 @@ import {
   clampDailyElapsedMs,
   DAILY_SEED_VERSION,
   getDailyKey,
-} from '@/utils/daily';
-import type { DailyAttemptStatus } from '@/utils/db/constants';
+  type DailyAttemptStatus,
+} from '@/game/daily';
 import { useDailyStore } from './store';
 import type {
   DailyHistoryByKey,

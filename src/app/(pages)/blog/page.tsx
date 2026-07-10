@@ -1,4 +1,4 @@
-import { generateMetadata } from "../../../utils/seo";
+import { generateMetadata } from "@/lib/seo";
 
 export const metadata = generateMetadata({
   title: "Blog",

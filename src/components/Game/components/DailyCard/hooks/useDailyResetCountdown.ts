@@ -1,7 +1,7 @@
 import {
   formatDailyResetCountdown,
   getMsUntilNextDailyKey,
-} from '@/utils/daily';
+} from '@/game/daily';
 import { useEffect, useState } from 'react';
 
 const DAILY_COUNTDOWN_REFRESH_MS = 60_000;

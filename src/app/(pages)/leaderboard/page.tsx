@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import { auth } from '@clerk/nextjs/server';
-import LeaderboardPage from '@/components/LeaderboardPage';
-import ROUTES from '@/config/routes.json';
-import { getDailyKey } from '@/utils/daily';
+import LeaderboardPage from '@/components/pages/LeaderboardPage';
+import { ROUTES } from '@/config/routes';
+import { getDailyKey } from '@/game/daily';
 import {
   getDailyLeaderboardEntries,
   getDailyStreakLeaderboardEntries,
   getLeaderboardEntries,
-} from '@/utils/db/queries';
-import { generateMetadata as buildMetadata } from '@/utils/seo';
+} from '@/server/db/queries';
+import { generateMetadata as buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Leaderboard',

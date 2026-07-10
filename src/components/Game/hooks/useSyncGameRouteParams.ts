@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useGameStore } from '@/store/game';
 import { selectGameMode } from '@/store/game/selectors';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 
 export const useSyncGameRouteParams = () => {
   const mode = useGameStore(selectGameMode);

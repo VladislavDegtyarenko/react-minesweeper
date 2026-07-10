@@ -1,7 +1,7 @@
 import { SignUp } from '@clerk/nextjs';
 import type { Metadata } from 'next';
-import ROUTES from '@/config/routes.json';
-import { generateMetadata as buildMetadata } from '@/utils/seo';
+import { ROUTES } from '@/config/routes';
+import { generateMetadata as buildMetadata } from '@/lib/seo';
 import styles from './styles.module.scss';
 
 export const metadata: Metadata = buildMetadata({

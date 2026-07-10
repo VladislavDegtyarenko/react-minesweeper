@@ -2,8 +2,8 @@ import GameClient from './Game.client';
 import {
   generateGameJsonLd,
   generateMetadata as buildMetadata,
-} from '@/utils/seo';
-import ROUTES from '@/config/routes.json';
+} from '@/lib/seo';
+import { ROUTES } from '@/config/routes';
 import type { GameSearchParams } from '@/components/Game/types';
 import { Suspense } from 'react';
 

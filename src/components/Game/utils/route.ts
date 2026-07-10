@@ -1,4 +1,4 @@
-import { LEVELS_CONFIG } from '@/constants';
+import { LEVELS_CONFIG } from '@/config';
 import type { GameMode } from '@/store/game/store';
 import type { LevelId } from '@/types';
 import type { GameSearchParams, ParsedGameRouteParams } from '../types';

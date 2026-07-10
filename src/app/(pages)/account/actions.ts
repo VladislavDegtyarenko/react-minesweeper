@@ -2,12 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 import { clerkClient } from '@clerk/nextjs/server';
-import ROUTES from '@/config/routes.json';
-import { requireUserId } from '@/utils/auth';
+import { ROUTES } from '@/config/routes';
+import { requireUserId } from '@/server/auth';
 import {
   deleteUserDailyAttempts,
   deleteUserScores,
-} from '@/utils/db/queries';
+} from '@/server/db/queries';
 
 export const deleteAccount = async (): Promise<void> => {
   const userId = await requireUserId();

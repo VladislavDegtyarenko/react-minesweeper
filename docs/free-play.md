@@ -36,14 +36,14 @@ play, personal best times, and the level-based public leaderboard.
 | `src/store/game/actions.ts` | Enters Free Play, creates new boards, restarts boards, and confirms active-game switches. |
 | `src/store/game/store.ts` | Stores `mode='free'`, board state, active difficulty, and pending confirmations. |
 | `src/utils/init.ts` | Generates random boards with `Math.random` and optional first-click exclusion. |
-| `src/utils/board/index.ts` | Applies first-click protection, opens cells, toggles markers, and sets win/loss status. |
+| `src/game/board/index.ts` | Applies first-click protection, opens cells, toggles markers, and sets win/loss status. |
 | `src/store/stats/store.ts` | Owns best times, win dialog state, score source, and sync state. |
 | `src/store/stats/actions.ts` | Records guest/account best times and retries account score sync. |
 | `src/store/stats/subscriptions.ts` | Records Free Play wins when game status changes to `won`. |
 | `src/store/stats/utils/guest.ts` | Reads and writes guest `BEST_TIMES`. |
-| `src/app/(game)/actions.ts` | Server actions for loading and saving account best scores. |
-| `src/utils/db/queries/bestScores.ts` | Reads, writes, and deletes account best-score rows. |
-| `src/components/LeaderboardPage/index.tsx` | Renders the Free Play leaderboard tab by difficulty. |
+| `src/app/(lobby)/actions.ts` | Server actions for loading and saving account best scores. |
+| `src/server/db/queries/bestScores.ts` | Reads, writes, and deletes account best-score rows. |
+| `src/components/pages/LeaderboardPage/index.tsx` | Renders the Free Play leaderboard tab by difficulty. |
 
 ## Data Flow
 

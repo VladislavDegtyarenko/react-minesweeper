@@ -7,8 +7,9 @@
     "dev": "node scripts/check-env.js --mode development && rm -rf .next && next dev",
     "build": "node scripts/check-env.js --mode production && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit --pretty false",
+    "test": "vitest run",
     "workflow:branch": "node scripts/workflow/branch-name.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -44,8 +45,11 @@
     "@types/react-dom": "^18.2.15",
     "autoprefixer": "^10.4.19",
     "drizzle-kit": "^0.31.10",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.10",
     "postcss": "^8.4.38",
     "prettier": "^3.8.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^4.1.10"
   }
 }

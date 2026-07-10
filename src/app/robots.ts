@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "../utils/seo";
+import { SITE_URL } from "@/lib/seo";
 
 /**
  * Generates robots.txt for search engine crawlers.

@@ -1,4 +1,4 @@
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import { useUser } from '@clerk/nextjs';
 import {
   retryDailyAttemptSync,
@@ -21,7 +21,7 @@ import {
   setHasPresentedWinDialog,
   setIsWinDialogOpen,
 } from '@/store/stats/actions';
-import { canPublishUserScores } from '@/utils/clerk';
+import { canPublishUserScores } from '@/lib/clerk';
 import {
   selectIsWinDialogOpen,
   selectLastWinSummary,

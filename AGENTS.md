@@ -12,6 +12,11 @@
 - Before planning or reviewing non-trivial work, read `.codex/rules/architecture.md` (system map, design principles, routes/SEO conventions, definition of non-trivial).
 - Do not duplicate rule text in agent docs; point agents to the relevant file in `.codex/rules/`.
 
+## PR Descriptions
+
+- Whenever the user asks for a PR description, PR body, commit summary, branch summary, or pull request text, read `.codex/agents/pr-writer.md` and `.codex/templates/pr-description.md` before answering.
+- Do not write PR text from memory. Do not invent a format. The PR Writer Agent output format is mandatory.
+
 ## Notion (canonical reference)
 
 This section is the single source of truth for Notion identifiers. Other docs must link here instead of repeating them.

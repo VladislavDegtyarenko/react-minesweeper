@@ -39,6 +39,8 @@
   },
   "include": [
     "./src",
+    "./tests/**/*.ts",
+    "./tests/**/*.tsx",
     "./dist/types/**/*.ts",
     "./next-env.d.ts",
     ".next/types/**/*.ts",

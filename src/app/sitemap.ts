@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL, PUBLIC_PAGES } from "../utils/seo";
+import { SITE_URL, PUBLIC_PAGES } from "@/lib/seo";
 
 /**
  * Generates sitemap.xml for search engine discovery.
@@ -10,8 +10,8 @@ import { SITE_URL, PUBLIC_PAGES } from "../utils/seo";
  * - priority: relative importance (1.0 = highest, 0.0 = lowest)
  * - changeFrequency: hint for crawl frequency
  *
- * When you publish new pages (remove from middleware HIDDEN_ROUTES),
- * add them to PUBLIC_PAGES in utils/seo/publicPages.ts
+ * When you publish new pages (remove from config HIDDEN_ROUTES),
+ * add them to PUBLIC_PAGES in lib/seo/publicPages.ts
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   return PUBLIC_PAGES.map((page) => ({

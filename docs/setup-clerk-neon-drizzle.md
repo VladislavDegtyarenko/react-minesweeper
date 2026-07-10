@@ -27,7 +27,7 @@ The data flow on the leaderboard:
 ```
 Clerk (user identity) ──► clerkClient().users.getUserList()
                                                           ╲
-                                                           ╲ joined in src/utils/db/queries/leaderboard.ts
+                                                           ╲ joined in src/server/db/queries/leaderboard.ts
                                                            ╱
 Neon (best_scores rows) ──► Drizzle queries via @neondatabase/serverless
 ```
@@ -54,7 +54,7 @@ Neon (best_scores rows) ──► Drizzle queries via @neondatabase/serverless
 
 The leaderboard renders `entry.username`. If a user has no username we fall
 back to the literal string `"Player"` (see `FALLBACK_USERNAME` in
-`src/utils/db/queries/leaderboard.ts`), so technically the app works without
+`src/server/db/queries/leaderboard.ts`), so technically the app works without
 this — but every row would say `"Player"`. Turn it on.
 
 In the dashboard, go to **User & authentication → Email, phone, username** and
@@ -158,7 +158,7 @@ DATABASE_URL_UNPOOLED=postgresql://<user>:<password>@<endpoint-id>.<region>.<pro
 
 There is nothing to sign up for. `drizzle-orm` and `drizzle-kit` are already
 in `package.json`, and `drizzle.config.ts` already points at
-`src/utils/db/schema.ts` and reads `DATABASE_URL_UNPOOLED ?? DATABASE_URL`.
+`src/server/db/schema.ts` and reads `DATABASE_URL_UNPOOLED ?? DATABASE_URL`.
 
 This part will pick up after [Part 4](#part-4--local-environment-file)
 provides the connection strings.

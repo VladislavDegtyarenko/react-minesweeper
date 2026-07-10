@@ -11,10 +11,10 @@ Relevant findings from the current codebase:
 - There is no `vercel.json` and no tracked `.vercel/` project link.
 - The current GitHub Actions deploy workflow still targets GitHub Pages and uploads `./dist`, which does not match the current Next.js app shape.
 - The app depends on server features:
-  - Clerk server auth in `src/utils/auth/server.ts`
-  - Neon + Drizzle server database access in `src/utils/db/index.ts`
-  - Server Actions in `src/app/(game)/actions.ts` and `src/app/account/actions.ts`
-  - Dynamic rendering in `src/app/account/page.tsx` and `src/app/leaderboard/page.tsx`
+  - Clerk server auth in `src/server/auth/server.ts`
+  - Neon + Drizzle server database access in `src/server/db/index.ts`
+  - Server Actions in `src/app/(lobby)/actions.ts` and `src/app/(pages)/account/actions.ts`
+  - Dynamic rendering in `src/app/(pages)/account/page.tsx` and `src/app/(pages)/leaderboard/page.tsx`
   - Edge runtime OG image generation in `src/app/opengraph-image.tsx`
 
 ## Required Environment Variables
