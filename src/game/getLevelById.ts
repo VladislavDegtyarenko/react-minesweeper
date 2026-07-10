@@ -1,4 +1,4 @@
-import { LEVELS_CONFIG } from "@/constants";
+import { LEVELS_CONFIG } from '@/config';
 import type { LevelId } from "@/types";
 
 export const getLevelById = (levelId: LevelId) => {

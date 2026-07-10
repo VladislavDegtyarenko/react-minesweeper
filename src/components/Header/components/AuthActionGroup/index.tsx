@@ -3,7 +3,7 @@
 import { Show, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import Avatar from '@/components/ui/Avatar';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 

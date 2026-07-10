@@ -1,4 +1,4 @@
-import { CELL_MARKERS } from '@/constants';
+import { CELL_MARKERS } from '@/config';
 import { type TBoard } from '../../types';
 
 export const revealBoard = (board: TBoard, highlightWin?: boolean) => {

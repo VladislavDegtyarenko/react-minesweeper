@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 
 import { PlayIcon } from '@radix-ui/react-icons';
 import Button from '@/components/ui/Button';
-import { LEVELS_CONFIG } from '@/constants';
+import { LEVELS_CONFIG } from '@/config';
 import type { LevelId } from '@/types';
 import { DEFAULT_LEVEL_ID, DEFAULT_MODE, MODE_OPTIONS } from '../../constants';
 import LevelCard from '../LevelCard';
@@ -13,7 +13,7 @@ import type { IntroMode } from '../../types';
 const DIFFICULTY_LABEL_ID = 'intro-difficulty-label';
 import { initSFX } from '@/store/sfx/actions';
 
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 

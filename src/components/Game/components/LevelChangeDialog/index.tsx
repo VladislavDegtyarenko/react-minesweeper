@@ -5,7 +5,7 @@ import {
   cancelLevelChange,
   confirmLevelChange,
 } from '@/store/game/actions';
-import { LEVELS_CONFIG } from '@/constants';
+import { LEVELS_CONFIG } from '@/config';
 import { createCx } from '@/utils';
 import styles from './styles.module.scss';
 

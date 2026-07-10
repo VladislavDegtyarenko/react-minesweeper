@@ -1,4 +1,4 @@
-import { LOCAL_STORAGE_KEYS, LEVELS_CONFIG } from '@/constants';
+import { LOCAL_STORAGE_KEYS, LEVELS_CONFIG } from '@/config';
 import type { Level, LevelId, TBoard } from '@/types';
 import { localStorageService } from '@/utils';
 import { DAILY_SEED_VERSION, getDailyKey } from '@/game/daily';

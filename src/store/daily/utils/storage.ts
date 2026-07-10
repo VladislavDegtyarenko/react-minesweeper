@@ -1,4 +1,4 @@
-import { LEVELS_CONFIG, LOCAL_STORAGE_KEYS } from '@/constants';
+import { LEVELS_CONFIG, LOCAL_STORAGE_KEYS } from '@/config';
 import {
   DAILY_ATTEMPT_STATUSES,
   DAILY_HISTORY_MAX_ENTRIES,

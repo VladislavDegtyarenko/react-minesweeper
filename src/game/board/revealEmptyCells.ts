@@ -1,6 +1,5 @@
-import { CELL_MARKERS } from '@/constants';
-import { DIRECTIONS } from '../../constants';
-import { type GameCell, type TBoard } from '../../types';
+import { CELL_MARKERS, DIRECTIONS } from '@/config';
+import { type GameCell, type TBoard } from '@/types';
 
 // BFS on the original board (read-only).
 // Returns every [row, col] position that should be opened in this cascade,

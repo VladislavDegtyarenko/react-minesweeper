@@ -1,5 +1,5 @@
-import { DIRECTIONS } from '../constants';
-import type { GameCell, Level, TBoard } from '../types';
+import { DIRECTIONS } from '@/config';
+import type { GameCell, Level, TBoard } from '@/types';
 
 type RandomSource = () => number;
 

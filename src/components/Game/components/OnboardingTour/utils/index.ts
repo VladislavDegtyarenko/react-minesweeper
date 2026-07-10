@@ -1,4 +1,4 @@
-import { CELL_MARKERS } from '@/constants';
+import { CELL_MARKERS } from '@/config';
 import { ControlModes, DigFlag } from '@/store/settings';
 import type { GameCell, TBoard } from '@/types';
 import type { CSSProperties } from 'react';

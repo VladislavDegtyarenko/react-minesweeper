@@ -3,7 +3,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import Link from 'next/link';
 import { useState } from 'react';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import { createCx } from '@/utils';
 import AuthActionGroup from './components/AuthActionGroup';
 import MobileMenuDrawer from './components/MobileMenuDrawer';

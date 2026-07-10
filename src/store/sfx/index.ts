@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { LOCAL_STORAGE_KEYS } from "@/constants";
+import { LOCAL_STORAGE_KEYS } from "@/config";
 import { localStorageService } from "@/utils";
 
 export const SOUNDS_CONFIG = {

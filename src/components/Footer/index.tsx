@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import styles from './styles.module.scss';
 import { createCx } from '@/utils';
 import Copyright from '../Copyright';

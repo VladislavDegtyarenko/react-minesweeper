@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
-import { LEVELS_CONFIG } from '@/constants';
+import { LEVELS_CONFIG } from '@/config';
 import type {
   DailyLeaderboardEntry,
   DailyStreakLeaderboardEntry,

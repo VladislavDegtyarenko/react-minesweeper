@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { auth } from '@clerk/nextjs/server';
 import LeaderboardPage from '@/components/LeaderboardPage';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import { getDailyKey } from '@/game/daily';
 import {
   getDailyLeaderboardEntries,

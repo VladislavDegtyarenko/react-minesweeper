@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import { initSFX } from '@/store/sfx/actions';
 import { clearSnapshot as clearSnapshotFromLocalStorage } from '@/store/game/snapshot';
 import { createCx } from '@/utils';

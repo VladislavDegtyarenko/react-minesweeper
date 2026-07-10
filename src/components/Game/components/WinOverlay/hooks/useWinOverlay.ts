@@ -1,4 +1,4 @@
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import { useUser } from '@clerk/nextjs';
 import {
   retryDailyAttemptSync,

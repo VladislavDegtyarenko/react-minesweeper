@@ -1,7 +1,7 @@
 'use client';
 
 import { useClerk } from '@clerk/nextjs';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import { restoreGuestStatsState } from '@/store/stats/actions';
 
 export const useAccountSessionActions = () => {

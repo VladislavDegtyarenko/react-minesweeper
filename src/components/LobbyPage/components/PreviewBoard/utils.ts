@@ -1,4 +1,4 @@
-import { CELL_MARKERS, DIRECTIONS } from '@/constants';
+import { CELL_MARKERS, DIRECTIONS } from '@/config';
 import type { GameCell, Level, TBoard } from '@/types';
 import { PREVIEW_BOARDS } from '../../constants';
 

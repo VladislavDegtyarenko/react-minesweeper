@@ -1,4 +1,4 @@
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import Button from '@/components/ui/Button';
-import { LOCAL_STORAGE_KEYS } from '@/constants';
+import { LOCAL_STORAGE_KEYS } from '@/config';
 import { useGameStore } from '@/store/game';
 import {
   setOnboardingTourFlagOnlyCell,

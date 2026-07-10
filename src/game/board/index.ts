@@ -1,4 +1,4 @@
-import { CELL_MARKERS } from '@/constants';
+import { CELL_MARKERS } from '@/config';
 import { useGameStore } from '@/store/game';
 import { selectGameStatus, selectMinesLeft } from '@/store/game/selectors';
 import { useSettingsStore } from '@/store/settings';

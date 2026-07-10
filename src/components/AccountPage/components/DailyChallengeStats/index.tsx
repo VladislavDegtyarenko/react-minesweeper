@@ -1,4 +1,4 @@
-import { LEVELS_CONFIG } from '@/constants';
+import { LEVELS_CONFIG } from '@/config';
 import type { DailyAttempt, DailyStreakSummary } from '@/server/db';
 import { createCx, formatDate, getTimeDiff } from '@/utils';
 import { formatDailyKey } from '@/game/daily';

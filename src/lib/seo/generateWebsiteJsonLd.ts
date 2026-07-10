@@ -1,5 +1,5 @@
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION } from "./config";
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 
 /**
  * Generates JSON-LD structured data for the WebSite schema.

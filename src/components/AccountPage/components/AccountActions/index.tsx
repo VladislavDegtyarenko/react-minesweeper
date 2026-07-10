@@ -3,7 +3,7 @@
 import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { useState } from 'react';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import Button from '@/components/ui/Button';
 import { createCx } from '@/utils';
 import { deleteAccount } from '@/app/(pages)/account/actions';

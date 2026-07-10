@@ -2,7 +2,7 @@ import { memo } from 'react';
 import styles from './styles.module.scss';
 import { createCx } from '@/utils';
 import type { CellMarkerState, GameCell } from '@/types';
-import { CELL_MARKERS, CELL_NUMBERS_COLORS } from '@/constants';
+import { CELL_MARKERS, CELL_NUMBERS_COLORS } from '@/config';
 import Bomb from './components/Bomb';
 import Number from './components/Number';
 import Cross from './components/Cross';

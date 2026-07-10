@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { auth } from '@clerk/nextjs/server';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import type { LevelId } from '@/types';
 import { getDailyKey } from '@/game/daily';
 import type { BestScore, DailyAttempt, DailyAttemptStatus } from '@/server/db';

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import { createCx } from '@/utils';
 import CellExample from './cell-example';
 import NumberClueDemo from './number-clue-demo';

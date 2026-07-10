@@ -8,7 +8,7 @@ import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
 // Constants
-import { DEFAULT_LEVEL } from '@/constants';
+import { DEFAULT_LEVEL } from '@/config';
 import type { Level, LevelId, TBoard } from '@/types';
 import { loadPreferredGameMode } from './preferences';
 

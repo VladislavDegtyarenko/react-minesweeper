@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { CELL_MARKERS } from '@/constants';
+import { CELL_MARKERS } from '@/config';
 import type { TBoard } from '@/types';
 import { applyOpenedCells, revealEmptyCells } from '@/game/board/revealEmptyCells';
 

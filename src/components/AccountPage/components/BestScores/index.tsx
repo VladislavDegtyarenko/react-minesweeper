@@ -1,4 +1,4 @@
-import { LEVELS_CONFIG } from '@/constants';
+import { LEVELS_CONFIG } from '@/config';
 import type { BestScore } from '@/server/db';
 import { createCx, formatDate, getTimeDiff } from '@/utils';
 import styles from './styles.module.scss';

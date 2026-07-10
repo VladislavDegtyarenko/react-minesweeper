@@ -1,6 +1,6 @@
 import TextContent from '@/components/Blog/TextContent';
 import { generateHowToJsonLd, generateMetadata } from '@/lib/seo';
-import ROUTES from '@/config/routes.json';
+import { ROUTES } from '@/config/routes';
 import HowToPlayContent from './content';
 
 export const dynamic = 'force-static';

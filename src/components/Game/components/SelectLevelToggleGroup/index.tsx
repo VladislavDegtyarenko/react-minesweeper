@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { LEVELS_CONFIG } from '@/constants';
+import { LEVELS_CONFIG } from '@/config';
 import type { LevelId } from '@/types';
 import { useGameStore } from '@/store/game';
 import { requestLevelChange } from '@/store/game/actions';
