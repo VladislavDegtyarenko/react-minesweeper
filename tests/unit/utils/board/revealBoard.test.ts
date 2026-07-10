@@ -11,6 +11,8 @@ describe('revealBoard', () => {
         { value: 'mine', marker: null, isOpened: false },
         { value: 'mine', marker: CELL_MARKERS.FLAG, isOpened: false },
         { value: 1, marker: null, isOpened: false },
+        { value: 2, marker: null, isOpened: true },
+        { value: null, marker: CELL_MARKERS.QUESTION, isOpened: false },
       ],
     ];
 
@@ -19,6 +21,8 @@ describe('revealBoard', () => {
     expect(board[0][0]).toMatchObject({ isOpened: true });
     expect(board[0][1]).toMatchObject({ isOpened: false });
     expect(board[0][2]).toMatchObject({ isOpened: false });
+    expect(board[0][3]).toMatchObject({ isOpened: true });
+    expect(board[0][4]).toMatchObject({ isOpened: false });
   });
 
   it('highlights every mine green for a win reveal', () => {
@@ -26,6 +30,7 @@ describe('revealBoard', () => {
       [
         { value: 'mine', marker: null, isOpened: false },
         { value: 'mine', marker: CELL_MARKERS.FLAG, isOpened: false },
+        { value: 'mine', marker: CELL_MARKERS.QUESTION, isOpened: false },
       ],
     ];
 
@@ -33,5 +38,6 @@ describe('revealBoard', () => {
 
     expect(board[0][0]).toMatchObject({ highlight: 'green', isOpened: true });
     expect(board[0][1]).toMatchObject({ highlight: 'green', isOpened: false });
+    expect(board[0][2]).toMatchObject({ highlight: 'green', isOpened: true });
   });
 });
