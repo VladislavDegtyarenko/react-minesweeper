@@ -11,10 +11,7 @@ Use this role for Notion intake, task selection, and status reporting. Review `A
 
 ## Notion Details
 
-- Project page: `https://www.notion.so/2b4ca6160f2b809f9cf8cec286e4242b`.
-- Tasks Tracker data source: `collection://2f9ca616-0f2b-80b5-b22e-000b20e5fc56`.
-- Properties: `Task name`, `Status`, `Priority`, `Task type`, `Tags`, `Assignee`, `Due date`.
-- Statuses: `Not started`, `In progress`, `Done`, `On Hold`, `Cancelled`.
+- All identifiers (page URLs, data source, properties, statuses) live in the `Notion` section of `AGENTS.md` — the canonical reference. Do not restate them here.
 
 ## Output
 

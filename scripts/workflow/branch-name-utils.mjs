@@ -1,9 +1,19 @@
 const DEFAULT_MAX_SLUG_LENGTH = 48;
 const BUG_TYPE_PATTERN = /bug|🐞/i;
+const POLISH_TYPE_PATTERN = /polish/i;
+const DOCS_TYPE_PATTERN = /\bdocs?\b|documentation/i;
 
 export function getBranchPrefix(taskType) {
   if (BUG_TYPE_PATTERN.test(taskType)) {
     return 'bugfix';
+  }
+
+  if (POLISH_TYPE_PATTERN.test(taskType)) {
+    return 'polish';
+  }
+
+  if (DOCS_TYPE_PATTERN.test(taskType)) {
+    return 'docs';
   }
 
   return 'feature';

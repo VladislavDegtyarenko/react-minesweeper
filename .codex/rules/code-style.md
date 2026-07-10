@@ -2,27 +2,86 @@
 
 This file is the source of truth for code style and styling rules. Read it before code changes and code review.
 
-## Code Style
+Rules describe the target state for new and edited code. Do not refactor existing violations opportunistically — fix them only when a task already touches that code.
 
-- Always put utility functions in a separate `utils` file or `utils/` folder, depending on the local structure of the feature/module.
-- Use a single `utils.ts` file only for small local helper sets.
-- If utility logic grows into multiple files, move it into a local `utils/` folder. In that case, expose the helpers through `utils/index.ts` and import from the folder entrypoint rather than individual utility files unless there is a clear reason not to.
-- Try to keep the code reusable.
-- Prefer `constants.ts` for exported constants definitions.
-- For any constants and any read-only definitions, use SCREAMING_SNAKE_CASE.
-- Prefer `types.ts` for exported type definitions.
-- Do not use interfaces.
-- Try, but it is not required, to limit React components to 120 lines. If a component grows beyond that, prefer splitting the logic.
-- Always put an empty line before a `return` statement, except when it is the only line in the current scope.
-- Do not use empty return statements.
-- If a component has sub-components used in it, create a local `components/` folder and put them there.
-- Prefer a folder per React component, named after the component. Use `index.tsx` for the React component file inside that folder.
-- Use `styles.module.scss` inside the component folder for styles related to that component.
-- Store hooks related to a component in a local `hooks/` subfolder inside that component folder.
-- Prefer nested SCSS rules over repeating flat selectors when working in `.scss` modules.
-- If a component has sub-components with dedicated styles, place those styles in the local `components/` folder next to the sub-component instead of keeping them in the parent component stylesheet.
+## Imports
 
-## Styling
+- Use the `@/` alias (maps to `src/`) for anything outside the current component folder. Use relative paths only within a component's own folder.
 
-- Do not add `min-width: 0`, fixed `width`/`height`, or `min-*`/`max-*` width/height values in CSS/SCSS unless the user explicitly asks for it or an unavoidable third-party override requires it.
-- Prefer fluid layout with flex/grid behavior, intrinsic sizing, padding, gap, and `aspect-ratio`.
+```typescript
+// Good
+import { useGameStore } from '@/store/game';
+import styles from './styles.module.scss';
+
+// Avoid
+import { useGameStore } from '../../store/game';
+```
+
+## File & Folder Layout
+
+- One React component per file. Folder per component, named after the component:
+
+```text
+ComponentName/
+  index.tsx             # the component; default export named ComponentName
+  styles.module.scss    # styles for this component only
+  components/           # sub-components used only here (same layout, recursive)
+  hooks/                # hooks used only by this component
+  constants.ts          # exported constants
+  types.ts              # exported type definitions
+  utils.ts              # small set of local helpers
+  utils/                # if helpers outgrow one file; expose via utils/index.ts
+                        # and import from the folder entrypoint
+```
+
+- Only `index.tsx` and `styles.module.scss` are required; add the rest when needed.
+- Generic reusable helpers live in `src/utils/` — one file per function, re-exported through `src/utils/index.ts`.
+- Shared hooks live in `src/hooks/` with a brief JSDoc line. Shared UI primitives live in `src/components/ui/`.
+- Keep the code reusable: when the same logic appears in a second module, extract it to the nearest shared `utils` location instead of copying it.
+
+## React
+
+- Prefer arrow-function components with `export default ComponentName` at the end of the file.
+- Hooks use named exports: `export function useSomething()`.
+- Props: name the type `Props` when local, `ComponentNameProps` when exported. Destructure props in the parameter list or on the first line of the component.
+- Prefer `PropsWithChildren` over a manual `children: ReactNode` unless an explicit `ReactNode` prop is needed.
+- Keep components under ~120 lines. When a component grows beyond that, extract a sub-component (`components/`), a hook (`hooks/`), or helpers (`utils.ts`) before adding more.
+- Combine class names with `createCx` from `@/utils` (a `classnames/bind` wrapper):
+
+```typescript
+const cx = createCx(styles);
+// <div className={cx('cell', { revealed: isRevealed })} />
+```
+
+## TypeScript
+
+- Use `type` aliases; do not use `interface`. Exception: module augmentation in `src/types/*.d.ts`, where declaration merging is required.
+- Use SCREAMING_SNAKE_CASE for constants and read-only definitions; put exported ones in `constants.ts`.
+- Put exported type definitions in `types.ts`.
+- Use single quotes in JS/TS/TSX.
+
+## Returns
+
+- Put an empty line before a `return` statement, except when it is the only statement in its scope:
+
+```typescript
+// Good
+const getLabel = (count: number) => {
+  const label = formatCount(count);
+
+  return label;
+};
+
+// Good — only statement in its scope, no blank line needed
+if (!isInitialized) {
+  return null;
+}
+```
+
+- No bare `return;` — return `undefined` explicitly in functions and `null` in React components.
+
+## SCSS & Styling
+
+- Each component owns its `styles.module.scss`. When a sub-component has dedicated styles, its stylesheet lives next to the sub-component in the local `components/` folder — not in the parent stylesheet. (Older components still import the parent stylesheet; leave them unless you are already editing them.)
+- Prefer nested SCSS rules over repeating flat selectors.
+- Do not add `min-width: 0`, fixed `width`/`height`, or `min-*`/`max-*` width/height values unless the user explicitly asks for it or an unavoidable third-party override requires it. Prefer fluid layout: flex/grid behavior, intrinsic sizing, padding, gap, and `aspect-ratio`.

@@ -4,17 +4,17 @@ Use this role to produce branch names, commit summaries, and PR descriptions. Re
 
 ## Branch Naming
 
-- Bug tasks: `bugfix/<brief-title>`.
-- Feature, polish, docs, and chores: `feature/<brief-title>`.
+- Follow the type-to-prefix rules in `.codex/workflows/task-lifecycle.md`, step 2 — the canonical branch-naming reference.
 - Generate the branch with `npm run workflow:branch -- --type "<type>" --title "<title>"`.
 
 ## PR Description Rules
 
-- Use plain, direct statements.
-- Mention key variables, functions, components, scripts, or config files when useful.
-- Include testing performed and legal/data notes.
 - The full PR description must be inside one markdown fenced code block.
-- Preserve markdown syntax inside the fenced block.
+- Preserve markdown syntax inside the fenced block: `##` headings, `-` lists, backticks for inline code.
+- Use simple plain statements. One statement per bullet.
+- Name the concrete elements present in this change: components, hooks, functions, variables, scripts, config files.
+- Follow the section structure from `.codex/templates/pr-description.md`; do not invent other sections.
+- Include testing performed and note legal/data impact when the `AGENTS.md` triggers apply.
 
 ## Output
 

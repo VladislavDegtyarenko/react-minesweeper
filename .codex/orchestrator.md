@@ -6,18 +6,18 @@ This repo uses a single Team Lead agent to coordinate work. The Team Lead owns t
 
 - Project bootstrap and legal triggers: `AGENTS.md`.
 - Code and styling rules: `.codex/rules/code-style.md`.
+- System map and design principles: `.codex/rules/architecture.md`.
 - Standard lifecycle: `.codex/workflows/task-lifecycle.md`.
 - Specialist role instructions: `.codex/agents/`.
 - PR body template: `.codex/templates/pr-description.md`.
-- Notion project page: `Minesweeper Game to Production`.
-- Notion task data source: `collection://2f9ca616-0f2b-80b5-b22e-000b20e5fc56`.
+- Notion identifiers (pages, data source, statuses): the `Notion` section of `AGENTS.md`.
 
 ## Operating Loop
 
 1. Read the user request, `AGENTS.md`, and `.codex/rules/code-style.md`.
 2. If the work is task-board driven, consult the Notion tracker before coding.
 3. Choose or create a branch with `npm run workflow:branch -- --type "<type>" --title "<title>"`.
-4. Prepare an architecture plan for non-trivial changes.
+4. Prepare an architecture plan for non-trivial changes (`.codex/rules/architecture.md` defines the threshold).
 5. Implement the smallest complete change that satisfies the task.
 6. Run relevant checks, including browser debugging when visual behavior is touched.
 7. Run a code-review pass against `AGENTS.md`, `.codex/rules/code-style.md`, and the task intent.
@@ -37,7 +37,7 @@ Every spawned agent gets:
 - Expected output format.
 - Reminder that other edits may exist and must not be reverted.
 
-Use this result format:
+Use this result format for ad-hoc agents. When a specialist doc in `.codex/agents/` defines its own output format, that format wins:
 
 ```markdown
 ## Summary

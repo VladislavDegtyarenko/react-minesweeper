@@ -9,17 +9,15 @@ Use this workflow for normal project tasks.
 - Capture task name, task type, status, priority, and Notion URL.
 - Do not mutate Notion during intake.
 
-Known task statuses:
-
-- `Not started`
-- `In progress`
-- `Done`
-- `On Hold`
-- `Cancelled`
+Task statuses and tracker identifiers: see the `Notion` section of `AGENTS.md`.
 
 ## 2. Branch
 
-- Use `feature/<brief-title>` for features, polish, chores, and docs.
+- pull latest changes from `main` branch first.
+- make sure the branch is clean, otherwise warn the user first.
+- Use `feature/<brief-title>` for features and chores.
+- Use `polish/<brief-title>` for polish.
+- Use `docs/<brief-title>` for docs.
 - Use `bugfix/<brief-title>` for Notion `🐞 Bug` tasks or explicit bug fixes.
 - Generate names with `npm run workflow:branch -- --type "<type>" --title "<title>"`.
 - Create a branch with `npm run workflow:branch -- --type "<type>" --title "<title>" --create`.
@@ -27,7 +25,7 @@ Known task statuses:
 
 ## 3. Architecture
 
-- Use `.codex/agents/architect.md` for non-trivial work.
+- Use `.codex/agents/architect.md` for non-trivial work (`.codex/rules/architecture.md` defines the threshold).
 - Keep the plan scoped to the task.
 - Identify legal-page, data, auth, storage, SEO, and UI risks before coding.
 
@@ -51,7 +49,6 @@ Known task statuses:
 ## 7. PR Description
 
 - Use `.codex/agents/pr-writer.md` and `.codex/templates/pr-description.md`.
-- Output the PR description inside one markdown fenced code block.
 
 ## 8. Notion Status
 

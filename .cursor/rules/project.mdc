@@ -1,54 +1,15 @@
 ---
-description: Project-specific coding guidelines
+description: Project-specific coding guidelines (pointer to canonical rules)
 globs:
 alwaysApply: true
 ---
 
-## Project Structure
+# Project Rules
 
-- Routes live in `src/app`
-  - Root (game) page live in `src/app/(game)`
-  - Other routes live in `src/app/(pages)`
-  - auth pages `src/app/login` and `src/app/signup`
+Canonical rules live in the repo, not in this file. Read these before coding:
 
-- Feature components live in `src/components/`
-- Reusable UI parts live in `src/components/ui/`
-- Component folder structure: `ComponentName/index.tsx` + `styles.module.scss`
-- Utils: One file per function in `src/utils/` with barrel export via `index.ts`
-- SEO utilities: `src/utils/seo/`
-- Constants: `src/constants/`
-- Hooks: `src/hooks/` with brief JSDoc comments
+- Project bootstrap and legal triggers: `AGENTS.md`
+- Code style and file layout: `.codex/rules/code-style.md`
+- System map, design principles, routes & SEO: `.codex/rules/architecture.md`
 
-## Code Style
-
-- Files should not exceed ~100 lines. If larger, split into:
-  - Utility functions in `src/utils/`
-  - Custom hooks in `src/hooks/`
-  - Smaller components
-- One React component per file
-- Extract complex logic from components into hooks or utils
-- Components: use arrow functions and declare `export default` at the end
-- Hooks: use named exports, e.g. `export function useSomething()`
-- Prefer `classnames/bind` when combining classes or using prop-based classes
-- Prefer `type Props` for local component/hook props, and `ComponentNameProps` when exported
-- Prefer `PropsWithChildren` over `children: ReactNode` unless explicit ReactNode is needed
-- Prefer `props: Props` param and destructure props on the first line, except when no props are used
-- Prefer single quotes in JS/TS/TSX
-- Omit empty returns: use `return undefined` in functions and `return null` in React components
-
-## Styling
-
-- Do not add `min-width: 0`, fixed `width`/`height`, or `min-*`/`max-*` width/height values in CSS/SCSS unless the user explicitly asks for it or an unavoidable third-party override requires it. Prefer fluid layout with flex/grid behavior, intrinsic sizing, padding, gap, and `aspect-ratio`.
-
-## SEO
-
-- Use `generateMetadata()` from `src/utils/seo` for all page metadata
-- Hidden pages: add to `HIDDEN_ROUTES` in `middleware.ts` + set `noIndex: true`
-- Public pages: add to `PUBLIC_PAGES` in `src/utils/seo/publicPages.ts`
-- Production URL: `NEXT_PUBLIC_SITE_URL` env variable
-
-## Next.js
-
-- App Router in `src/app/`
-- Route groups: `(pages)` for content pages
-- Dynamic game: `[[...slug]]/` with client-only rendering
+This file intentionally holds no rule text, to prevent drift between tools.

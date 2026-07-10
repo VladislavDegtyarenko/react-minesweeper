@@ -9,12 +9,18 @@
 ## Required Rules
 
 - Before code changes or code review, read `.codex/rules/code-style.md`.
+- Before planning or reviewing non-trivial work, read `.codex/rules/architecture.md` (system map, design principles, routes/SEO conventions, definition of non-trivial).
 - Do not duplicate rule text in agent docs; point agents to the relevant file in `.codex/rules/`.
 
-## Project Context
+## Notion (canonical reference)
 
-- For Notion-related project planning and PR/task lookups, use the Notion page `Minesweeper Game to Production`: `https://www.notion.so/2b4ca6160f2b809f9cf8cec286e4242b`.
-- The task tracker for this project is the inline Notion database `Tasks Tracker` inside that page.
+This section is the single source of truth for Notion identifiers. Other docs must link here instead of repeating them.
+
+- Project page: `Minesweeper Game to Production` — `https://www.notion.so/2b4ca6160f2b809f9cf8cec286e4242b`
+- Tasks Tracker database page: `https://www.notion.so/2f9ca6160f2b8017939ee024933e9a00`
+- Tasks Tracker data source: `collection://2f9ca616-0f2b-80b5-b22e-000b20e5fc56`
+- Properties: `Task name`, `Status`, `Priority`, `Task type`, `Tags`, `Assignee`, `Due date`
+- Statuses: `Not started`, `In progress`, `Done`, `On Hold`, `Cancelled`
 
 ## Legal Pages
 

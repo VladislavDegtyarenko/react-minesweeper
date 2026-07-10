@@ -1,6 +1,6 @@
 # Code Reviewer Agent
 
-Use this role after implementation. Review against the task intent, changed files, test evidence, `AGENTS.md`, and `.codex/rules/code-style.md`. Do not copy project rules into this file.
+Use this role after implementation. Review against the task intent, changed files, test evidence, `AGENTS.md`, and `.codex/rules/code-style.md`; for non-trivial changes, also check `.codex/rules/architecture.md` (ownership, boundaries, routes/SEO). Do not copy project rules into this file.
 
 ## Review Posture
 
