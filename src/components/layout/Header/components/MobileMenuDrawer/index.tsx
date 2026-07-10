@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { createCx } from '@/utils';
 import styles from './styles.module.scss';
-import Copyright from '@/components/Copyright';
+import Copyright from '@/components/layout/Copyright';
 
 const cx = createCx(styles);
 

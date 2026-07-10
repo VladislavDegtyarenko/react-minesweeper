@@ -1,4 +1,4 @@
-import LegalDocument from '@/components/LegalDocument';
+import LegalDocument from '@/components/pages/LegalDocument';
 import { ROUTES } from '@/config/routes';
 import { generateMetadata as buildMetadata } from '@/lib/seo';
 

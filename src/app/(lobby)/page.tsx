@@ -1,4 +1,4 @@
-import LobbyPage from '@/components/LobbyPage';
+import LobbyPage from '@/components/pages/LobbyPage';
 import { generateWebsiteJsonLd, generateGameJsonLd } from '@/lib/seo';
 
 /**

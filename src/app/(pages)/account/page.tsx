@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import AccountPage from '@/components/AccountPage';
+import AccountPage from '@/components/pages/AccountPage';
 import { ROUTES } from '@/config/routes';
 import { requireUserId } from '@/server/auth';
 import { getDailyKey } from '@/game/daily';

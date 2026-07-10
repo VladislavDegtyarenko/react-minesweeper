@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import PageShell from '@/components/PageShell';
+import PageShell from '@/components/layout/PageShell';
 import { LEVELS_CONFIG } from '@/config';
 import type {
   DailyLeaderboardEntry,
@@ -9,7 +9,7 @@ import type {
 import { createCx, getTimeDiff } from '@/utils';
 import { formatDailyKey } from '@/game/daily';
 import { formatDate } from '@/utils/formatDate';
-import Avatar from '../ui/Avatar';
+import Avatar from '@/components/ui/Avatar';
 import styles from './styles.module.scss';
 
 const cx = createCx(styles);

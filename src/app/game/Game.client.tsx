@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import type { GameSearchParams } from '@/components/Game/types';
 
-const App = dynamic(() => import('../../components/Game'), {
+const App = dynamic(() => import('../../components/GameRoot'), {
   ssr: false,
   loading: () => (
     <p aria-busy="true" aria-label="Loading game">

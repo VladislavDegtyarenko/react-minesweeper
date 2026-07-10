@@ -1,4 +1,4 @@
-import PageShell from '@/components/PageShell';
+import PageShell from '@/components/layout/PageShell';
 import type { BestScore, DailyAttempt, DailyStreakSummary } from '@/server/db';
 import { createCx } from '@/utils';
 import AccountActions from './components/AccountActions';

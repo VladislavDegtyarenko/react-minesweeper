@@ -1,4 +1,4 @@
-import TextContent from '@/components/Blog/TextContent';
+import TextContent from '@/components/pages/Blog/TextContent';
 import { generateHowToJsonLd, generateMetadata } from '@/lib/seo';
 import { ROUTES } from '@/config/routes';
 import HowToPlayContent from './content';
