@@ -46,7 +46,7 @@ no active board is being replaced.
 | `src/components/Game/components/ModeToggle/index.tsx` | Renders the Free Play / Daily segmented control. |
 | `src/components/Game/components/LevelChangeDialog/index.tsx` | Confirms active-game difficulty and mode changes. |
 | `src/utils/init.ts` | Creates boards, places mines, and fills adjacent mine counts. |
-| `src/utils/board/index.ts` | Handles cell opens, marker toggles, win/loss checks, and first-click behavior. |
+| `src/game/board/index.ts` | Handles cell opens, marker toggles, win/loss checks, and first-click behavior. |
 
 ## Related Docs
 

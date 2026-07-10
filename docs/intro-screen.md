@@ -114,7 +114,7 @@ onboarding targets after a refresh.
 
 | Path | Responsibility |
 | --- | --- |
-| `src/components/LobbyPage/` | Lobby layout, mode selector, selectable level cards, preview boards, Continue banner, and global Start Playing action |
+| `src/components/pages/LobbyPage/` | Lobby layout, mode selector, selectable level cards, preview boards, Continue banner, and global Start Playing action |
 | `src/app/game/page.tsx` | `/game` route and game metadata |
 | `src/components/Game/hooks/useGameRouteInitializer.ts` | Applies URL params, snapshot resume, and tour replay decisions |
 | `src/components/Game/hooks/useSyncGameRouteParams.ts` | Keeps `/game` query params aligned with confirmed mode and difficulty |

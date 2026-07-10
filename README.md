@@ -1,30 +1,23 @@
-# React + TypeScript + Vite
+# Minesweeper
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Next.js Minesweeper app with free play, daily challenges, account score sync, leaderboards, and Playwright smoke coverage.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- `npm run dev` starts the local Next.js dev server.
+- `npm run typecheck` runs TypeScript without emitting files.
+- `npm run lint` runs ESLint 9 with the Next.js flat config.
+- `npm run test` runs Vitest unit tests.
+- `npm run test:e2e` runs Playwright smoke tests.
+- `npm run build` creates a production Next.js build.
 
-## Expanding the ESLint configuration
+## Source Layout
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- `src/app/` contains App Router routes.
+- `src/components/pages/` contains page-level UIs; `src/components/layout/` contains shared layout chrome.
+- `src/components/GameRoot/` initializes the game route; `src/components/Game/` contains the game UI.
+- `src/game/` contains game-domain logic; `src/server/` contains server-only auth and data access.
+- `src/lib/` contains integrations and cross-cutting helpers; `src/utils/` contains generic helpers.
+- `src/config/` contains routes and app constants; `src/styles/` contains global/shared styles.
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Required environment variables are checked by `scripts/check-env.js` before dev/build commands.
