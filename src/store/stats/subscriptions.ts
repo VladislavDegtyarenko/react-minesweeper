@@ -1,6 +1,6 @@
 import { selectGameStatus } from '@/store/game/selectors';
 import { useGameStore } from '@/store/game/store';
-import { useTimerStore } from '@/store/timer';
+import { getCurrentElapsedMs } from '@/store/timer/actions';
 import { handleCompletedGameWin, recordDailyWinSummary } from './actions';
 import { clearLastWinSummary } from './utils';
 
@@ -8,7 +8,7 @@ export const initSubscriptions = (): void => {
   useGameStore.subscribe(selectGameStatus, (gameStatus, previousGameStatus) => {
     if (gameStatus === 'won') {
       const { level, mode } = useGameStore.getState();
-      const { elapsedMs } = useTimerStore.getState();
+      const elapsedMs = getCurrentElapsedMs();
 
       // Daily wins are tracked in the daily store and never update the
       // free-play best-score table or leaderboard. We still surface a win

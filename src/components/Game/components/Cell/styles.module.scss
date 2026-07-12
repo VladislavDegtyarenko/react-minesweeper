@@ -28,7 +28,7 @@
     transform var(--duration-press) var(--easing-standard),
     background-color var(--duration-hover) var(--easing-standard),
     box-shadow var(--duration-hover) var(--easing-standard);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 0 0 var(--cell-border-width, 1px) rgba(255, 255, 255, 0.03);
 }
 
 .cellImage {
@@ -106,7 +106,7 @@
   align-items: center;
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 0 1px var(--cell-border);
+  box-shadow: inset 0 0 0 var(--cell-border-width, 1px) var(--cell-border);
   transition:
     background-color var(--duration-hover) var(--easing-standard),
     transform var(--duration-press) var(--easing-standard),

@@ -7,7 +7,7 @@ import SelectLevelToggleGroup from './components/SelectLevelToggleGroup';
 import SelectDigFlag from './components/SelectDigFlag';
 import WinOverlay from './components/WinOverlay';
 import styles from './styles.module.scss';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { selectIsToggleMode } from '@/store/settings/selectors';
 import { useSettingsStore } from '@/store/settings';
 import { useGameStore } from '@/store/game';
@@ -37,22 +37,30 @@ const Game = ({ shouldReplayTour = false }: GameProps) => {
   const dailyCardRef = useRef<HTMLElement>(null);
   const footerAreaRef = useRef<HTMLDivElement>(null);
 
+  const updateBoardLayoutHeights = useCallback(() => {
+    const nextDailyCardHeight = dailyCardRef.current?.clientHeight ?? 0;
+    const nextFooterHeight = footerAreaRef.current?.clientHeight ?? 0;
+
+    setDailyCardHeight((currentDailyCardHeight) =>
+      currentDailyCardHeight === nextDailyCardHeight
+        ? currentDailyCardHeight
+        : nextDailyCardHeight,
+    );
+    setGameFooterHeight((currentFooterHeight) =>
+      currentFooterHeight === nextFooterHeight
+        ? currentFooterHeight
+        : nextFooterHeight,
+    );
+  }, []);
+
   useLayoutEffect(() => {
-    const dailyCardHeight = dailyCardRef.current?.clientHeight ?? 0;
-    const footerHeight = footerAreaRef.current?.clientHeight ?? 0;
-    setDailyCardHeight(dailyCardHeight);
-    setGameFooterHeight(footerHeight);
-  }, [isToggleMode, isDailyMode]);
+    updateBoardLayoutHeights();
+  }, [isToggleMode, isDailyMode, updateBoardLayoutHeights]);
 
   useResizeObserver(
     () => [document.body],
-    () => {
-      const dailyCardHeight = dailyCardRef.current?.clientHeight ?? 0;
-      const footerHeight = footerAreaRef.current?.clientHeight ?? 0;
-      setDailyCardHeight(dailyCardHeight);
-      setGameFooterHeight(footerHeight);
-    },
-    [dailyCardRef, footerAreaRef],
+    updateBoardLayoutHeights,
+    [updateBoardLayoutHeights],
   );
 
   return (

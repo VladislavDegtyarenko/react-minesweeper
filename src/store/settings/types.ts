@@ -1,5 +1,3 @@
-import { ZOOM_OPTIONS } from './constants';
-
 export enum ControlModes {
   Pointer = 'Pointer', // desktop
   Toggle = 'Toggle', // mobile method 1
@@ -15,7 +13,7 @@ export type SettingsState = {
   isTouchScreen: boolean;
   controlMode: ControlModes;
   digFlag: DigFlag;
-  zoom: (typeof ZOOM_OPTIONS)[number]['value'];
+  zoom: number;
   isSettingsOpened: boolean;
   isQuestionMarkEnabled: boolean;
 };

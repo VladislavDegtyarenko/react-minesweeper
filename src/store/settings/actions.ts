@@ -1,5 +1,6 @@
 import { useSettingsStore } from './store';
 import { ControlModes, DigFlag } from './types';
+import { clampZoom } from './utils';
 
 /**
  * Sets the control mode for the game.
@@ -16,10 +17,10 @@ export const setDigFlag = (digFlag: DigFlag): void => {
 };
 
 /**
- * Adjusts zoom level by a delta value.
+ * Sets the board zoom level.
  */
 export const adjustZoom = (zoom: number): void => {
-  useSettingsStore.setState({ zoom });
+  useSettingsStore.setState({ zoom: clampZoom(zoom) });
 };
 
 /**
