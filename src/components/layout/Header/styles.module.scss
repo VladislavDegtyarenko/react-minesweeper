@@ -11,9 +11,9 @@
   gap: 1rem;
   color: var(--text-secondary);
   position: fixed;
-  min-height: var(
-    --header-height
-  ); // temporary solution to avoid layout shift while loading account data (accountStateStatus in account state)
+  // min-height: var(
+  //   --header-height
+  // ); // temporary solution to avoid layout shift while loading account data (accountStateStatus in account state)
   top: 0;
   left: 0;
   right: 0;
