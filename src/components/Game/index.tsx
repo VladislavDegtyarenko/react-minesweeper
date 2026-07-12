@@ -1,8 +1,8 @@
 import Board from './components/Board';
+import ChangeGameButton from './components/ChangeGameButton';
 import DailyCard from './components/DailyCard';
 import GameHeader from './components/GameHeader';
 import LevelChangeDialog from './components/LevelChangeDialog';
-import ModeToggle from './components/ModeToggle';
 import SelectLevelToggleGroup from './components/SelectLevelToggleGroup';
 import SelectDigFlag from './components/SelectDigFlag';
 import WinOverlay from './components/WinOverlay';
@@ -16,6 +16,7 @@ import { createCx } from '@/utils';
 import OnboardingTour from './components/OnboardingTour';
 import { useSyncGameRouteParams } from './hooks/useSyncGameRouteParams';
 import { useResizeObserver } from '@/hooks';
+import { GAME_FEATURES } from '@/config';
 
 const cx = createCx(styles);
 
@@ -68,10 +69,12 @@ const Game = ({ shouldReplayTour = false }: GameProps) => {
           />
 
           <div className={cx('footerArea')} ref={footerAreaRef}>
-            <ModeToggle />
             <div className={cx('footerControlsRow')}>
-              <SelectLevelToggleGroup />
+              {GAME_FEATURES.isInGameLevelToggleEnabled ? (
+                <SelectLevelToggleGroup />
+              ) : null}
               <SelectDigFlag />
+              <ChangeGameButton />
             </div>
           </div>
         </div>

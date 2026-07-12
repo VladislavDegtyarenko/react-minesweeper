@@ -28,16 +28,12 @@ export const MODE_OPTIONS: IntroModeOption[] = [
 
 export const LEVEL_DETAILS: Record<LevelId, IntroLevelDetails> = {
   easy: {
-    description: 'A compact board for a clean first run.',
     pace: 'Fast',
   },
   medium: {
-    description: 'More space, more logic, and a steady rhythm.',
     pace: 'Balanced',
-    badge: 'Recommended',
   },
   expert: {
-    description: 'A wide board for deliberate, high-risk clears.',
     pace: 'Demanding',
   },
 };

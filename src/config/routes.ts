@@ -13,7 +13,15 @@ export const ROUTES = {
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
 
-export const HIDDEN_ROUTES = [ROUTES.BLOG] as const satisfies readonly RoutePath[];
+export const LOBBY_SETUP_QUERY = {
+  param: 'setup',
+  value: '1',
+  href: `${ROUTES.LOBBY}?setup=1`,
+} as const;
+
+export const HIDDEN_ROUTES = [
+  ROUTES.BLOG,
+] as const satisfies readonly RoutePath[];
 
 export const isHiddenRoute = (pathname: string): boolean =>
   (HIDDEN_ROUTES as readonly string[]).includes(pathname);

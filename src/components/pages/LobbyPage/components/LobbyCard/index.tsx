@@ -12,6 +12,9 @@ type LobbyCardProps = PropsWithChildren<{
   ariaLabel: string;
   badge?: string;
   className?: string;
+  compactBadge?: string;
+  compactOnMobile?: boolean;
+  compactVariant?: 'level' | 'mode';
   description?: string;
   descriptionPlacement?: 'afterMedia' | 'beforeMedia';
   eyebrow: string;
@@ -30,6 +33,9 @@ const LobbyCard = (props: LobbyCardProps) => {
     badge,
     children,
     className,
+    compactBadge,
+    compactOnMobile,
+    compactVariant,
     description,
     descriptionPlacement = 'afterMedia',
     eyebrow,
@@ -50,7 +56,14 @@ const LobbyCard = (props: LobbyCardProps) => {
       <span className={cx('titleBlock')}>
         <span className={cx('headingRow')}>
           <span className={cx('eyebrow')}>{eyebrow}</span>
-          {badge ? <span className={cx('badge')}>{badge}</span> : null}
+          {badge ? (
+            <span className={cx('badge', compactBadge && 'hasCompactBadge')}>
+              {badge}
+              {compactBadge ? (
+                <span className={cx('compactBadgeText')}>{compactBadge}</span>
+              ) : null}
+            </span>
+          ) : null}
         </span>
         <span className={cx('title')}>
           {titleIcon ? (
@@ -104,6 +117,9 @@ const LobbyCard = (props: LobbyCardProps) => {
           'card',
           'staticCard',
           isSelected && 'selected',
+          compactOnMobile && 'compactOnMobile',
+          compactVariant === 'level' && 'compactLevel',
+          compactVariant === 'mode' && 'compactMode',
           className,
         )}
       >
@@ -116,7 +132,14 @@ const LobbyCard = (props: LobbyCardProps) => {
     <button
       aria-label={ariaLabel}
       aria-pressed={isSelected}
-      className={cx('card', isSelected && 'selected', className)}
+      className={cx(
+        'card',
+        isSelected && 'selected',
+        compactOnMobile && 'compactOnMobile',
+        compactVariant === 'level' && 'compactLevel',
+        compactVariant === 'mode' && 'compactMode',
+        className,
+      )}
       type="button"
       onClick={onSelect}
     >

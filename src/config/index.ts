@@ -1,6 +1,8 @@
 import { getLevelById } from '@/game/getLevelById';
 import type { Level, LevelId, LevelsConfig } from '@/types';
 
+export { GAME_FEATURES } from './features';
+
 export const LOCAL_STORAGE_KEYS = {
   bestTimes: 'BEST_TIMES',
   GAME_SNAPSHOT: 'GAME_SNAPSHOT',

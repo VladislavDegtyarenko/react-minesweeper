@@ -19,6 +19,7 @@ export type GameStatusBeforeLevelChange = Extract<
 >;
 
 export type GameMode = 'free' | 'daily';
+export type PendingGameChange = 'lobby' | null;
 
 export type GameState = {
   board: TBoard;
@@ -28,6 +29,7 @@ export type GameState = {
   isLevelChangeDialogOpen: boolean;
   pendingLevelId: LevelId | null; // target difficulty selected while confirmation dialog is open
   pendingMode: GameMode | null; // target mode selected while confirmation dialog is open
+  pendingGameChange: PendingGameChange; // target navigation selected while confirmation dialog is open
   gameStatusBeforeLevelChange: GameStatusBeforeLevelChange | null; // active gameStatus before opening the level-change confirmation dialog
   isGameRestarted: boolean; // if the game is restarted, the first click on mine won't generate a new board in a do/while loop
   openedSafeCells: number; // running count of revealed non-mine cells — used for O(1) win detection
@@ -54,6 +56,7 @@ const buildInitialGameState = (): GameState => {
       isLevelChangeDialogOpen: false,
       pendingLevelId: null,
       pendingMode: null,
+      pendingGameChange: null,
       gameStatusBeforeLevelChange: null,
       isGameRestarted: false,
       openedSafeCells: 0,
@@ -74,6 +77,7 @@ const buildInitialGameState = (): GameState => {
     isLevelChangeDialogOpen: false,
     pendingLevelId: null,
     pendingMode: null,
+    pendingGameChange: null,
     gameStatusBeforeLevelChange: null,
     isGameRestarted: false,
     openedSafeCells: 0,

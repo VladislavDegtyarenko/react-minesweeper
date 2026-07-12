@@ -40,7 +40,14 @@
 }
 
 .footerControlsRow {
-  display: contents;
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+
+  > * {
+    flex: 1 1 12rem;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -59,10 +66,8 @@
   }
 
   .footerControlsRow {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
     gap: 6px;
+    flex-wrap: nowrap;
 
     > * {
       flex: 1 1 0;

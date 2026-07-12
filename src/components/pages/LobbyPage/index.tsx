@@ -14,7 +14,11 @@ import LobbyNewGameSection from './components/LobbyNewGameSection';
 
 const cx = createCx(styles);
 
-const LobbyPage = () => {
+type Props = {
+  shouldShowSetup?: boolean;
+};
+
+const LobbyPage = ({ shouldShowSetup = false }: Props) => {
   const router = useRouter();
   const {
     isLoaded: isSnapshotLoaded,
@@ -23,7 +27,11 @@ const LobbyPage = () => {
   } = useResumableSnapshot();
 
   const shouldShowLobbyLoading = !isSnapshotLoaded;
-  const shouldShowSavedGame = !!(isSnapshotLoaded && snapshot);
+  const shouldShowSavedGame = !!(
+    isSnapshotLoaded &&
+    snapshot &&
+    !shouldShowSetup
+  );
 
   const handleContinue = () => {
     initSFX();

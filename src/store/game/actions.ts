@@ -19,6 +19,7 @@ import {
   type GameMode,
   type GameStatus,
   type GameStatusBeforeLevelChange,
+  type PendingGameChange,
 } from './store';
 
 const FINISHED_GAME_STATUSES: GameStatus[] = ['idle', 'won', 'lost'];
@@ -47,11 +48,15 @@ const setLevelChangeDialogState = (
   pendingLevelId: LevelId | null,
   gameStatusBeforeLevelChange: GameStatusBeforeLevelChange | null,
   pendingMode: GameMode | null = null,
+  pendingGameChange: PendingGameChange = null,
 ) => {
   useGameStore.setState({
-    isLevelChangeDialogOpen: Boolean(pendingLevelId || pendingMode),
+    isLevelChangeDialogOpen: Boolean(
+      pendingLevelId || pendingMode || pendingGameChange,
+    ),
     pendingLevelId,
     pendingMode,
+    pendingGameChange,
     gameStatusBeforeLevelChange,
   });
 };
@@ -84,9 +89,16 @@ export const requestLevelChange = (newLevelId: LevelId) => {
 };
 
 export const confirmLevelChange = () => {
-  const { pendingLevelId, pendingMode } = useGameStore.getState();
+  const { pendingLevelId, pendingMode, pendingGameChange } =
+    useGameStore.getState();
 
-  if (!pendingLevelId && !pendingMode) {
+  if (!pendingLevelId && !pendingMode && !pendingGameChange) {
+    return undefined;
+  }
+
+  if (pendingGameChange) {
+    setLevelChangeDialogState(null, null);
+
     return undefined;
   }
 
@@ -120,6 +132,18 @@ export const cancelLevelChange = () => {
   }
 
   return undefined;
+};
+
+export const requestGameChange = () => {
+  const { gameStatus } = useGameStore.getState();
+  const gameStatusBeforeLevelChange =
+    gameStatus === 'playing' || gameStatus === 'paused' ? gameStatus : null;
+
+  setLevelChangeDialogState(null, gameStatusBeforeLevelChange, null, 'lobby');
+
+  if (gameStatus === 'playing') {
+    useGameStore.setState({ gameStatus: 'paused' });
+  }
 };
 
 const buildBoardForCurrentMode = (level: ReturnType<typeof getLevelById>) => {
@@ -175,6 +199,7 @@ export const resetBoard = (isRestart?: boolean) => {
     isLevelChangeDialogOpen: false,
     pendingLevelId: null,
     pendingMode: null,
+    pendingGameChange: null,
     gameStatusBeforeLevelChange: null,
     isGameRestarted: Boolean(isRestart),
     openedSafeCells: 0,
@@ -293,6 +318,7 @@ export const resumeFromSnapshot = (snapshot: GameSnapshotV1) => {
     isLevelChangeDialogOpen: false,
     pendingLevelId: null,
     pendingMode: null,
+    pendingGameChange: null,
     gameStatusBeforeLevelChange: null,
     isGameRestarted: true,
     openedSafeCells: snapshot.openedSafeCells,

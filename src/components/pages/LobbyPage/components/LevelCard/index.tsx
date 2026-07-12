@@ -14,14 +14,25 @@ type LevelCardProps = {
 };
 
 const LevelCard = ({ level, isSelected, onSelect }: LevelCardProps) => {
-  const details = LEVEL_DETAILS[level.id];
+  const { pace, description, badge } = LEVEL_DETAILS[level.id];
+  const ariaLabel = [
+    `${level.label} difficulty`,
+    description,
+    `${level.rows} by ${level.cols}`,
+    `${level.totalMines} mines`,
+  ]
+    .filter(Boolean)
+    .join('. ');
 
   return (
     <LobbyCard
-      ariaLabel={`${level.label} difficulty: ${details.description}`}
-      badge={details.badge}
-      description={details.description}
-      eyebrow={details.pace}
+      ariaLabel={ariaLabel}
+      badge={badge}
+      compactBadge={badge === 'Recommended' ? 'Best' : badge}
+      compactOnMobile
+      compactVariant="level"
+      description={description}
+      eyebrow={pace}
       isSelected={isSelected}
       media={
         <span className={cx('previewWrap')}>
@@ -31,6 +42,13 @@ const LevelCard = ({ level, isSelected, onSelect }: LevelCardProps) => {
       title={level.label}
       onSelect={() => onSelect(level.id)}
     >
+      <span className={cx('mobileMeta')} aria-hidden="true">
+        <span>
+          {level.rows} × {level.cols}
+        </span>
+        <span>{level.totalMines} mines</span>
+      </span>
+
       <span className={cx('meta')} aria-label={`${level.label} board details`}>
         <span>
           <span className={cx('metaLabel')}>Grid</span>

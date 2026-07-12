@@ -33,3 +33,28 @@
 .metaValue {
   font-weight: 900;
 }
+
+.mobileMeta {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .previewWrap {
+    display: none;
+  }
+
+  .meta {
+    display: none;
+  }
+
+  .mobileMeta {
+    display: grid;
+    align-items: start;
+    gap: 3px;
+    padding-right: 22px;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+}

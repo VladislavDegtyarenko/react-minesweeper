@@ -29,6 +29,8 @@ const ModeSelector = ({ selectedMode, onModeChange }: ModeSelectorProps) => {
               key={value}
               ariaLabel={`${label}: ${description}`}
               badge={badge}
+              compactOnMobile
+              compactVariant="mode"
               description={description}
               eyebrow={eyebrow}
               isSelected={selectedMode === value}

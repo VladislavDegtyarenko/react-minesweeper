@@ -12,7 +12,7 @@ export type IntroModeOption = {
 };
 
 export type IntroLevelDetails = {
-  description: string;
+  description?: string;
   pace: string;
   badge?: string;
 };
