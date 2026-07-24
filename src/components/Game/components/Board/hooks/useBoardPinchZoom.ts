@@ -8,7 +8,6 @@ import {
 import { cancelCellPointerSequence } from '@/game/board';
 import { adjustZoom } from '@/store/settings/actions';
 import { useSettingsStore } from '@/store/settings';
-import { MAX_ZOOM } from '@/store/settings/constants';
 import { clampZoomToRange } from '@/store/settings/utils';
 import {
   getIsPinchPerfDebugEnabled,
@@ -29,15 +28,30 @@ type PendingZoom = {
   zoom: number;
 };
 
+type Size = {
+  height: number;
+  width: number;
+};
+
+type ScrollPosition = {
+  scrollLeft: number;
+  scrollTop: number;
+};
+
 type PinchState = {
+  boardHeight: number;
   boardLeft: number;
   boardTop: number;
+  boardWidth: number;
+  centerX: number;
+  centerY: number;
   contentHeight: number;
   contentWidth: number;
   contentX: number;
   contentY: number;
   currentZoom: number;
   hasPreviewStarted: boolean;
+  maxFrameHeight: number;
   startDistance: number;
   startZoom: number;
   surfaceHeight: number;
@@ -98,7 +112,7 @@ const getPinchPoints = (
 const getContentSizeForScale = (
   pinchState: PinchState,
   scale: number,
-): { height: number; width: number } => {
+): Size => {
   const rightPadding =
     pinchState.contentWidth - pinchState.surfaceLeft - pinchState.surfaceWidth;
   const bottomPadding =
@@ -109,6 +123,93 @@ const getContentSizeForScale = (
       pinchState.surfaceTop + pinchState.surfaceHeight * scale + bottomPadding,
     width:
       pinchState.surfaceLeft + pinchState.surfaceWidth * scale + rightPadding,
+  };
+};
+
+const getBoardFrameSize = (
+  pinchState: PinchState,
+  contentSize: Size,
+): Size => {
+  // boardWidth/boardHeight is the rest viewport size, i.e. the content size
+  // already capped by the board's max-width/max-height. When the board
+  // overflows that viewport, (boardWidth - contentWidth) is negative; adding it
+  // would shrink the frame below the viewport, and because `.board` is
+  // `margin: 0 auto` the too-small frame gets centered and clips the grid on
+  // both sides. The delta only ever stands in for frame chrome (border /
+  // scrollbar), which is never negative, so floor it at zero. The CSS
+  // max-width/max-height caps still bound the rendered frame from above.
+  const frameChromeWidth = Math.max(
+    0,
+    pinchState.boardWidth - pinchState.contentWidth,
+  );
+  const frameChromeHeight = Math.max(
+    0,
+    pinchState.boardHeight - pinchState.contentHeight,
+  );
+
+  return {
+    // The board's CSS max-height over-reserves vertical space, so growing the
+    // inline height unbounded lets the frame (and the scaled surface it clips)
+    // spill past the footer. maxFrameHeight is the real slot the flex layout
+    // constrains the board to, captured at pinch start; cap the frame there.
+    height: Math.min(
+      contentSize.height + frameChromeHeight,
+      pinchState.maxFrameHeight,
+    ),
+    width: contentSize.width + frameChromeWidth,
+  };
+};
+
+const getScaledContentPosition = (
+  pinchState: PinchState,
+  zoom: number,
+): { scale: number; x: number; y: number } => {
+  const scale = zoom / pinchState.startZoom;
+
+  return {
+    scale,
+    x:
+      pinchState.surfaceLeft +
+      (pinchState.contentX - pinchState.surfaceLeft) * scale,
+    y:
+      pinchState.surfaceTop +
+      (pinchState.contentY - pinchState.surfaceTop) * scale,
+  };
+};
+
+const getScrollPositionForZoom = (
+  pinchState: PinchState,
+  zoom: number,
+  boardLeft: number,
+  boardTop: number,
+): ScrollPosition => {
+  const scaledPosition = getScaledContentPosition(pinchState, zoom);
+
+  return {
+    scrollLeft: scaledPosition.x - (pinchState.centerX - boardLeft),
+    scrollTop: scaledPosition.y - (pinchState.centerY - boardTop),
+  };
+};
+
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, value));
+
+const getClampedScrollPosition = (
+  boardElement: HTMLElement,
+  scrollPosition: ScrollPosition,
+): ScrollPosition => {
+  const maxScrollLeft = Math.max(
+    0,
+    boardElement.scrollWidth - boardElement.clientWidth,
+  );
+  const maxScrollTop = Math.max(
+    0,
+    boardElement.scrollHeight - boardElement.clientHeight,
+  );
+
+  return {
+    scrollLeft: clamp(scrollPosition.scrollLeft, 0, maxScrollLeft),
+    scrollTop: clamp(scrollPosition.scrollTop, 0, maxScrollTop),
   };
 };
 
@@ -133,6 +234,8 @@ const rebasePinchPreview = (
 
   pinchState.contentX = boardElement.scrollLeft + offsetX;
   pinchState.contentY = boardElement.scrollTop + offsetY;
+  pinchState.centerX = center.clientX;
+  pinchState.centerY = center.clientY;
   pinchState.startDistance = distance;
   pinchState.currentZoom = pinchState.startZoom;
   pinchState.hasPreviewStarted = true;
@@ -219,23 +322,35 @@ export function useBoardPinchZoom({
       return;
     }
 
-    const offsetX = pendingZoom.center.clientX - pinchState.boardLeft;
-    const offsetY = pendingZoom.center.clientY - pinchState.boardTop;
-    const scale = pendingZoom.zoom / pinchState.startZoom;
-    const scaledContentX =
-      pinchState.surfaceLeft +
-      (pinchState.contentX - pinchState.surfaceLeft) * scale;
-    const scaledContentY =
-      pinchState.surfaceTop +
-      (pinchState.contentY - pinchState.surfaceTop) * scale;
+    pinchState.centerX = pendingZoom.center.clientX;
+    pinchState.centerY = pendingZoom.center.clientY;
 
-    // PERF PROBE: content spacer is pre-sized once in startPinch (to the max
-    // scale this gesture can reach) instead of being resized every frame here.
-    // This isolates whether the per-frame width/height writes (layout) were
-    // the FPS culprit, vs. transform/scroll (compositor-only) writes.
+    const { scale } = getScaledContentPosition(pinchState, pendingZoom.zoom);
+    const contentSize = getContentSizeForScale(pinchState, scale);
+    const frameSize = getBoardFrameSize(pinchState, contentSize);
+
+    boardElement.style.width = `${frameSize.width}px`;
+    boardElement.style.height = `${frameSize.height}px`;
+    contentElement.style.width = `${contentSize.width}px`;
+    contentElement.style.height = `${contentSize.height}px`;
+
+    const rect = boardElement.getBoundingClientRect();
+    const { scrollLeft, scrollTop } = getClampedScrollPosition(
+      boardElement,
+      getScrollPositionForZoom(
+        pinchState,
+        pendingZoom.zoom,
+        rect.left,
+        rect.top,
+      ),
+    );
+
+    // The frame and spacer both follow the current preview size. Keeping the
+    // spacer at max zoom creates fake scroll range, which lets fitted boards
+    // drift out of the frame before they actually overflow.
     surfaceElement.style.transform = `scale(${scale})`;
-    boardElement.scrollLeft = scaledContentX - offsetX;
-    boardElement.scrollTop = scaledContentY - offsetY;
+    boardElement.scrollLeft = scrollLeft;
+    boardElement.scrollTop = scrollTop;
     pinchState.currentZoom = pendingZoom.zoom;
 
     if (shouldRecordPerf) {
@@ -299,15 +414,31 @@ export function useBoardPinchZoom({
       const offsetY = center.clientY - rect.top;
       const startZoom = useSettingsStore.getState().zoom;
 
+      // Capture the vertical slot the flex layout actually allows the board.
+      // The board's CSS max-height over-reserves space (the game panel is
+      // vertically centered, so the board starts lower than the static reserve
+      // assumes), so relying on it lets the pinch frame - and the scaled
+      // surface it clips - grow past the footer. Forcing the content to
+      // overflow reveals the true slot; restore immediately, this is a
+      // throwaway measurement taken while the content styles are still cleared.
+      contentElement.style.height = '1000000px';
+      const maxFrameHeight = boardElement.clientHeight;
+      contentElement.style.height = '';
+
       const pinchState: PinchState = {
+        boardHeight: rect.height,
         boardLeft: rect.left,
         boardTop: rect.top,
+        boardWidth: rect.width,
+        centerX: center.clientX,
+        centerY: center.clientY,
         contentHeight: contentElement.offsetHeight,
         contentWidth: contentElement.offsetWidth,
         contentX: boardElement.scrollLeft + offsetX,
         contentY: boardElement.scrollTop + offsetY,
         currentZoom: startZoom,
         hasPreviewStarted: false,
+        maxFrameHeight,
         startDistance,
         startZoom,
         surfaceHeight: surfaceElement.offsetHeight,
@@ -318,14 +449,10 @@ export function useBoardPinchZoom({
 
       pinchStateRef.current = pinchState;
 
-      // PERF PROBE: pre-size the spacer once, to the largest size this
-      // gesture could ever reach (zooming out never needs more room than the
-      // current layout already has), instead of resizing it every frame.
-      const maxScale = MAX_ZOOM / startZoom;
-      const maxContentSize = getContentSizeForScale(pinchState, maxScale);
+      // Keep the centered frame stable while the second touch starts.
+      boardElement.style.width = `${rect.width}px`;
+      boardElement.style.height = `${rect.height}px`;
 
-      contentElement.style.width = `${maxContentSize.width}px`;
-      contentElement.style.height = `${maxContentSize.height}px`;
       surfaceElement.style.willChange = 'transform';
       panStateRef.current = null;
       isPinchingRef.current = true;
@@ -355,9 +482,6 @@ export function useBoardPinchZoom({
     }
 
     const finalZoom = pinchState.currentZoom;
-    const scrollLeft = boardElement?.scrollLeft;
-    const scrollTop = boardElement?.scrollTop;
-
     if (
       Math.abs(finalZoom - useSettingsStore.getState().zoom) >=
       ZOOM_CHANGE_EPSILON
@@ -373,7 +497,15 @@ export function useBoardPinchZoom({
       surfaceElement.style.transform = '';
       surfaceElement.style.willChange = '';
 
-      if (boardElement && scrollLeft !== undefined && scrollTop !== undefined) {
+      if (boardElement) {
+        boardElement.style.width = '';
+        boardElement.style.height = '';
+        const rect = boardElement.getBoundingClientRect();
+        const { scrollLeft, scrollTop } = getClampedScrollPosition(
+          boardElement,
+          getScrollPositionForZoom(pinchState, finalZoom, rect.left, rect.top),
+        );
+
         boardElement.scrollLeft = scrollLeft;
         boardElement.scrollTop = scrollTop;
       }
@@ -557,6 +689,7 @@ export function useBoardPinchZoom({
   useEffect(() => {
     const activePointers = activePointersRef.current;
     const pinchedPointerIds = pinchedPointerIdsRef.current;
+    const boardElement = boardRef.current;
     const contentElement = contentRef.current;
     const surfaceElement = surfaceRef.current;
 
@@ -569,6 +702,11 @@ export function useBoardPinchZoom({
       pinchedPointerIds.clear();
       panStateRef.current = null;
 
+      if (boardElement) {
+        boardElement.style.width = '';
+        boardElement.style.height = '';
+      }
+
       if (contentElement) {
         contentElement.style.width = '';
         contentElement.style.height = '';
@@ -579,7 +717,7 @@ export function useBoardPinchZoom({
         surfaceElement.style.willChange = '';
       }
     };
-  }, [contentRef, surfaceRef]);
+  }, [boardRef, contentRef, surfaceRef]);
 
   return {
     onPointerCancel: onPointerEnd,

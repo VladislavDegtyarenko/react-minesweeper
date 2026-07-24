@@ -22,13 +22,15 @@
   background-color: var(--cell-revealed);
   color: var(--text-primary);
   border-radius: var(--radius-cell);
+  contain: layout style;
   position: relative;
   box-sizing: border-box;
   transition:
     transform var(--duration-press) var(--easing-standard),
     background-color var(--duration-hover) var(--easing-standard),
     box-shadow var(--duration-hover) var(--easing-standard);
-  box-shadow: inset 0 0 0 var(--cell-border-width, 1px) rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 0 0 var(--cell-border-width, 1px)
+    rgba(255, 255, 255, 0.03);
 }
 
 .cellImage {

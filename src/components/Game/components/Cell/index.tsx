@@ -13,7 +13,6 @@ import QuestionMark from './components/Question';
 const cx = createCx(styles);
 
 type Props = {
-  as?: 'div' | 'span';
   rowIndex: number;
   cellIndex: number;
   value: GameCell['value'];
@@ -25,7 +24,6 @@ type Props = {
 
 const Cell = (props: Props) => {
   const {
-    as: Component = 'div',
     rowIndex,
     cellIndex,
     value,
@@ -42,13 +40,13 @@ const Cell = (props: Props) => {
     typeof value === 'number' ? CELL_NUMBERS_COLORS[value] : null;
 
   return (
-    <Component
+    <span
       className={cx('cell')}
       data-row={rowIndex}
       data-cell={cellIndex}
       data-tour-cell={`${rowIndex}-${cellIndex}`}
     >
-      <Component
+      <span
         className={cx(
           'cellSurface',
           cellNumberClass || undefined,
@@ -60,19 +58,15 @@ const Cell = (props: Props) => {
         {typeof value === 'number' && isOpened && <Number value={value} />}
 
         {!isOpened && (
-          <Overlay
-            as={Component}
-            isMine={value === 'mine'}
-            highlight={highlight}
-          >
+          <Overlay isMine={value === 'mine'} highlight={highlight}>
             {isFlagged && <Flag />}
             {isQuestionMarked && <QuestionMark />}
           </Overlay>
         )}
 
         <Cross isGameLost={isGameLost} isFlagged={isFlagged} isMine={isMine} />
-      </Component>
-    </Component>
+      </span>
+    </span>
   );
 };
 
