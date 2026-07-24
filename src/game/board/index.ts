@@ -60,6 +60,11 @@ const cleanupTimers = () => {
   latestPointerCoordinates = null;
 };
 
+export const cancelCellPointerSequence = (): void => {
+  isPointerSequenceBlocked = true;
+  cleanupTimers();
+};
+
 const getNextMarker = (
   marker: CellMarkerState,
   isQuestionMarkEnabled: boolean,

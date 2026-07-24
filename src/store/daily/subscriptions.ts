@@ -1,6 +1,6 @@
 import { selectGameStatus } from '@/store/game/selectors';
 import { useGameStore } from '@/store/game/store';
-import { useTimerStore } from '@/store/timer';
+import { getCurrentElapsedMs } from '@/store/timer/actions';
 import {
   classifyDailyRun,
   clearActiveDailyRunKind,
@@ -51,7 +51,7 @@ export const initSubscriptions = (): void => {
       return;
     }
 
-    const { elapsedMs } = useTimerStore.getState();
+    const elapsedMs = getCurrentElapsedMs();
 
     void recordDailyAttempt({
       levelId: level.id,

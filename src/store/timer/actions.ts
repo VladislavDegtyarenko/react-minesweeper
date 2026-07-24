@@ -1,69 +1,50 @@
-import { useTimerStore } from ".";
-import type { TimerState } from "./types";
+import { useTimerStore } from '.';
+import { getElapsedMs } from './selectors';
+import type { TimerState } from './types';
 
 const now = () => performance.now();
 
-const tick = (t: number) => {
-  const { status, startedAtMs, elapsedMs } = useTimerStore.getState();
-  if (status !== "running" || startedAtMs == null) return;
-
-  // elapsed = accumulated + (current - startedAt)
-  const nextElapsed = elapsedMs + (t - startedAtMs);
-
-  // Important: move startedAt forward to current frame
-  // so we accumulate deltas and avoid floating drift.
-  useTimerStore.setState({
-    elapsedMs: nextElapsed,
-    startedAtMs: t,
-    rafId: requestAnimationFrame(tick),
-  });
-};
-
-const cancelRaf = () => {
-  const id = useTimerStore.getState().rafId;
-  if (id != null) cancelAnimationFrame(id);
-  useTimerStore.setState({ rafId: null });
+export const getCurrentElapsedMs = (timestampMs: number = now()) => {
+  return getElapsedMs(useTimerStore.getState(), timestampMs);
 };
 
 export const startTimer = () => {
   const { status } = useTimerStore.getState();
-  if (status === "running") return;
-
-  cancelRaf();
-  const t = now();
+  if (status === 'running') return;
 
   useTimerStore.setState({
-    status: "running",
-    startedAtMs: t,
-    rafId: requestAnimationFrame(tick),
+    status: 'running',
+    startedAtMs: now(),
   });
 };
 
 export const pauseTimer = () => {
   const { status } = useTimerStore.getState();
-  if (status !== "running") return;
+  if (status !== 'running') return;
 
-  // elapsed is already updated on every tick,
-  // so pausing is just canceling raf and status change.
-  cancelRaf();
-  useTimerStore.setState({ status: "paused", startedAtMs: null });
+  useTimerStore.setState({
+    status: 'paused',
+    elapsedMs: getCurrentElapsedMs(),
+    startedAtMs: null,
+  });
 };
 
 export const stopTimer = () => {
   const { status } = useTimerStore.getState();
-  if (status !== "running" && status !== "paused") return;
+  if (status !== 'running' && status !== 'paused') return;
 
-  cancelRaf();
-  useTimerStore.setState({ status: "stopped", startedAtMs: null });
+  useTimerStore.setState({
+    status: 'stopped',
+    elapsedMs: getCurrentElapsedMs(),
+    startedAtMs: null,
+  });
 };
 
 export const resetTimer = () => {
-  cancelRaf();
   useTimerStore.setState({
-    status: "idle",
+    status: 'idle',
     elapsedMs: 0,
     startedAtMs: null,
-    rafId: null,
   });
 };
 
@@ -71,11 +52,9 @@ export const restoreTimerElapsed = (
   elapsedMs: number,
   status: Extract<TimerState['status'], 'idle' | 'paused'> = 'idle',
 ) => {
-  cancelRaf();
   useTimerStore.setState({
     status,
     elapsedMs,
     startedAtMs: null,
-    rafId: null,
   });
 };

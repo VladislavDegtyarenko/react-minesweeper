@@ -1,4 +1,4 @@
-import { useTimerStore } from '@/store/timer';
+import { getCurrentElapsedMs } from '@/store/timer/actions';
 import { useGameStore } from '../store';
 import { clearSnapshot, createSnapshot, writeSnapshot } from '.';
 
@@ -18,7 +18,7 @@ const clearSaveTimeout = () => {
 const flushSnapshot = () => {
   const snapshot = createSnapshot(
     useGameStore.getState(),
-    useTimerStore.getState().elapsedMs,
+    getCurrentElapsedMs(),
   );
 
   if (!snapshot) {

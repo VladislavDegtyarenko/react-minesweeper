@@ -1,11 +1,9 @@
 import { useResizeObserver } from '@/hooks';
-import { throttle } from '@/utils';
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef } from 'react';
+import { markBoardScrollActivity } from '@/components/Game/utils/boardInteraction';
 import { DEFAULT_BOARD_SCROLL_HINTS } from '../constants';
 import type { BoardScrollHints } from '../types';
 import { areBoardScrollHintsEqual, getBoardScrollHints } from '../utils';
-
-const SCROLL_THROTTLE_MS = 50;
 
 type UseBoardScrollHintsOptions = {
   /**
@@ -24,9 +22,36 @@ export const useBoardScrollHints = ({
   layoutKey,
 }: UseBoardScrollHintsOptions) => {
   const boardRef = useRef<HTMLDivElement>(null);
-  const [scrollHints, setScrollHints] = useState<BoardScrollHints>(
+  const scrollHintsRef = useRef<HTMLDivElement>(null);
+  const lastScrollHintsRef = useRef<BoardScrollHints>(
     DEFAULT_BOARD_SCROLL_HINTS,
   );
+  const updateFrameRef = useRef<number | null>(null);
+
+  const applyScrollHints = useCallback((scrollHints: BoardScrollHints) => {
+    const scrollHintsElement = scrollHintsRef.current;
+
+    if (!scrollHintsElement) {
+      return;
+    }
+
+    scrollHintsElement.style.setProperty(
+      '--scroll-hint-bottom',
+      String(scrollHints.bottom),
+    );
+    scrollHintsElement.style.setProperty(
+      '--scroll-hint-left',
+      String(scrollHints.left),
+    );
+    scrollHintsElement.style.setProperty(
+      '--scroll-hint-right',
+      String(scrollHints.right),
+    );
+    scrollHintsElement.style.setProperty(
+      '--scroll-hint-top',
+      String(scrollHints.top),
+    );
+  }, []);
 
   const updateScrollHints = useCallback(() => {
     const boardElement = boardRef.current;
@@ -34,20 +59,28 @@ export const useBoardScrollHints = ({
       ? getBoardScrollHints(boardElement)
       : DEFAULT_BOARD_SCROLL_HINTS;
 
-    setScrollHints((currentScrollHints) =>
-      areBoardScrollHintsEqual(currentScrollHints, nextScrollHints)
-        ? currentScrollHints
-        : nextScrollHints,
-    );
-  }, []);
+    if (
+      areBoardScrollHintsEqual(lastScrollHintsRef.current, nextScrollHints)
+    ) {
+      return;
+    }
 
-  // Throttled scroll handler with leading + trailing edges so the resting
-  // hint always reflects the final scroll position. Stored in a ref so the
-  // throttle's cooldown state survives re-renders; created once because
-  // updateScrollHints is stable (useCallback with []).
-  const onScroll = useRef(
-    throttle(() => updateScrollHints(), SCROLL_THROTTLE_MS),
-  ).current;
+    lastScrollHintsRef.current = nextScrollHints;
+    applyScrollHints(nextScrollHints);
+  }, [applyScrollHints]);
+
+  const scheduleScrollHintUpdate = useCallback(() => {
+    markBoardScrollActivity();
+
+    if (updateFrameRef.current !== null) {
+      return;
+    }
+
+    updateFrameRef.current = window.requestAnimationFrame(() => {
+      updateFrameRef.current = null;
+      updateScrollHints();
+    });
+  }, [updateScrollHints]);
 
   useLayoutEffect(() => {
     if (!boardRef.current) {
@@ -56,6 +89,31 @@ export const useBoardScrollHints = ({
 
     updateScrollHints();
   }, [layoutKey, updateScrollHints]);
+
+  useLayoutEffect(() => {
+    const boardElement = boardRef.current;
+
+    if (!boardElement) {
+      return undefined;
+    }
+
+    boardElement.addEventListener('scroll', scheduleScrollHintUpdate, {
+      passive: true,
+    });
+
+    return () => {
+      boardElement.removeEventListener('scroll', scheduleScrollHintUpdate);
+    };
+  }, [scheduleScrollHintUpdate]);
+
+  useLayoutEffect(() => {
+    return () => {
+      if (updateFrameRef.current !== null) {
+        window.cancelAnimationFrame(updateFrameRef.current);
+        updateFrameRef.current = null;
+      }
+    };
+  }, []);
 
   useResizeObserver(
     () => {
@@ -67,5 +125,5 @@ export const useBoardScrollHints = ({
     [layoutKey],
   );
 
-  return { boardRef, onScroll, scrollHints };
+  return { boardRef, scrollHintsRef };
 };

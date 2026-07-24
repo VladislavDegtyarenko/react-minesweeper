@@ -1,25 +1,18 @@
+import { forwardRef } from 'react';
 import { createCx } from '@/utils';
 import { SCROLL_HINT_DIRECTIONS } from './constants';
-import type { BoardScrollHints } from './types';
 import styles from './styles.module.scss';
 
 const cx = createCx(styles);
 
-type Props = {
-  scrollHints: BoardScrollHints;
-};
-
-const ScrollHints = ({ scrollHints }: Props) => (
-  <>
+const ScrollHints = forwardRef<HTMLDivElement>((_, ref) => (
+  <div ref={ref} aria-hidden="true" className={cx('scrollHints')}>
     {SCROLL_HINT_DIRECTIONS.map((direction) => (
-      <span
-        key={direction}
-        aria-hidden="true"
-        className={cx('scrollHint', direction)}
-        style={{ opacity: scrollHints[direction] }}
-      />
+      <span key={direction} className={cx('scrollHint', direction)} />
     ))}
-  </>
-);
+  </div>
+));
+
+ScrollHints.displayName = 'ScrollHints';
 
 export default ScrollHints;

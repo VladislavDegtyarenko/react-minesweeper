@@ -1,6 +1,7 @@
 import { useSettingsStore } from '@/store/settings';
 import { adjustZoom } from '@/store/settings/actions';
 import { selectZoom } from '@/store/settings/selectors';
+import { getPresetZoomValue } from '@/store/settings/utils';
 
 import { ZOOM_OPTIONS } from '@/store/settings/constants';
 
@@ -13,6 +14,9 @@ const cx = createCx(styles);
 
 const ToggleGroupZoom = () => {
   const zoom = useSettingsStore(selectZoom);
+  const presetZoomValue = getPresetZoomValue(zoom);
+  const selectedValue = presetZoomValue?.toString() ?? '';
+  const zoomLabel = presetZoomValue === undefined ? 'Zoom: Custom' : 'Zoom';
 
   const handleZoomChange = (value: string) => {
     if (value) {
@@ -22,10 +26,10 @@ const ToggleGroupZoom = () => {
 
   return (
     <ToggleGroup
-      label="Zoom"
+      label={zoomLabel}
       type="single"
-      value={zoom.toString()}
-      defaultValue={zoom.toString()}
+      value={selectedValue}
+      defaultValue={selectedValue}
       aria-label="Zoom"
       onValueChange={handleZoomChange}
       loop={true}

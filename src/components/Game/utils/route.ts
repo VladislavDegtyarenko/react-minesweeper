@@ -4,7 +4,10 @@ import type { LevelId } from '@/types';
 import type { GameSearchParams, ParsedGameRouteParams } from '../types';
 
 const GAME_MODES = new Set<GameMode>(['free', 'daily']);
+const GAME_DEBUG_MODES = new Set<GameDebugMode>(['fps', 'perf']);
 const LEVEL_IDS = new Set<LevelId>(LEVELS_CONFIG.map((level) => level.id));
+
+export type GameDebugMode = 'fps' | 'perf';
 
 const getSingleParam = (
   searchParams: GameSearchParams,
@@ -38,4 +41,14 @@ export const parseGameRouteParams = (
     shouldReplayTour: tourParam === '1',
     hasGameConfig: Boolean(mode || levelId),
   };
+};
+
+export const getGameDebugMode = (
+  searchParams: GameSearchParams,
+): GameDebugMode | undefined => {
+  const debugParam = getSingleParam(searchParams, 'debug');
+
+  return GAME_DEBUG_MODES.has(debugParam as GameDebugMode)
+    ? (debugParam as GameDebugMode)
+    : undefined;
 };

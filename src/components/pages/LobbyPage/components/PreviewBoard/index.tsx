@@ -32,7 +32,6 @@ const PreviewBoard = ({ board, level }: PreviewBoardProps) => {
           <span key={rowIndex} className={cx('row')}>
             {row.map((cell, cellIndex) => (
               <Cell
-                as="span"
                 key={`${rowIndex}-${cellIndex}`}
                 rowIndex={rowIndex}
                 cellIndex={cellIndex}

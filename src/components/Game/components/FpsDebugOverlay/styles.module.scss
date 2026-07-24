@@ -1,0 +1,53 @@
+.overlay {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(9, 12, 18, 0.72);
+  color: #f7fbff;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(8px);
+}
+
+.perf {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 4px;
+  max-width: calc(100vw - 16px);
+  padding: 7px 9px;
+  white-space: normal;
+}
+
+.summary,
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+.summary {
+  align-items: center;
+}
+
+.row {
+  flex-wrap: wrap;
+  line-height: 1.15;
+  max-width: 100%;
+}
+
+.fps {
+  font-weight: 700;
+}

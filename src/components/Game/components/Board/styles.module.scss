@@ -6,6 +6,7 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
   -webkit-overflow-scrolling: touch;
+  touch-action: none;
   overscroll-behavior: none;
 }
 
@@ -48,14 +49,20 @@
   touch-action: none;
 }
 
-// Inner wrapper so horizontal scroll extent includes end padding (padding on
-// overflow containers does not reliably widen scrollWidth in all engines).
 .boardContent {
   display: inline-block;
   vertical-align: top;
   box-sizing: border-box;
   padding: 16px;
   min-width: 100%;
+  width: max-content;
+}
+
+.boardPinchSurface {
+  display: inline-block;
+  vertical-align: top;
+  width: max-content;
+  transform-origin: top left;
 }
 
 .boardArea {
@@ -71,7 +78,6 @@
         --daily-card-height
       )
   );
-
 }
 
 @media screen and (max-width: 768px) {

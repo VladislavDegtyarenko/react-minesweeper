@@ -1,19 +1,33 @@
+.scrollHints {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  user-select: none;
+  --scroll-hint-bottom: 0;
+  --scroll-hint-left: 0;
+  --scroll-hint-right: 0;
+  --scroll-hint-top: 0;
+}
+
 .scrollHint {
   display: block;
   pointer-events: none;
   position: absolute;
   user-select: none;
   transition: opacity 100ms var(--easing-standard);
+  // --hint-size: var(--cell-size);
+  --hint-size: 2rem;
 
   &.top,
   &.bottom {
     left: 0;
     right: 0;
-    height: var(--cell-size);
+    height: var(--hint-size);
   }
 
   &.top {
     top: 0;
+    opacity: var(--scroll-hint-top);
     background: linear-gradient(
       to bottom,
       var(--surface-1) 0%,
@@ -25,6 +39,7 @@
 
   &.bottom {
     bottom: 0;
+    opacity: var(--scroll-hint-bottom);
     background: linear-gradient(
       to top,
       var(--surface-1) 0%,
@@ -38,11 +53,12 @@
   &.right {
     top: 0;
     bottom: 0;
-    width: var(--cell-size);
+    width: var(--hint-size);
   }
 
   &.left {
     left: 0;
+    opacity: var(--scroll-hint-left);
     background: linear-gradient(
       to right,
       var(--surface-1) 0%,
@@ -54,6 +70,7 @@
 
   &.right {
     right: 0;
+    opacity: var(--scroll-hint-right);
     background: linear-gradient(
       to left,
       var(--surface-1) 0%,

@@ -20,6 +20,10 @@ export const ZOOM_OPTIONS = [
 ];
 
 export const ZOOM_VALUES = ZOOM_OPTIONS.map((option) => option.value);
+export const MIN_ZOOM = ZOOM_VALUES[0];
+export const MAX_ZOOM = ZOOM_VALUES[ZOOM_VALUES.length - 1];
+export const ZOOM_PRECISION = 1000;
+export const ZOOM_PRESET_MATCH_DELTA = 0.005;
 
 export const DEFAULT_ZOOM = ZOOM_OPTIONS.find(
   (option) => option.label === 'M',

@@ -4,3 +4,11 @@
   filter: brightness(0) invert(1);
   opacity: 0.76;
 }
+
+.timerValue {
+  contain: layout paint style;
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  min-width: 5ch;
+  text-align: right;
+}
