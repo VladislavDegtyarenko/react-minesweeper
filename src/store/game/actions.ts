@@ -134,16 +134,27 @@ export const cancelLevelChange = () => {
   return undefined;
 };
 
+// Returns true when the confirmation dialog was opened (game in progress), or
+// false when there is no active game to lose and the caller should navigate to
+// the lobby directly.
 export const requestGameChange = () => {
   const { gameStatus } = useGameStore.getState();
   const gameStatusBeforeLevelChange =
     gameStatus === 'playing' || gameStatus === 'paused' ? gameStatus : null;
+
+  // Only 'playing'/'paused' have a board worth confirming; other statuses go
+  // straight to the lobby without the dialog.
+  if (!gameStatusBeforeLevelChange) {
+    return false;
+  }
 
   setLevelChangeDialogState(null, gameStatusBeforeLevelChange, null, 'lobby');
 
   if (gameStatus === 'playing') {
     useGameStore.setState({ gameStatus: 'paused' });
   }
+
+  return true;
 };
 
 const buildBoardForCurrentMode = (level: ReturnType<typeof getLevelById>) => {
