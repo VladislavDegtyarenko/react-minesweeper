@@ -21,6 +21,7 @@ import { getCellSize } from './utils';
 import ScrollHints from '../ScrollHints';
 import BoardFrame from '../BoardFrame';
 import { useBoardPinchZoom } from './hooks/useBoardPinchZoom';
+import { useBoardTouchDefaultSuppression } from './hooks/useBoardTouchDefaultSuppression';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -58,6 +59,8 @@ const Board = ({ dailyCardHeight, gameFooterHeight }: Props) => {
     gameStatus === 'paused' &&
     !(isLevelChangeDialogOpen && gameStatusBeforeLevelChange === 'playing');
   const isInteractive = gameStatus === 'playing' || gameStatus === 'idle';
+
+  useBoardTouchDefaultSuppression({ boardRef });
 
   useEffect(() => {
     return resetBoardInteraction;
