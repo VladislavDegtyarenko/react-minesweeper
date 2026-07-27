@@ -1,8 +1,10 @@
-import type { PinchPerfDebugSnapshot } from '@/components/Game/debug/pinchPerf';
+import type { PinchPerfDebugSnapshot } from '@/components/Game/debug/types';
+import type {
+  BoardElementStats,
+  PinchRates,
+} from '@/components/Game/components/FpsDebugOverlay/types';
 import { createCx } from '@/utils';
-import type { BoardElementStats } from '../../utils';
-import type { PinchRates } from '../../types';
-import styles from '../../styles.module.scss';
+import styles from '@/components/Game/components/FpsDebugOverlay/styles.module.scss';
 
 const cx = createCx(styles);
 
@@ -55,8 +57,16 @@ const PerfDebugDetails = ({ averageApplyMs, board, pinch, rates }: Props) => (
       <span>t {board.surfaceTransform}</span>
     </span>
     <span className={cx('row')}>
+      <span>bitmap {board.canvasBitmap}</span>
+      <span>dpr {board.canvasDpr}</span>
+    </span>
+    <span className={cx('row')}>
       <span>vv {board.viewport}</span>
       <span>cells {board.cellCount}</span>
+      <span>draws {pinch.canvasDraws}</span>
+      <span>full {pinch.canvasFullDraws}</span>
+      <span>dirty {pinch.canvasDirtyDraws}</span>
+      <span>paint {pinch.lastCanvasDrawnCells}</span>
       <span>writes {pinch.scrollWrites}</span>
     </span>
   </>

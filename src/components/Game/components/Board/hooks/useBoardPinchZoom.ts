@@ -5,6 +5,7 @@ import {
   type PointerEvent,
   type RefObject,
 } from 'react';
+import { clamp } from '@/utils';
 import { cancelCellPointerSequence } from '@/game/board';
 import { adjustZoom } from '@/store/settings/actions';
 import { useSettingsStore } from '@/store/settings';
@@ -17,6 +18,7 @@ import {
   recordPinchPerfPhase,
   recordPinchPerfPointerMove,
 } from '@/components/Game/debug/pinchPerf';
+import { BOARD_VIEWPORT_CHANGE_EVENT } from '../constants';
 
 type TouchPoint = {
   clientX: number;
@@ -50,6 +52,8 @@ type PinchState = {
   contentX: number;
   contentY: number;
   currentZoom: number;
+  frameHeight: number;
+  frameWidth: number;
   hasPreviewStarted: boolean;
   maxFrameHeight: number;
   startDistance: number;
@@ -71,8 +75,9 @@ type PanState = {
 
 type UseBoardPinchZoomOptions = {
   boardRef: RefObject<HTMLDivElement>;
+  bleedFrameRef: RefObject<HTMLElement>;
   contentRef: RefObject<HTMLDivElement>;
-  surfaceRef: RefObject<HTMLDivElement>;
+  pinchSurfaceRef: RefObject<HTMLElement>;
 };
 
 const MIN_PINCH_DISTANCE = 1;
@@ -126,10 +131,22 @@ const getContentSizeForScale = (
   };
 };
 
-const getBoardFrameSize = (
+const clearPinchFrameSize = (frameElement: HTMLElement | null): void => {
+  if (frameElement) {
+    frameElement.style.width = '';
+    frameElement.style.height = '';
+  }
+};
+
+const getPinchFrameSizeForScale = (
   pinchState: PinchState,
-  contentSize: Size,
-): Size => {
+  scale: number,
+): Size => ({
+  height: pinchState.frameHeight + pinchState.surfaceHeight * (scale - 1),
+  width: pinchState.frameWidth + pinchState.surfaceWidth * (scale - 1),
+});
+
+const getBoardFrameSize = (pinchState: PinchState, contentSize: Size): Size => {
   // boardWidth/boardHeight is the rest viewport size, i.e. the content size
   // already capped by the board's max-width/max-height. When the board
   // overflows that viewport, (boardWidth - contentWidth) is negative; adding it
@@ -190,9 +207,6 @@ const getScrollPositionForZoom = (
     scrollTop: scaledPosition.y - (pinchState.centerY - boardTop),
   };
 };
-
-const clamp = (value: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, value));
 
 const getClampedScrollPosition = (
   boardElement: HTMLElement,
@@ -271,8 +285,9 @@ const releasePointerCapture = (event: PointerEvent<HTMLDivElement>): void => {
 
 export function useBoardPinchZoom({
   boardRef,
+  bleedFrameRef,
   contentRef,
-  surfaceRef,
+  pinchSurfaceRef,
 }: UseBoardPinchZoomOptions) {
   const activePointersRef = useRef(new Map<number, TouchPoint>());
   const pinchedPointerIdsRef = useRef(new Set<number>());
@@ -281,6 +296,17 @@ export function useBoardPinchZoom({
   const isPinchingRef = useRef(false);
   const pendingZoomRef = useRef<PendingZoom | null>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const commitFrameRef = useRef<number | null>(null);
+  const commitGenerationRef = useRef(0);
+
+  const cancelCommitFrame = useCallback(() => {
+    commitGenerationRef.current += 1;
+
+    if (commitFrameRef.current !== null) {
+      window.cancelAnimationFrame(commitFrameRef.current);
+      commitFrameRef.current = null;
+    }
+  }, []);
 
   const applyPendingZoom = useCallback(() => {
     const shouldRecordPerf = getIsPinchPerfDebugEnabled();
@@ -296,12 +322,13 @@ export function useBoardPinchZoom({
         recordPinchPerfFrameSkipped('empty');
       }
 
-      return;
+      return undefined;
     }
 
     const boardElement = boardRef.current;
+    const pinchFrameElement = bleedFrameRef.current;
     const contentElement = contentRef.current;
-    const surfaceElement = surfaceRef.current;
+    const surfaceElement = pinchSurfaceRef.current;
     const pinchState = pinchStateRef.current;
 
     if (!boardElement || !contentElement || !surfaceElement || !pinchState) {
@@ -309,7 +336,7 @@ export function useBoardPinchZoom({
         recordPinchPerfFrameSkipped('missing-element');
       }
 
-      return;
+      return undefined;
     }
 
     if (
@@ -319,7 +346,7 @@ export function useBoardPinchZoom({
         recordPinchPerfFrameSkipped('epsilon');
       }
 
-      return;
+      return undefined;
     }
 
     pinchState.centerX = pendingZoom.center.clientX;
@@ -328,6 +355,14 @@ export function useBoardPinchZoom({
     const { scale } = getScaledContentPosition(pinchState, pendingZoom.zoom);
     const contentSize = getContentSizeForScale(pinchState, scale);
     const frameSize = getBoardFrameSize(pinchState, contentSize);
+    const pinchFrameSize = getPinchFrameSizeForScale(pinchState, scale);
+    // The fixed-bleed wrapper does not receive the scale transform. Resize its
+    // border box to the inner board's visual size so pinch-out cannot retain
+    // the larger committed scroll range.
+    if (pinchFrameElement) {
+      pinchFrameElement.style.width = `${pinchFrameSize.width}px`;
+      pinchFrameElement.style.height = `${pinchFrameSize.height}px`;
+    }
 
     boardElement.style.width = `${frameSize.width}px`;
     boardElement.style.height = `${frameSize.height}px`;
@@ -351,6 +386,7 @@ export function useBoardPinchZoom({
     surfaceElement.style.transform = `scale(${scale})`;
     boardElement.scrollLeft = scrollLeft;
     boardElement.scrollTop = scrollTop;
+    boardElement.dispatchEvent(new Event(BOARD_VIEWPORT_CHANGE_EVENT));
     pinchState.currentZoom = pendingZoom.zoom;
 
     if (shouldRecordPerf) {
@@ -361,14 +397,14 @@ export function useBoardPinchZoom({
         zoom: pendingZoom.zoom,
       });
     }
-  }, [boardRef, contentRef, surfaceRef]);
+  }, [bleedFrameRef, boardRef, contentRef, pinchSurfaceRef]);
 
   const scheduleZoom = useCallback(
     (pendingZoom: PendingZoom) => {
       pendingZoomRef.current = pendingZoom;
 
       if (animationFrameRef.current !== null) {
-        return;
+        return undefined;
       }
 
       recordPinchPerfFrameScheduled();
@@ -382,12 +418,15 @@ export function useBoardPinchZoom({
     (event: PointerEvent<HTMLDivElement>): boolean => {
       const pinchPoints = getPinchPoints(activePointersRef.current);
       const boardElement = boardRef.current;
+      const pinchFrameElement = bleedFrameRef.current;
       const contentElement = contentRef.current;
-      const surfaceElement = surfaceRef.current;
+      const surfaceElement = pinchSurfaceRef.current;
 
       if (!pinchPoints || !boardElement || !contentElement || !surfaceElement) {
         return false;
       }
+
+      cancelCommitFrame();
 
       const [firstPoint, secondPoint] = pinchPoints;
       const startDistance = getDistance(firstPoint, secondPoint);
@@ -403,9 +442,12 @@ export function useBoardPinchZoom({
       });
       const center = getCenter(firstPoint, secondPoint);
 
+      boardElement.style.width = '';
+      boardElement.style.height = '';
       contentElement.style.width = '';
       contentElement.style.height = '';
       surfaceElement.style.transform = '';
+      clearPinchFrameSize(pinchFrameElement);
 
       const rect = boardElement.getBoundingClientRect();
       const contentRect = contentElement.getBoundingClientRect();
@@ -437,6 +479,10 @@ export function useBoardPinchZoom({
         contentX: boardElement.scrollLeft + offsetX,
         contentY: boardElement.scrollTop + offsetY,
         currentZoom: startZoom,
+        frameHeight:
+          pinchFrameElement?.offsetHeight ?? surfaceElement.offsetHeight,
+        frameWidth:
+          pinchFrameElement?.offsetWidth ?? surfaceElement.offsetWidth,
         hasPreviewStarted: false,
         maxFrameHeight,
         startDistance,
@@ -462,7 +508,7 @@ export function useBoardPinchZoom({
 
       return true;
     },
-    [boardRef, contentRef, surfaceRef],
+    [bleedFrameRef, boardRef, cancelCommitFrame, contentRef, pinchSurfaceRef],
   );
 
   const commitPinchZoom = useCallback(() => {
@@ -474,11 +520,12 @@ export function useBoardPinchZoom({
 
     const pinchState = pinchStateRef.current;
     const boardElement = boardRef.current;
+    const pinchFrameElement = bleedFrameRef.current;
     const contentElement = contentRef.current;
-    const surfaceElement = surfaceRef.current;
+    const surfaceElement = pinchSurfaceRef.current;
 
     if (!pinchState || !contentElement || !surfaceElement) {
-      return;
+      return undefined;
     }
 
     const finalZoom = pinchState.currentZoom;
@@ -491,11 +538,20 @@ export function useBoardPinchZoom({
 
     recordPinchPerfPhase('commit', activePointersRef.current.size);
 
-    window.requestAnimationFrame(() => {
+    cancelCommitFrame();
+    const commitGeneration = commitGenerationRef.current;
+
+    commitFrameRef.current = window.requestAnimationFrame(() => {
+      if (commitGeneration !== commitGenerationRef.current) {
+        return undefined;
+      }
+
+      commitFrameRef.current = null;
       contentElement.style.width = '';
       contentElement.style.height = '';
       surfaceElement.style.transform = '';
       surfaceElement.style.willChange = '';
+      clearPinchFrameSize(pinchFrameElement);
 
       if (boardElement) {
         boardElement.style.width = '';
@@ -508,9 +564,17 @@ export function useBoardPinchZoom({
 
         boardElement.scrollLeft = scrollLeft;
         boardElement.scrollTop = scrollTop;
+        boardElement.dispatchEvent(new Event(BOARD_VIEWPORT_CHANGE_EVENT));
       }
     });
-  }, [applyPendingZoom, boardRef, contentRef, surfaceRef]);
+  }, [
+    applyPendingZoom,
+    bleedFrameRef,
+    boardRef,
+    cancelCommitFrame,
+    contentRef,
+    pinchSurfaceRef,
+  ]);
 
   const onPointerDown = useCallback(
     (event: PointerEvent<HTMLDivElement>): boolean => {
@@ -690,14 +754,16 @@ export function useBoardPinchZoom({
     const activePointers = activePointersRef.current;
     const pinchedPointerIds = pinchedPointerIdsRef.current;
     const boardElement = boardRef.current;
+    const pinchFrameElement = bleedFrameRef.current;
     const contentElement = contentRef.current;
-    const surfaceElement = surfaceRef.current;
+    const surfaceElement = pinchSurfaceRef.current;
 
     return () => {
       if (animationFrameRef.current !== null) {
         window.cancelAnimationFrame(animationFrameRef.current);
       }
 
+      cancelCommitFrame();
       activePointers.clear();
       pinchedPointerIds.clear();
       panStateRef.current = null;
@@ -716,8 +782,10 @@ export function useBoardPinchZoom({
         surfaceElement.style.transform = '';
         surfaceElement.style.willChange = '';
       }
+
+      clearPinchFrameSize(pinchFrameElement);
     };
-  }, [boardRef, contentRef, surfaceRef]);
+  }, [bleedFrameRef, boardRef, cancelCommitFrame, contentRef, pinchSurfaceRef]);
 
   return {
     onPointerCancel: onPointerEnd,

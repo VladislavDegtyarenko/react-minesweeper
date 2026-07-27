@@ -1,26 +1,19 @@
-import { memo, useEffect, useRef, type PointerEvent } from 'react';
+import { memo, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useGameStore } from '@/store/game';
 import {
   selectIsLevelChangeDialogOpen,
   selectGameStatusBeforeLevelChange,
 } from '@/store/game/selectors';
-import {
-  beginBoardInteraction,
-  endBoardInteraction,
-  resetBoardInteraction,
-} from '@/components/Game/utils/boardInteraction';
 import { selectZoom } from '@/store/settings/selectors';
 import { useSettingsStore } from '@/store/settings';
-import Row from '../Row';
-import PauseOverlay from '../PauseOverlay';
+import BoardFrame from '@/components/Game/components/BoardFrame';
+import PauseOverlay from '@/components/Game/components/PauseOverlay';
+import ScrollHints from '@/components/Game/components/ScrollHints';
+import { useBoardScrollHints } from '@/components/Game/components/ScrollHints/hooks/useBoardScrollHints';
 import BoardWrapper from './BoardWrapper';
-import { useBoardScrollHints } from '../ScrollHints/hooks/useBoardScrollHints';
-import { useBoardPointerHandlers } from '../ScrollHints/hooks/useBoardPointerHandlers';
-import { getCellSize } from './utils';
-import ScrollHints from '../ScrollHints';
-import BoardFrame from '../BoardFrame';
-import { useBoardPinchZoom } from './hooks/useBoardPinchZoom';
+import { useBoardInputHandlers } from './hooks/useBoardInputHandlers';
+import BoardCanvas from './components/BoardCanvas';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -29,8 +22,9 @@ type Props = {
 };
 
 const Board = ({ dailyCardHeight, gameFooterHeight }: Props) => {
-  const { cols, rows, gameStatus } = useGameStore(
+  const { board, cols, rows, gameStatus } = useGameStore(
     useShallow((state) => ({
+      board: state.board,
       cols: state.level.cols,
       rows: state.level.rows,
       gameStatus: state.gameStatus,
@@ -40,87 +34,62 @@ const Board = ({ dailyCardHeight, gameFooterHeight }: Props) => {
   const gameStatusBeforeLevelChange = useGameStore(
     selectGameStatusBeforeLevelChange,
   );
+  const boardBleedFrameRef = useRef<HTMLDivElement>(null);
   const boardContentRef = useRef<HTMLDivElement>(null);
+  const boardRenderLayerRef = useRef<HTMLDivElement>(null);
   const boardSurfaceRef = useRef<HTMLDivElement>(null);
   const zoom = useSettingsStore(selectZoom);
-  const cellSize = getCellSize(zoom);
+  const layoutKey = `${cols}|${rows}|${zoom}|${dailyCardHeight}|${gameFooterHeight}`;
   const { boardRef, scrollHintsRef } = useBoardScrollHints({
-    layoutKey: `${cols}|${rows}|${zoom}|${dailyCardHeight}|${gameFooterHeight}`,
+    layoutKey,
   });
-  const { onContextMenu, onPointerEvent, throttledPointerMove } =
-    useBoardPointerHandlers({ gameStatus });
-  const pinchZoomHandlers = useBoardPinchZoom({
+  const boardInput = useBoardInputHandlers({
     boardRef,
+    bleedFrameRef: boardBleedFrameRef,
     contentRef: boardContentRef,
+    gameStatus,
+    layoutKey,
+    pinchSurfaceRef: boardRenderLayerRef,
     surfaceRef: boardSurfaceRef,
   });
   const shouldShowPauseOverlay =
     gameStatus === 'paused' &&
     !(isLevelChangeDialogOpen && gameStatusBeforeLevelChange === 'playing');
-  const isInteractive = gameStatus === 'playing' || gameStatus === 'idle';
-
-  useEffect(() => {
-    return resetBoardInteraction;
-  }, []);
-
-  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    beginBoardInteraction();
-
-    if (pinchZoomHandlers.onPointerDown(event) || !isInteractive) {
-      return;
-    }
-
-    onPointerEvent(event);
-  };
-  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (pinchZoomHandlers.onPointerMove(event) || !isInteractive) {
-      return;
-    }
-
-    throttledPointerMove(event);
-  };
-  const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
-    endBoardInteraction();
-
-    if (pinchZoomHandlers.onPointerUp(event) || !isInteractive) {
-      return;
-    }
-
-    onPointerEvent(event);
-  };
-  const handlePointerCancel = (event: PointerEvent<HTMLDivElement>) => {
-    endBoardInteraction();
-
-    if (pinchZoomHandlers.onPointerCancel(event) || !isInteractive) {
-      return;
-    }
-
-    onPointerEvent(event);
-  };
 
   return (
     <BoardWrapper
-      cellSize={cellSize}
       dailyCardHeight={dailyCardHeight}
       gameFooterHeight={gameFooterHeight}
-      zoom={zoom}
     >
       <BoardFrame
         ref={boardRef}
+        data-board-frame="true"
         data-tour-id="board"
         isPaused={gameStatus === 'paused'}
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onPointerMove={handlePointerMove}
-        onPointerCancel={handlePointerCancel}
-        onContextMenu={isInteractive ? onContextMenu : undefined}
+        onPointerDown={boardInput.onPointerDown}
+        onPointerUp={boardInput.onPointerUp}
+        onPointerMove={boardInput.onPointerMove}
+        onPointerCancel={boardInput.onPointerCancel}
+        onPointerLeave={boardInput.onPointerLeave}
+        onContextMenu={boardInput.onContextMenu}
+        onScroll={boardInput.onScroll}
       >
         <div ref={boardContentRef} className={styles.boardContent}>
-          <div ref={boardSurfaceRef} className={styles.boardPinchSurface}>
-            {Array.from({ length: rows }, (_, rowIndex) => (
-              <Row rowIndex={rowIndex} key={rowIndex} />
-            ))}
-          </div>
+          <BoardCanvas
+            board={board}
+            boardRef={boardRef}
+            bleedFrameRef={boardBleedFrameRef}
+            cols={cols}
+            hoverSnapRevision={boardInput.hoverSnapRevision}
+            hoveredCell={boardInput.hoveredCell}
+            isGameLost={gameStatus === 'lost'}
+            pressSnapRevision={boardInput.pressSnapRevision}
+            pressedCell={boardInput.pressedCell}
+            renderLayerRef={boardRenderLayerRef}
+            rows={rows}
+            surfaceRef={boardSurfaceRef}
+            zoom={zoom}
+          />
         </div>
       </BoardFrame>
 

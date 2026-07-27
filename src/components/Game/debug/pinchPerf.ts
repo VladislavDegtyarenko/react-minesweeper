@@ -1,25 +1,4 @@
-export type PinchPerfPhase = 'idle' | 'pan' | 'pinch' | 'commit';
-
-export type PinchPerfDebugSnapshot = {
-  activePointers: number;
-  appliedFrames: number;
-  enabled: boolean;
-  lastApplyMs: number;
-  lastInputLagMs: number;
-  lastSkipReason: string;
-  maxApplyMs: number;
-  maxInputLagMs: number;
-  phase: PinchPerfPhase;
-  pointerMoves: number;
-  scale: number;
-  scheduledFrames: number;
-  scrollWrites: number;
-  skippedFrames: number;
-  startedAt: number;
-  totalApplyMs: number;
-  updatedAt: number;
-  zoom: number;
-};
+import type { PinchPerfDebugSnapshot, PinchPerfPhase } from './types';
 
 const DEBUG_STATE_KEY = '__MINESWEEPER_PINCH_PERF_DEBUG__';
 
@@ -37,7 +16,11 @@ const createSnapshot = (enabled = false): PinchPerfDebugSnapshot => {
   return {
     activePointers: 0,
     appliedFrames: 0,
+    canvasDirtyDraws: 0,
+    canvasDraws: 0,
+    canvasFullDraws: 0,
     enabled,
+    lastCanvasDrawnCells: 0,
     lastApplyMs: 0,
     lastInputLagMs: 0,
     lastSkipReason: '',
@@ -168,5 +151,24 @@ export const recordPinchPerfFrameApplied = ({
     snapshot.scrollWrites += scrollWrites;
     snapshot.totalApplyMs += applyMs;
     snapshot.zoom = zoom;
+  });
+};
+
+export const recordBoardCanvasDraw = ({
+  drawnCells,
+  mode,
+}: {
+  drawnCells: number;
+  mode: 'dirty' | 'full';
+}): void => {
+  updateSnapshot((snapshot) => {
+    snapshot.canvasDraws += 1;
+    snapshot.lastCanvasDrawnCells = drawnCells;
+
+    if (mode === 'dirty') {
+      snapshot.canvasDirtyDraws += 1;
+    } else {
+      snapshot.canvasFullDraws += 1;
+    }
   });
 };

@@ -53,16 +53,9 @@
   display: inline-block;
   vertical-align: top;
   box-sizing: border-box;
-  padding: 16px;
+  padding: 0;
   min-width: 100%;
   width: max-content;
-}
-
-.boardPinchSurface {
-  display: inline-block;
-  vertical-align: top;
-  width: max-content;
-  transform-origin: top left;
 }
 
 .boardArea {
@@ -89,10 +82,6 @@
     );
     border: none;
     border-radius: 0;
-  }
-
-  .boardContent {
-    padding: 10px;
   }
 
   .boardArea {

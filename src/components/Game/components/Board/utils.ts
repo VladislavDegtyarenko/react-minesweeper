@@ -1,49 +1,45 @@
 import type { CSSProperties, PointerEvent } from 'react';
-import {
-  CELL_BORDER_WIDTH_PX,
-  CELL_GAP_PX,
-  CELL_HIT_INSET_PX,
-  CELL_SELECTOR,
-  CELL_SIZE_REM,
-} from './constants';
+import { CELL_GAP_PX, CELL_SIZE_REM } from './constants';
+import { getBoardCellFromClientPoint, getBoardGridSize } from './geometry';
 
-export const getCellSize = (zoom: number) => `${CELL_SIZE_REM * zoom}rem`;
+const formatCssNumber = (value: number): number => Number(value.toFixed(6));
 
-// Pinch-zoom previews the board with a single transform: scale(), which
-// scales every rendered pixel uniformly - including the gap/inset/border
-// widths below, even though they're normally fixed px values. Without this,
-// committing the zoom (which only resizes --cell-size) makes those fixed
-// values visually "snap" back to their unscaled size. Scaling them here too
-// keeps the committed board consistent with what the pinch preview showed.
-export const getCellGapVars = (zoom: number): CSSProperties =>
-  ({
-    '--board-cell-gap': `${CELL_GAP_PX * zoom}px`,
-    '--board-cell-hit-inset': `${CELL_HIT_INSET_PX * zoom}px`,
-    '--cell-border-width': `${CELL_BORDER_WIDTH_PX * zoom}px`,
-  }) as CSSProperties;
+const getBoardCanvasAxisSize = (cellCount: number, zoom: number): string => {
+  const cellsRem = formatCssNumber(cellCount * CELL_SIZE_REM * zoom);
+  const gapsPx = formatCssNumber(cellCount * CELL_GAP_PX * zoom);
+
+  return `calc(${cellsRem}rem + ${gapsPx}px)`;
+};
+
+export const getBoardCanvasStyle = ({
+  cols,
+  rows,
+  zoom,
+}: {
+  cols: number;
+  rows: number;
+  zoom: number;
+}): CSSProperties => ({
+  height: getBoardCanvasAxisSize(rows, zoom),
+  width: getBoardCanvasAxisSize(cols, zoom),
+});
 
 export const getRowAndCellIndex = (
   e: PointerEvent<HTMLDivElement>,
+  surfaceElement: HTMLElement,
 ): { rowIndex: number; cellIndex: number } | undefined => {
-  const element = e.target as HTMLElement;
-  const cellElement = element.closest(CELL_SELECTOR);
+  const gridSize = getBoardGridSize(surfaceElement);
 
-  if (!cellElement || !(cellElement instanceof HTMLElement)) {
+  if (!gridSize) {
     return undefined;
   }
 
-  const { row, cell } = cellElement.dataset;
-
-  if (!row || !cell) {
-    return undefined;
-  }
-
-  const rowIndex = parseInt(row);
-  const cellIndex = parseInt(cell);
-
-  if (isNaN(rowIndex) || isNaN(cellIndex)) {
-    return undefined;
-  }
-
-  return { rowIndex, cellIndex };
+  return (
+    getBoardCellFromClientPoint({
+      clientX: e.clientX,
+      clientY: e.clientY,
+      ...gridSize,
+      surfaceRect: surfaceElement.getBoundingClientRect(),
+    }) ?? undefined
+  );
 };

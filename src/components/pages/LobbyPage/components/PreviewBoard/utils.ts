@@ -1,6 +1,6 @@
 import { CELL_MARKERS, DIRECTIONS } from '@/config';
+import { PREVIEW_BOARDS } from '@/components/pages/LobbyPage/constants';
 import type { GameCell, Level, TBoard } from '@/types';
-import { PREVIEW_BOARDS } from '../../constants';
 
 type PreviewPoint = {
   row: number;
@@ -17,7 +17,10 @@ const createRandom = (seed: number) => {
   };
 };
 
-const shufflePoints = (points: PreviewPoint[], seed: number): PreviewPoint[] => {
+const shufflePoints = (
+  points: PreviewPoint[],
+  seed: number,
+): PreviewPoint[] => {
   const random = createRandom(seed);
   const shuffled = [...points];
 

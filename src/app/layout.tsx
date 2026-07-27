@@ -17,11 +17,13 @@ import type { Viewport } from 'next';
 export const metadata = generateMetadata({ isRootLayout: true });
 
 /**
- * Disables pinch- and double-tap-zoom at the viewport level.
- * Required on iOS to suppress the "drag to select" magnifier gesture
- * that fires on a tap → release → press-and-hold sequence, which is
- * tied to the double-tap-to-zoom system rather than per-element CSS.
- * The game has its own in-app zoom, so browser-level zoom is not needed.
+ * Disables pinch- and double-tap-zoom at the viewport level, since the game
+ * ships its own in-app zoom.
+ *
+ * Note: iOS Safari ignores `maximumScale` and `userScalable` for accessibility
+ * reasons, so this does nothing there — including for the "drag to select"
+ * magnifier that a tap → release → press-and-hold sequence triggers. That
+ * gesture is suppressed by `useBoardTouchDefaultSuppression` instead.
  */
 export const viewport: Viewport = {
   width: 'device-width',

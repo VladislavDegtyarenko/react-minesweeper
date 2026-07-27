@@ -1,0 +1,41 @@
+.bleedFrame {
+  --board-canvas-bleed: var(--board-canvas-desktop-bleed);
+
+  // Shadow room stays in screen CSS pixels while the inner board is scaled.
+  box-sizing: border-box;
+  display: inline-block;
+  flex-shrink: 0;
+  margin: 0;
+  padding: var(--board-canvas-bleed);
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+
+  @media screen and (max-width: 768px) {
+    --board-canvas-bleed: var(--board-canvas-mobile-bleed);
+  }
+}
+
+.renderLayer {
+  display: block;
+  position: relative;
+  transform-origin: top left;
+  // Keep the camera layer intrinsic when its fixed-bleed parent gets an
+  // explicit preview size.
+  width: fit-content;
+}
+
+.surface {
+  display: block;
+  pointer-events: none;
+}
+
+.canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  transform-origin: top left;
+}

@@ -1,5 +1,18 @@
-import type { PinchPerfDebugSnapshot } from '@/components/Game/debug/pinchPerf';
-import type { BoardElementStats } from './utils';
+import type { PinchPerfDebugSnapshot } from '@/components/Game/debug/types';
+
+export type BoardElementStats = {
+  boardClient: string;
+  boardScroll: string;
+  canvasBitmap: string;
+  canvasDpr: string;
+  cellCount: number;
+  contentBox: string;
+  contentInline: string;
+  scroll: string;
+  surfaceBox: string;
+  surfaceTransform: string;
+  viewport: string;
+};
 
 export type FpsStats = {
   fps: number;

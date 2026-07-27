@@ -1,3 +1,4 @@
+export { clamp } from './clamp';
 export { createCx } from './createCx';
 export { debounce } from './debounce';
 export { deepClone } from './deepClone';
