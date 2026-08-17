@@ -2,6 +2,7 @@
 import '@/styles/globals.scss';
 
 import { ClerkProvider } from '@clerk/nextjs';
+import { Analytics } from '@vercel/analytics/next';
 import { generateMetadata } from '@/lib/seo';
 import ClerkAuthBridge from '@/components/ClerkAuthBridge';
 import Header from '@/components/layout/Header';
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 
             <Footer />
           </div>
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>

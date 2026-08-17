@@ -14,8 +14,8 @@ export default function PrivacyPage() {
     <LegalDocument
       title="Privacy Policy"
       description="How Minesweeper collects, uses, stores, and discloses personal data for accounts and the shared leaderboard."
-      lastUpdatedDateTime="2026-05-14"
-      lastUpdated="May 14, 2026"
+      lastUpdatedDateTime="2026-08-17"
+      lastUpdated="August 17, 2026"
     >
       <section>
         <h2>1. Controller and scope</h2>
@@ -74,6 +74,14 @@ export default function PrivacyPage() {
             sound mute setting, and the selected game mode (free play or daily
             challenge).
           </li>
+          <li>
+            <strong>Website analytics:</strong> anonymized page views collected
+            through Vercel Web Analytics, including the visited URL or route,
+            timestamp, referrer, filtered query parameters, approximate
+            location, browser, operating system, and device type. This data is
+            used only in aggregate and is not associated with an account or IP
+            address.
+          </li>
         </ul>
       </section>
 
@@ -94,6 +102,9 @@ export default function PrivacyPage() {
             Let you delete your account and associated stored profile data.
           </li>
           <li>Operate, secure, and troubleshoot the service.</li>
+          <li>
+            Understand aggregate website traffic and which pages are used.
+          </li>
         </ul>
       </section>
 
@@ -143,7 +154,8 @@ export default function PrivacyPage() {
           </li>
           <li>
             The site is hosted on Vercel, which processes request and runtime
-            metadata necessary to deliver the service.
+            metadata necessary to deliver the service and provides anonymized
+            Web Analytics.
           </li>
           <li>
             Public leaderboard visitors can see the public profile and score
@@ -151,8 +163,7 @@ export default function PrivacyPage() {
           </li>
           <li>
             Minesweeper does not sell personal information and does not
-            currently use advertising trackers or analytics trackers in this
-            app.
+            use advertising trackers or cross-site analytics trackers.
           </li>
         </ul>
       </section>
@@ -177,6 +188,12 @@ export default function PrivacyPage() {
             removed.
           </li>
           <li>
+            Vercel uses a request-derived hash to distinguish visitors for Web
+            Analytics and discards the visitor session after 24 hours.
+            Aggregated analytics are retained according to the reporting period
+            available for the project&apos;s Vercel plan.
+          </li>
+          <li>
             You can delete your account from the account page. That flow removes
             your scores and daily challenge attempts from our database and
             deletes your account record at Clerk.
@@ -189,9 +206,9 @@ export default function PrivacyPage() {
         <p>
           Minesweeper currently uses cookies that are necessary for signed-in
           Clerk sessions and browser local storage that supports gameplay and
-          account functionality. At the time of this policy, the app does not
-          use analytics cookies, advertising cookies, or cross-site tracking
-          technologies.
+          account functionality. Vercel Web Analytics does not use cookies and
+          does not track visitors across websites. The app does not use
+          advertising cookies or cross-site tracking technologies.
         </p>
         <p>
           If that changes, the site will need updated disclosures and may need
