@@ -26,7 +26,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: npm run lint
+      # Keep the existing warning baseline; additional warnings fail this check.
+      - run: npm run lint -- --max-warnings=19
       - run: npm run typecheck
       - run: npm test
       - run: npm run test:storybook

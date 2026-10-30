@@ -74,7 +74,7 @@ npm run test:storybook:build
 STORYBOOK_URL=https://vladislavdegtyarenko.github.io/react-minesweeper/ npm run test:storybook:build
 ```
 
-GitHub Actions runs lint, TypeScript checking, unit tests, Storybook tests, the static build, and static-site checks on pull requests and `main`. Only a successful `main` run can deploy to Pages. Repository Pages settings must use **GitHub Actions** as the publishing source. Pull requests do not deploy. The public static site has no background Vitest process; use Actions for automated results or the local Storybook test panel for interactive debugging.
+GitHub Actions runs lint, TypeScript checking, unit tests, Storybook tests, the static build, and static-site checks on pull requests and `main`. Lint enforces the existing baseline of at most 19 warnings. Only a successful `main` run can deploy to Pages. Repository Pages settings must use **GitHub Actions** as the publishing source. Pull requests do not deploy. The public static site has no background Vitest process; use Actions for automated results or the local Storybook test panel for interactive debugging.
 
 The full application build uses the existing Vercel deployment configuration. To run application browser tests against a deployed preview instead of starting a local server, set `PLAYWRIGHT_BASE_URL` to that preview's URL when running `npm run test:e2e`. This avoids copying hosting credentials into the project folder.
 
