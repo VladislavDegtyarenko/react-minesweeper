@@ -1,4 +1,8 @@
-import { ButtonHTMLAttributes, PropsWithChildren } from 'react';
+import {
+  forwardRef,
+  type ButtonHTMLAttributes,
+  type PropsWithChildren,
+} from 'react';
 import styles from './styles.module.scss';
 import { createCx } from '@/utils';
 
@@ -16,7 +20,7 @@ type ButtonProps = PropsWithChildren<
   }
 >;
 
-const Button = (props: ButtonProps) => {
+const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const {
     className,
     isIcon,
@@ -31,6 +35,7 @@ const Button = (props: ButtonProps) => {
   return (
     <button
       {...buttonProps}
+      ref={ref}
       className={cx(
         'button',
         !variant && 'solid',
@@ -46,6 +51,8 @@ const Button = (props: ButtonProps) => {
       {children}
     </button>
   );
-};
+});
+
+Button.displayName = 'Button';
 
 export default Button;

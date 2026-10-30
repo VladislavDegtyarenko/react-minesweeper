@@ -1,5 +1,5 @@
 import styles from '../../styles.module.scss';
-import { createCx } from '@/utils';
+import { createCx, getAssetUrl } from '@/utils';
 
 const cx = createCx(styles);
 
@@ -15,7 +15,7 @@ const Cross = ({ isGameLost = false, isFlagged, isMine }: Props) => {
   if (isFlagNotCorrect) {
     return (
       <img
-        src="/icons/cross.svg"
+        src={getAssetUrl('/icons/cross.svg')}
         alt="cross"
         className={cx('image', 'crossFlag')}
         draggable={false}

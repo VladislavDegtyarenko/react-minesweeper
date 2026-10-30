@@ -1,11 +1,11 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { ResumeIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import type { GameSnapshotV1 } from '@/store/game/snapshot/types';
 import { createCx, getTimeDiff } from '@/utils';
-import PreviewBoard from '../PreviewBoard';
-import LobbyCard from '../LobbyCard';
+import PreviewBoard from '@/components/pages/LobbyPage/components/PreviewBoard';
+import LobbyCard from '@/components/pages/LobbyPage/components/LobbyCard';
+import StartNewGameDialog from './components/StartNewGameDialog';
 import { getModeLabel } from './utils';
 import styles from './styles.module.scss';
 
@@ -22,100 +22,66 @@ const ContinueBanner = ({
   onContinue,
   onStartNew,
 }: ContinueBannerProps) => {
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const minesLeft = Math.max(
     0,
     snapshot.level.totalMines - snapshot.totalFlags,
   );
   const elapsedLabel = getTimeDiff(snapshot.elapsedMs);
   const gameTitle = `${getModeLabel(snapshot.mode)} · ${snapshot.level.label}`;
-  const handleConfirmStartNew = () => {
-    onStartNew();
-  };
 
   return (
-    <section className={cx('resumeFlow')} aria-label="Saved game">
-      <LobbyCard
-        ariaLabel="Saved game"
-        className={cx('savedCard')}
-        eyebrow="Saved game"
-        isSelected={true}
-        media={
-          <span className={cx('previewWrap')}>
-            <PreviewBoard board={snapshot.board} level={snapshot.level} />
-          </span>
-        }
-        showSelectionMark={false}
-        title={gameTitle}
-        variant="horizontal"
-      >
-        <div className={cx('summary')}>
-          <div className={cx('stats')} aria-label="Saved game stats">
-            <span className={cx('stat')}>
-              <span className={cx('statLabel')}>Elapsed</span>
-              <span className={cx('statValue')}>{elapsedLabel}</span>
+    <Dialog.Root>
+      <section className={cx('resumeFlow')} aria-label="Saved game">
+        <LobbyCard
+          ariaLabel="Saved game summary"
+          className={cx('savedCard')}
+          eyebrow="Saved game"
+          isSelected={true}
+          media={
+            <span className={cx('previewWrap')}>
+              <PreviewBoard board={snapshot.board} level={snapshot.level} />
             </span>
-            <span className={cx('stat')}>
-              <span className={cx('statLabel')}>Mines left</span>
-              <span className={cx('statValue')}>{minesLeft}</span>
-            </span>
-          </div>
+          }
+          showSelectionMark={false}
+          title={gameTitle}
+          variant="horizontal"
+        >
+          <div className={cx('summary')}>
+            <div className={cx('stats')} aria-label="Saved game stats">
+              <span className={cx('stat')}>
+                <span className={cx('statLabel')}>Elapsed</span>
+                <span className={cx('statValue')}>{elapsedLabel}</span>
+              </span>
+              <span className={cx('stat')}>
+                <span className={cx('statLabel')}>Mines left</span>
+                <span className={cx('statValue')}>{minesLeft}</span>
+              </span>
+            </div>
 
-          <div className={cx('actions')}>
-            <Button
-              className={cx('actionButton')}
-              type="button"
-              variant="primary"
-              onClick={onContinue}
-            >
-              <ResumeIcon /> Continue Game
-            </Button>
-            <Button
-              className={cx('startNewButton')}
-              type="button"
-              variant="secondary"
-              onClick={() => setIsConfirmOpen(true)}
-            >
-              Start New Game
-            </Button>
-          </div>
-        </div>
-      </LobbyCard>
-
-      <Dialog.Root open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-        <Dialog.Portal>
-          <Dialog.Overlay className={cx('dialogOverlay')} />
-
-          <Dialog.Content className={cx('dialogContent')}>
-            <div className={cx('dialogBody')}>
-              <Dialog.Title className={cx('dialogTitle')}>
-                Start a new game?
-              </Dialog.Title>
-              <Dialog.Description className={cx('dialogDescription')}>
-                Your saved {gameTitle} board will be discarded.
-              </Dialog.Description>
-
-              <div className={cx('dialogActions')}>
+            <div className={cx('actions')}>
+              <Button
+                className={cx('actionButton')}
+                type="button"
+                variant="primary"
+                onClick={onContinue}
+              >
+                <ResumeIcon aria-hidden="true" /> Continue Game
+              </Button>
+              <Dialog.Trigger asChild>
                 <Button
+                  className={cx('startNewButton')}
                   type="button"
                   variant="secondary"
-                  onClick={() => setIsConfirmOpen(false)}
-                >
-                  Keep Playing
-                </Button>
-                <Button
-                  type="button"
-                  variant="primary"
-                  onClick={handleConfirmStartNew}
                 >
                   Start New Game
                 </Button>
-              </div>
+              </Dialog.Trigger>
             </div>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
-    </section>
+          </div>
+        </LobbyCard>
+      </section>
+      <StartNewGameDialog gameTitle={gameTitle} onStartNew={onStartNew} />
+    </Dialog.Root>
   );
 };
 

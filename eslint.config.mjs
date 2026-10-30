@@ -13,6 +13,7 @@ const eslintConfig = [
     ignores: [
       '.next/**',
       'coverage/**',
+      'storybook-static/**',
       'node_modules/**',
       'test-results/**',
       'tsconfig.tsbuildinfo',
