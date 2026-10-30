@@ -100,72 +100,6 @@
   box-shadow: none;
 }
 
-.dialogOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  background: rgba(11, 16, 25, 0.58);
-  backdrop-filter: blur(4px);
-}
-
-.dialogContent {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  z-index: 91;
-  width: min(30rem, calc(100vw - 2rem));
-  transform: translate(-50%, -50%);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-card);
-  background: linear-gradient(
-    180deg,
-    var(--surface-1) 0%,
-    var(--surface-2) 100%
-  );
-  box-shadow: var(--shadow-card);
-  animation: dialogEnter 180ms ease;
-}
-
-.dialogBody {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3);
-}
-
-.dialogTitle,
-.dialogDescription {
-  margin: 0;
-}
-
-.dialogTitle {
-  font-size: 1.25rem;
-  line-height: 1.2;
-}
-
-.dialogDescription {
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.dialogActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-1);
-}
-
-@keyframes dialogEnter {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -46%);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
 @media screen and (max-width: 768px) {
   .previewWrap {
     display: none;
@@ -179,13 +113,5 @@
 
   .stats {
     grid-template-columns: 1fr;
-  }
-
-  .dialogActions {
-    flex-direction: column;
-  }
-
-  .dialogBody {
-    padding: var(--space-2);
   }
 }

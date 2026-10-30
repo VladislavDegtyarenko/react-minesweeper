@@ -2,7 +2,7 @@ import { useSettingsStore } from '@/store/settings';
 import { selectZoom } from '@/store/settings/selectors';
 import { motion } from 'framer-motion';
 import styles from '../../styles.module.scss';
-import { createCx } from '@/utils';
+import { createCx, getAssetUrl } from '@/utils';
 
 const cx = createCx(styles);
 
@@ -11,7 +11,7 @@ const QuestionMark = () => {
 
   return (
     <motion.img
-      src="/themes/blue-graphite/icons/Question.png"
+      src={getAssetUrl('/themes/blue-graphite/icons/Question.png')}
       alt="question"
       className={cx('image', 'cellImage')}
       draggable={false}
