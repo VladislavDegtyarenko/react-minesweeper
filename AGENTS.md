@@ -12,10 +12,20 @@
 - Before planning or reviewing non-trivial work, read `.codex/rules/architecture.md` (system map, design principles, routes/SEO conventions, definition of non-trivial).
 - Do not duplicate rule text in agent docs; point agents to the relevant file in `.codex/rules/`.
 
-## PR Descriptions
+## Git rules and flow
+- Prod branch is `main`
+- Before starting the work on a new feature and implementing new ones, switch to prod branch and pull the latest changes. Make sure the branch has no uncommited changes, otherwise tell the user about it.
+- Create a separate branch (e.g. `feat/some-new-feature` or `fix/little-bug-fix`)
 
-- Whenever the user asks for a PR description, PR body, commit summary, branch summary, or pull request text, read `.codex/agents/pr-writer.md` and `.codex/templates/pr-description.md` before answering.
-- Do not write PR text from memory. Do not invent a format. The PR Writer Agent output format is mandatory.
+## Storybook maintenance
+
+- When changing a component, its styles, or a dependency used by its stories, check the neighboring `*.stories.tsx` files and their example helpers for affected behavior.
+- Stories must reuse the real application components and styles. Styling and internal implementation changes appear in Storybook automatically; do not duplicate component code or edit stories just to mirror those changes.
+- When props (component inputs), variants, states, or behavior change, update the affected story inputs, Controls (the editable inputs panel), example wrappers, descriptions, usage examples, and interaction assertions as needed. Add a focused story and meaningful assertions for a new state or behavior within the documented component scope.
+- Keep examples reproducible and isolated: update fixed sample data and the in-memory settings substitute when their contracts change, without introducing real account requests or application-storage access.
+- Run `npm run test:storybook` for affected component behavior and accessibility, and visually inspect affected examples when appearance changes. Automated interaction and accessibility checks do not compare screenshots or prove that a layout looks correct.
+- When Storybook configuration, shared styling, public assets, or asset paths change, also run `STORYBOOK_BASE_PATH=/react-minesweeper npm run build-storybook` and `npm run test:storybook:build` to check the site under its deployment path.
+- The public Storybook updates after a successful `main` workflow builds and publishes it. Follow the user's explicit merge-approval rule; a request to update Storybook does not authorize merging a pull request.
 
 ## Notion (canonical reference)
 
