@@ -49,7 +49,7 @@ export const Closed: Story = {
   play: async ({ canvas, canvasElement }) => {
     await expectCanvasRendered(canvasElement);
     await expect(canvas.getByRole('img')).toHaveAccessibleName(
-      'Minesweeper board, 1 rows by 1 columns. Row 1: closed',
+      'Cell: closed',
     );
   },
 };
@@ -63,7 +63,7 @@ export const AllNumbers: Story = {
     for (const value of [1, 2, 3, 4, 5, 6, 7, 8]) {
       await expect(
         canvas.getByRole('img', {
-          name: `Minesweeper board, 1 rows by 1 columns. Row 1: ${value}`,
+          name: `Cell: ${value}`,
         }),
       ).toBeVisible();
     }
@@ -89,7 +89,7 @@ export const IncorrectFlag: Story = {
   play: async ({ canvas, canvasElement }) => {
     await expectCanvasRendered(canvasElement);
     await expect(canvas.getByRole('img')).toHaveAccessibleName(
-      'Minesweeper board, 1 rows by 1 columns. Row 1: incorrect flag',
+      'Cell: incorrect flag',
     );
   },
 };
@@ -99,10 +99,10 @@ export const MarkerUpdates: Story = {
   play: async ({ canvas, canvasElement }) => {
     await expectCanvasRendered(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Place flag' }));
-    await expect(canvas.getByRole('img')).toHaveAccessibleName(/Row 1: flag$/);
+    await expect(canvas.getByRole('img')).toHaveAccessibleName(/Cell: flag$/);
     await userEvent.click(canvas.getByRole('button', { name: 'Remove flag' }));
     await expect(canvas.getByRole('img')).toHaveAccessibleName(
-      /Row 1: closed$/,
+      /Cell: closed$/,
     );
   },
 };

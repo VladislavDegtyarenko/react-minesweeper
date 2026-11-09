@@ -1,5 +1,4 @@
 export { hasCompleteBoardCanvasAssets, loadBoardCanvasAssets } from './assets';
-export { getBoardCanvasAccessibleLabel } from './accessibility';
 export {
   BOARD_CANVAS_DESKTOP_BLEED_PX,
   BOARD_CANVAS_MOBILE_BLEED_PX,

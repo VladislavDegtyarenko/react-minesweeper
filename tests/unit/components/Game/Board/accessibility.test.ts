@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  describeBoardCell,
-  getBoardCanvasAccessibleLabel,
-} from '@/components/Game/components/Board/renderer/accessibility';
+import { describeBoardCell } from '@/components/Game/components/Board/renderer/accessibility';
 import type { GameCell } from '@/types';
 
 describe('board cell descriptions', () => {
@@ -17,18 +14,6 @@ describe('board cell descriptions', () => {
         ).toBe('closed');
       }
     }
-    const label = getBoardCanvasAccessibleLabel({
-      board: [
-        [
-          { value: 'mine', isOpened: false, marker: null },
-          { value: 8, isOpened: false, marker: null },
-        ],
-      ],
-      isGameLost: false,
-    });
-    expect(label).toContain('1 rows by 2 columns');
-    expect(label).toContain('Row 1: closed, closed');
-    expect(label).not.toContain('8');
   });
 
   it.each<[GameCell, boolean, string]>([

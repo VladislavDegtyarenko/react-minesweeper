@@ -1,5 +1,6 @@
 import { useMemo, useRef } from 'react';
 import BoardFrame from '@/components/Game/components/BoardFrame';
+import { describeBoardCell } from '@/components/Game/components/Board/renderer/accessibility';
 import type { CellMarkerState, TBoard } from '@/types';
 import BoardCanvas from '../../index';
 import styles from './styles.module.scss';
@@ -39,6 +40,7 @@ const CanvasCell = ({
   return (
     <BoardFrame ref={boardRef} className={styles.frame}>
       <BoardCanvas
+        accessibleLabel={`Cell: ${describeBoardCell(board[0][0], isGameLost)}`}
         board={board}
         boardRef={boardRef}
         bleedFrameRef={bleedFrameRef}

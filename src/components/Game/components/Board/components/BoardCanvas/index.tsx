@@ -1,5 +1,4 @@
 import {
-  useMemo,
   useRef,
   type CSSProperties,
   type PropsWithChildren,
@@ -10,7 +9,6 @@ import { useBoardCanvasRenderer } from '@/components/Game/components/Board/hooks
 import {
   BOARD_CANVAS_DESKTOP_BLEED_PX,
   BOARD_CANVAS_MOBILE_BLEED_PX,
-  getBoardCanvasAccessibleLabel,
   type BoardCanvasInteractionState,
 } from '@/components/Game/components/Board/renderer';
 import type { TBoard } from '@/types';
@@ -18,6 +16,7 @@ import styles from './styles.module.scss';
 
 type Props = PropsWithChildren<
   BoardCanvasInteractionState & {
+    accessibleLabel?: string;
     board: TBoard;
     boardRef: RefObject<HTMLDivElement>;
     bleedFrameRef: RefObject<HTMLDivElement>;
@@ -31,6 +30,7 @@ type Props = PropsWithChildren<
 >;
 
 const BoardCanvas = ({
+  accessibleLabel = 'Minesweeper game board',
   board,
   children,
   boardRef,
@@ -47,14 +47,6 @@ const BoardCanvas = ({
   zoom,
 }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const accessibleLabel = useMemo(
-    () =>
-      getBoardCanvasAccessibleLabel({
-        board,
-        isGameLost,
-      }),
-    [board, isGameLost],
-  );
   const areAssetsReady = useBoardCanvasRenderer({
     board,
     boardRef,
@@ -96,7 +88,7 @@ const BoardCanvas = ({
           data-board-canvas-ready={areAssetsReady ? 'true' : 'false'}
           role="img"
         >
-          Minesweeper game board
+          {accessibleLabel}
         </canvas>
         <div
           ref={surfaceRef}

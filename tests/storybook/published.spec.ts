@@ -65,7 +65,7 @@ test('loads Canvas cell assets from the deployment subpath', async ({
     }
   });
   await page.goto('iframe.html?id=game-cell--incorrect-flag&viewMode=story');
-  const canvas = page.getByRole('img', { name: /Row 1: incorrect flag$/ });
+  const canvas = page.getByRole('img', { name: /Cell: incorrect flag$/ });
   await expect(canvas).toBeVisible();
   await expect(canvas).toHaveAttribute('data-board-canvas-ready', 'true');
   await expect(canvas).toHaveAttribute('data-board-canvas-visible-cells', '1');
@@ -114,7 +114,7 @@ test('isolates application storage and remounts with fresh state', async ({
     };
   }, Object.values(LOCAL_STORAGE_KEYS));
   await page.goto('iframe.html?id=game-cell--flagged&viewMode=story');
-  await expect(page.getByRole('img', { name: /Row 1: flag$/ })).toHaveAttribute(
+  await expect(page.getByRole('img', { name: /Cell: flag$/ })).toHaveAttribute(
     'data-board-canvas-ready',
     'true',
   );

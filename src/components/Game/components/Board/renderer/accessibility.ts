@@ -1,5 +1,5 @@
 import { CELL_MARKERS } from '@/config';
-import type { GameCell, TBoard } from '@/types';
+import type { GameCell } from '@/types';
 
 export const describeBoardCell = (cell: GameCell, isGameLost: boolean): string => {
   const isMine = cell.value === 'mine';
@@ -29,26 +29,4 @@ export const describeBoardCell = (cell: GameCell, isGameLost: boolean): string =
   }
 
   return String(cell.value);
-};
-
-export const getBoardCanvasAccessibleLabel = ({
-  board,
-  isGameLost,
-}: {
-  board: TBoard;
-  isGameLost: boolean;
-}): string => {
-  const rows = board.length;
-  const cols = board[0]?.length ?? 0;
-  const rowDescriptions = board.map(
-    (row, rowIndex) =>
-      `Row ${rowIndex + 1}: ${row
-        .map((cell) => describeBoardCell(cell, isGameLost))
-        .join(', ')}`,
-  );
-
-  return [
-    `Minesweeper board, ${rows} rows by ${cols} columns.`,
-    ...rowDescriptions,
-  ].join(' ');
 };

@@ -6,7 +6,6 @@ import {
   BOARD_RESULT_HIGHLIGHT_TWEEN_DURATION_MS,
   createBoardInteractionTweens,
   createBoardResultHighlightTweens,
-  getBoardCanvasAccessibleLabel,
   getBoardCanvasCamera,
   getBoardCanvasDirtyRegion,
   getBoardInteractionDirtyViewport,
@@ -800,37 +799,6 @@ describe('board result highlight tween', () => {
 });
 
 describe('board cell render model', () => {
-  it('provides a dynamic text alternative for the visual canvas', () => {
-    const board = [
-      [
-        createCell({ isOpened: true, marker: null, value: 2 }),
-        createCell({
-          isOpened: false,
-          marker: CELL_MARKERS.FLAG,
-          value: 1,
-        }),
-      ],
-      [
-        createCell({ isOpened: true, marker: null, value: 0 }),
-        createCell({
-          isOpened: false,
-          marker: CELL_MARKERS.FLAG,
-          value: 1,
-        }),
-      ],
-    ];
-
-    expect(
-      getBoardCanvasAccessibleLabel({
-        board,
-        isGameLost: true,
-      }),
-    ).toBe(
-      'Minesweeper board, 2 rows by 2 columns. ' +
-        'Row 1: 2, incorrect flag Row 2: empty, incorrect flag',
-    );
-  });
-
   it.each([
     {
       cell: createCell({ isOpened: false, marker: null, value: null }),
