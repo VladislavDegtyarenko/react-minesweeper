@@ -10,9 +10,9 @@ Start with **UI / Switch** to change a controlled value, **Lobby / ContinueBanne
 
 ## What runs here
 
-The components, SCSS, Radix interactions, cell icons, and difficulty definitions come from the application. Example wrappers own temporary selection and retry state. Saved boards and dates are fixed. A small in-memory settings substitute supplies zoom without loading the application's browser-storage subscriptions.
+The components, SCSS, Radix interactions, Canvas board renderer, cell assets, and difficulty definitions come from the application. Example wrappers own temporary selection and retry state. Saved boards and dates are fixed. Cell examples pass zoom directly to the Canvas renderer. A small in-memory settings substitute isolates other examples from the application's browser-storage subscriptions.
 
-No account, database, analytics provider, or real score synchronization runs in these examples. Cell stories describe appearance; the full board owns gameplay input.
+No account, database, analytics provider, or real score synchronization runs in these examples. Cell stories mount the real Canvas renderer with fixed one-cell boards and demonstrate marker updates. The full application board owns gameplay input.
 
 ## Read the tests
 

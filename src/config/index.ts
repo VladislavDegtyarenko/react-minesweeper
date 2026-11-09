@@ -32,18 +32,6 @@ export const DIRECTIONS = [
   [1, 1],
 ];
 
-export const CELL_NUMBERS_COLORS = [
-  null,
-  'one',
-  'two',
-  'three',
-  'four',
-  'five',
-  'six',
-  'seven',
-  'eight',
-];
-
 export const LEVELS_CONFIG: LevelsConfig = [
   { id: 'easy', rows: 9, cols: 9, totalMines: 10, label: 'Easy' },
 

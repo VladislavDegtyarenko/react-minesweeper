@@ -1,20 +1,30 @@
-import type { CSSProperties } from 'react';
+'use client';
+
+import { useMemo, useRef, type CSSProperties } from 'react';
 import BoardFrame from '@/components/Game/components/BoardFrame';
-import Cell from '@/components/Game/components/Cell';
-import type { Level, OpenedMineCell, TBoard } from '@/types';
+import type { Level, TBoard } from '@/types';
 import { createCx } from '@/utils';
+import { usePreviewBoardCanvasRenderer } from './hooks/usePreviewBoardCanvasRenderer';
 import styles from './styles.module.scss';
 import { createPreviewBoard } from './utils';
 
 const cx = createCx(styles);
 
-type PreviewBoardProps = {
+type Props = {
   board?: TBoard;
   level: Level;
 };
 
-const PreviewBoard = ({ board, level }: PreviewBoardProps) => {
-  const previewBoard = board ?? createPreviewBoard(level);
+const PreviewBoard = ({ board, level }: Props) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const previewBoard = useMemo(
+    () => board ?? createPreviewBoard(level),
+    [board, level],
+  );
+  const areAssetsReady = usePreviewBoardCanvasRenderer({
+    board: previewBoard,
+    canvasRef,
+  });
 
   return (
     <span
@@ -27,22 +37,15 @@ const PreviewBoard = ({ board, level }: PreviewBoardProps) => {
       }
       aria-hidden="true"
     >
-      <BoardFrame as="span" variant="preview">
-        {previewBoard.map((row, rowIndex) => (
-          <span key={rowIndex} className={cx('row')}>
-            {row.map((cell, cellIndex) => (
-              <Cell
-                key={`${rowIndex}-${cellIndex}`}
-                rowIndex={rowIndex}
-                cellIndex={cellIndex}
-                value={cell.value}
-                isOpened={cell.isOpened}
-                marker={cell.marker}
-                highlight={(cell as OpenedMineCell).highlight}
-              />
-            ))}
-          </span>
-        ))}
+      <BoardFrame className={cx('frame')} as="span" variant="preview">
+        <canvas
+          ref={canvasRef}
+          className={cx('canvas')}
+          data-preview-board-canvas="true"
+          data-preview-board-canvas-ready={areAssetsReady ? 'true' : 'false'}
+          data-preview-board-cols={level.cols}
+          data-preview-board-rows={level.rows}
+        />
       </BoardFrame>
     </span>
   );

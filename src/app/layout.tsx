@@ -17,18 +17,10 @@ import type { Viewport } from 'next';
  */
 export const metadata = generateMetadata({ isRootLayout: true });
 
-/**
- * Disables pinch- and double-tap-zoom at the viewport level.
- * Required on iOS to suppress the "drag to select" magnifier gesture
- * that fires on a tap → release → press-and-hold sequence, which is
- * tied to the double-tap-to-zoom system rather than per-element CSS.
- * The game has its own in-app zoom, so browser-level zoom is not needed.
- */
+// Keep browser zoom available. Board-local handlers own game pan and pinch.
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {

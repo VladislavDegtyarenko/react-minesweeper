@@ -25,7 +25,6 @@ const CONFIG: StorybookConfig = {
           '@radix-ui/react-dialog',
           '@radix-ui/react-icons',
           'classnames',
-          'framer-motion',
           'radix-ui',
           'zustand',
         ],

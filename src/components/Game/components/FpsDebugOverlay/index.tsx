@@ -4,9 +4,10 @@ import type { GameDebugMode } from '@/components/Game/utils/route';
 import {
   readPinchPerfDebugSnapshot,
   setPinchPerfDebugEnabled,
-  type PinchPerfDebugSnapshot,
 } from '@/components/Game/debug/pinchPerf';
-import { EMPTY_BOARD_ELEMENT_STATS, readBoardElementStats } from './utils';
+import type { PinchPerfDebugSnapshot } from '@/components/Game/debug/types';
+import { EMPTY_BOARD_ELEMENT_STATS } from './constants';
+import { readBoardElementStats } from './utils';
 import PerfDebugDetails from './components/PerfDebugDetails';
 import type { DebugStats, PinchRates } from './types';
 import styles from './styles.module.scss';

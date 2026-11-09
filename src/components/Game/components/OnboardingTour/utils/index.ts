@@ -1,4 +1,13 @@
 import { CELL_MARKERS } from '@/config';
+import {
+  BOARD_FRAME_SELECTOR,
+  BOARD_SURFACE_SELECTOR,
+} from '@/components/Game/components/Board/constants';
+import {
+  getBoardCellClientRect,
+  getBoardCellGroupClientRect,
+  getBoardGridSize,
+} from '@/components/Game/components/Board/geometry';
 import { ControlModes, DigFlag } from '@/store/settings';
 import type { GameCell, TBoard } from '@/types';
 import type { CSSProperties } from 'react';
@@ -9,6 +18,7 @@ import {
 } from '../constants';
 import type {
   FlagStepPhase,
+  TourCellGroupTarget,
   TourCellTarget,
   TourStepContent,
   TourStepId,
@@ -154,64 +164,71 @@ export const isCellStillActionable = (
   return Boolean(cell && isClosedUnmarkedCell(cell));
 };
 
-export const getTourCellSelector = (target: TourCellTarget) =>
-  `[data-tour-cell="${target.rowIndex}-${target.cellIndex}"]`;
+const getBoardSurfaceElement = (): HTMLElement | null => {
+  const element = document.querySelector(BOARD_SURFACE_SELECTOR);
 
-const getTourTargetElement = (target: TourTarget): Element | null => {
-  if (!target) {
+  return element instanceof HTMLElement ? element : null;
+};
+
+const getCellTargetRect = (target: TourCellTarget): TourTargetRect | null => {
+  const surfaceElement = getBoardSurfaceElement();
+
+  if (!surfaceElement) {
     return null;
   }
 
-  if (target.type === 'cell') {
-    return document.querySelector(getTourCellSelector(target));
+  const gridSize = getBoardGridSize(surfaceElement);
+
+  if (!gridSize) {
+    return null;
   }
 
-  if (target.type === 'cell-group') {
-    return document.querySelector(getTourCellSelector(target.cells[0]));
+  return getBoardCellClientRect({
+    ...target,
+    ...gridSize,
+    surfaceRect: surfaceElement.getBoundingClientRect(),
+  });
+};
+
+const getCellGroupTargetRect = (
+  target: TourCellGroupTarget,
+): TourTargetRect | null => {
+  const surfaceElement = getBoardSurfaceElement();
+
+  if (!surfaceElement) {
+    return null;
+  }
+
+  const gridSize = getBoardGridSize(surfaceElement);
+
+  if (!gridSize) {
+    return null;
+  }
+
+  return getBoardCellGroupClientRect({
+    cells: target.cells,
+    ...gridSize,
+    surfaceRect: surfaceElement.getBoundingClientRect(),
+  });
+};
+
+const getTourTargetElement = (target: TourTarget): Element | null => {
+  if (target?.type !== 'tour-id') {
+    return null;
   }
 
   return document.querySelector(`[data-tour-id="${target.tourId}"]`);
 };
 
-const getCellGroupTargetRect = (target: TourTarget): TourTargetRect | null => {
-  if (target?.type !== 'cell-group') {
-    return null;
-  }
-
-  const rects = target.cells
-    .map((cellTarget) =>
-      document
-        .querySelector(getTourCellSelector(cellTarget))
-        ?.getBoundingClientRect(),
-    )
-    .filter((rect): rect is DOMRect => Boolean(rect));
-
-  if (rects.length === 0) {
-    return null;
-  }
-
-  const top = Math.min(...rects.map((rect) => rect.top));
-  const left = Math.min(...rects.map((rect) => rect.left));
-  const right = Math.max(...rects.map((rect) => rect.right));
-  const bottom = Math.max(...rects.map((rect) => rect.bottom));
-
-  return {
-    top,
-    left,
-    width: right - left,
-    height: bottom - top,
-    right,
-    bottom,
-  };
-};
-
 export const getTourTargetRect = (
   target: TourTarget,
 ): TourTargetRect | null => {
-  const groupRect = getCellGroupTargetRect(target);
+  if (target?.type === 'cell') {
+    return getCellTargetRect(target);
+  }
 
-  if (groupRect) {
-    return groupRect;
+  if (target?.type === 'cell-group') {
+    return getCellGroupTargetRect(target);
   }
 
   const element = getTourTargetElement(target);
@@ -233,16 +250,29 @@ export const getTourTargetRect = (
 };
 
 export const scrollTourTargetIntoView = (target: TourTarget): void => {
-  const element = getTourTargetElement(target);
-
-  if (!element || (target?.type !== 'cell' && target?.type !== 'cell-group')) {
+  if (target?.type !== 'cell' && target?.type !== 'cell-group') {
     return undefined;
   }
 
-  element.scrollIntoView({
-    block: 'center',
-    inline: 'center',
+  const boardElement = document.querySelector(BOARD_FRAME_SELECTOR);
+  const targetRect = getTourTargetRect(target);
+
+  if (!(boardElement instanceof HTMLElement) || !targetRect) {
+    return undefined;
+  }
+
+  const boardRect = boardElement.getBoundingClientRect();
+  const viewportCenterX =
+    boardRect.left + boardElement.clientLeft + boardElement.clientWidth / 2;
+  const viewportCenterY =
+    boardRect.top + boardElement.clientTop + boardElement.clientHeight / 2;
+  const targetCenterX = targetRect.left + targetRect.width / 2;
+  const targetCenterY = targetRect.top + targetRect.height / 2;
+
+  boardElement.scrollTo({
     behavior: 'smooth',
+    left: boardElement.scrollLeft + targetCenterX - viewportCenterX,
+    top: boardElement.scrollTop + targetCenterY - viewportCenterY,
   });
 };
 

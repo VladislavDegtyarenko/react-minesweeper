@@ -59,6 +59,11 @@
   --green: #33d69f;
 
   --header-height: 88px;
+
+  @media screen and (max-width: 768px) {
+    --header-height: 56px;
+  }
+
   --page-inline-padding: var(--space-2);
   --page-block-offset: var(--header-height);
 

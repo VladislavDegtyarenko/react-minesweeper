@@ -53,7 +53,7 @@ test('loads the manager, docs, and a direct story after refresh', async ({
   });
 });
 
-test('loads cell icons from the deployment subpath', async ({
+test('loads Canvas cell assets from the deployment subpath', async ({
   page,
   baseURL,
 }) => {
@@ -65,18 +65,25 @@ test('loads cell icons from the deployment subpath', async ({
     }
   });
   await page.goto('iframe.html?id=game-cell--incorrect-flag&viewMode=story');
-  const cross = page.getByRole('img', { name: 'cross' });
-  await expect(cross).toBeVisible();
-  await expect
-    .poll(() => cross.evaluate((image: HTMLImageElement) => image.naturalWidth))
-    .toBeGreaterThan(0);
-  expect(await cross.getAttribute('src')).toBe(
-    new URL('icons/cross.svg', baseURL).pathname,
+  const canvas = page.getByRole('img', { name: /Cell: incorrect flag$/ });
+  await expect(canvas).toBeVisible();
+  await expect(canvas).toHaveAttribute('data-board-canvas-ready', 'true');
+  await expect(canvas).toHaveAttribute('data-board-canvas-visible-cells', '1');
+  const loadedAssets = await page.evaluate(() =>
+    performance.getEntriesByType('resource').map((entry) => entry.name),
   );
-  const flag = page.getByRole('img', { name: 'flag' });
-  await expect
-    .poll(() => flag.evaluate((image: HTMLImageElement) => image.naturalWidth))
-    .toBeGreaterThan(0);
+
+  for (const path of [
+    'icons/cross.svg',
+    'themes/blue-graphite/icons/Flag.svg',
+    'themes/blue-graphite/icons/Bomb.png',
+    'themes/blue-graphite/icons/Question.png',
+  ]) {
+    expect(loadedAssets).toContain(new URL(path, baseURL).href);
+  }
+  await page.screenshot({
+    path: 'test-results/storybook-canvas-incorrect-flag.png',
+  });
   expect(failures).toEqual([]);
 });
 
@@ -107,7 +114,10 @@ test('isolates application storage and remounts with fresh state', async ({
     };
   }, Object.values(LOCAL_STORAGE_KEYS));
   await page.goto('iframe.html?id=game-cell--flagged&viewMode=story');
-  await expect(page.getByRole('img', { name: 'flag' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /Cell: flag$/ })).toHaveAttribute(
+    'data-board-canvas-ready',
+    'true',
+  );
   expect(
     await page.evaluate(
       () =>
@@ -126,6 +136,44 @@ for (const viewport of [
   { width: 1280, height: 900 },
   { width: 390, height: 844 },
 ]) {
+  test(`keeps difficulty details accessible at ${viewport.width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(viewport);
+    for (const { story, name, selected } of [
+      {
+        story: 'easy',
+        name: /Fast Easy (Grid )?9 × 9 (Mines 10|10 mines)/i,
+        selected: false,
+      },
+      {
+        story: 'medium-selected',
+        name: /Balanced Medium (Grid )?16 × 16 (Mines 40|40 mines)/i,
+        selected: true,
+      },
+      {
+        story: 'expert',
+        name: /Demanding Expert (Grid )?16 × 30 (Mines 99|99 mines)/i,
+        selected: false,
+      },
+    ]) {
+      await page.goto(`iframe.html?id=lobby-levelcard--${story}&viewMode=story`);
+      const card = page.getByRole('button', { name });
+      await expect(card).toBeVisible();
+      await expect(card).toHaveAttribute('aria-pressed', String(selected));
+      await page.keyboard.press('Tab');
+      await expect(card).toBeFocused();
+      await page.keyboard.press('Space');
+      await expect(card).toHaveAttribute('aria-pressed', 'true');
+      await expect(card).toHaveAccessibleName(name);
+      if (story === 'easy') {
+        await page.screenshot({
+          path: `test-results/storybook-level-${viewport.width}.png`,
+        });
+      }
+    }
+  });
+
   test(`keeps the saved-game dialog usable at ${viewport.width}px`, async ({
     page,
   }) => {

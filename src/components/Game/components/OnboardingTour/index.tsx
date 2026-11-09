@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import Button from '@/components/ui/Button';
 import { LOCAL_STORAGE_KEYS } from '@/config';
@@ -31,14 +38,13 @@ import {
   getTourTargetRect,
   isCellFlagged,
   isCellOpened,
-  scrollTourTargetIntoView,
 } from './utils';
 import styles from './styles.module.scss';
-import { useResizeObserver } from '@/hooks';
+import { useTourTargetViewportSync } from './hooks/useTourTargetViewportSync';
 
 const cx = createCx(styles);
 
-type OnboardingTourProps = {
+type Props = {
   shouldReplay: boolean;
 };
 
@@ -51,7 +57,7 @@ const shouldDelayStepTransition = (
   nextStepIndex: number,
 ) => currentStepIndex !== nextStepIndex;
 
-const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
+const OnboardingTour = ({ shouldReplay }: Props) => {
   const board = useGameStore((state) => state.board);
   const minesLeft = useGameStore(
     (state) => state.level.totalMines - state.totalFlags,
@@ -76,7 +82,11 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
   const [hasAdvancedFromOpenStep, setHasAdvancedFromOpenStep] = useState(false);
   const [hasAdvancedFromFlagStep, setHasAdvancedFromFlagStep] = useState(false);
   const [pendingStepIndex, setPendingStepIndex] = useState<number | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const shouldRestoreFocusOnCloseRef = useRef(true);
   const stepTransitionTimeoutRef = useRef<number | null>(null);
+  const bodyId = useId();
+  const titleId = useId();
   const stepId = TOUR_STEP_IDS[stepIndex] ?? TOUR_STEP_IDS[0];
   const isStepTransitionPending = pendingStepIndex !== null;
   const numberCellTarget = useMemo(
@@ -116,7 +126,7 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
   );
   const clearStepTransitionDelay = useCallback((shouldResetPending = true) => {
     if (stepTransitionTimeoutRef.current === null) {
-      return;
+      return undefined;
     }
 
     window.clearTimeout(stepTransitionTimeoutRef.current);
@@ -132,7 +142,7 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
         pendingStepIndex !== null ||
         stepTransitionTimeoutRef.current !== null
       ) {
-        return;
+        return undefined;
       }
 
       clearStepTransitionDelay();
@@ -140,7 +150,7 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
       if (!shouldDelayStepTransition(stepIndex, nextStepIndex)) {
         setStepIndex(nextStepIndex);
 
-        return;
+        return undefined;
       }
 
       setPendingStepIndex(nextStepIndex);
@@ -157,6 +167,38 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
     markTourSeen();
     setIsOpen(false);
   }, [clearStepTransitionDelay]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    shouldRestoreFocusOnCloseRef.current = true;
+    const previouslyFocusedElement =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeTour();
+      }
+    };
+
+    closeButtonRef.current?.focus();
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+
+      if (
+        shouldRestoreFocusOnCloseRef.current &&
+        previouslyFocusedElement?.isConnected
+      ) {
+        previouslyFocusedElement.focus();
+      }
+    };
+  }, [closeTour, isOpen]);
 
   useEffect(
     () => () => {
@@ -287,6 +329,7 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
       return undefined;
     }
 
+    shouldRestoreFocusOnCloseRef.current = false;
     closeTour();
   }, [closeTour, isOpen, isSettingsOpened, stepId]);
 
@@ -299,14 +342,11 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
     );
   }, [numberCellTarget, stepContent.target, stepId]);
 
-  useResizeObserver(
-    () => [document.body],
-    () => {
-      updateTargetRect();
-      scrollTourTargetIntoView(stepContent.target);
-    },
-    [stepContent.target],
-  );
+  useTourTargetViewportSync({
+    isOpen,
+    target: stepContent.target,
+    updateTargetRect,
+  });
 
   if (!isOpen) {
     return null;
@@ -343,6 +383,7 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
       {targetRect ? (
         <div
           className={cx('spotlight')}
+          data-tour-spotlight="true"
           style={{
             top: targetRect.top,
             left: targetRect.left,
@@ -377,12 +418,14 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
       ) : null}
 
       <section
-        aria-modal="true"
+        aria-describedby={bodyId}
+        aria-labelledby={titleId}
         className={cx('card', !targetRect && 'centered')}
         role="dialog"
         style={cardStyle}
       >
         <button
+          ref={closeButtonRef}
           aria-label="Skip tutorial"
           className={cx('closeButton')}
           type="button"
@@ -394,8 +437,10 @@ const OnboardingTour = ({ shouldReplay }: OnboardingTourProps) => {
         <p className={cx('eyebrow')}>
           Step {stepIndex + 1} of {TOUR_STEP_COUNT}
         </p>
-        <h2>{stepContent.title}</h2>
-        <p className={cx('body')}>{stepContent.body}</p>
+        <h2 id={titleId}>{stepContent.title}</h2>
+        <p id={bodyId} className={cx('body')}>
+          {stepContent.body}
+        </p>
 
         <div className={cx('progress')} aria-hidden="true">
           {TOUR_STEP_IDS.map((tourStepId, index) => (

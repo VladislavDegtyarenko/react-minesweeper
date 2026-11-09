@@ -6,6 +6,13 @@ play, personal best times, and the level-based public leaderboard.
 ## User-facing Behavior
 
 - The player selects Easy, Medium, or Expert and receives a random board.
+- The board is drawn on Canvas. A synchronized accessible grid exposes cell
+  coordinates and visible states without revealing closed values. Tab enters or
+  leaves the grid, arrows move between cells, Enter or Space opens a cell, and F
+  cycles its marker (including question marks when enabled). Home and End move
+  to the row edges; Control plus Home or End moves to the board edges.
+- Board zoom, window resizing, and screen pixel density update the Canvas and
+  hit testing together. Browser page zoom remains available outside board gestures.
 - Starting a new game creates a fresh random board for the current difficulty.
 - Restarting reopens the same board values with all cells closed.
 - A fresh non-restarted Free Play board protects the first click from being a

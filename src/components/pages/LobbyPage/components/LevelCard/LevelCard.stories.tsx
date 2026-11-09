@@ -28,7 +28,7 @@ const META = {
     docs: {
       description: {
         component:
-          'A native button containing difficulty details and a deterministic preview board. The preview is decorative and hidden from assistive technology; the button’s name describes the difficulty, dimensions, and mines. aria-pressed exposes selection. The example parent selects the card without changing game state or navigating.',
+          'A native button containing difficulty details and a deterministic preview board. Its accessible name comes from the visible text, including dimensions and mines at both desktop and mobile widths. The preview is decorative and hidden from assistive technology. aria-pressed exposes selection. The example parent selects the card without changing game state or navigating.',
       },
       source: {
         code: '<LevelCard level={level} isSelected={selectedLevel === level.id} onSelect={setSelectedLevel} />',
@@ -52,7 +52,7 @@ export const Narrow: Story = {
 export const KeyboardSelection: Story = {
   play: async ({ canvas, canvasElement, userEvent, args }) => {
     const card = canvas.getByRole('button', {
-      name: 'Easy difficulty. 9 by 9. 10 mines',
+      name: /Fast Easy .*9 × 9.*10/i,
     });
     await expect(card).toHaveAttribute('aria-pressed', 'false');
     await userEvent.tab();
