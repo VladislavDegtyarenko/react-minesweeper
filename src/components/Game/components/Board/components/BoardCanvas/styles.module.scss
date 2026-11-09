@@ -7,6 +7,9 @@
   flex-shrink: 0;
   margin: 0;
   padding: var(--board-canvas-bleed);
+  // The viewport-sized canvas moves while scrolling and must not enlarge the
+  // board's scrollable area after the surface shrinks.
+  overflow: clip;
   cursor: default;
   user-select: none;
   -webkit-user-select: none;
