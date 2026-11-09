@@ -9,7 +9,7 @@ type Variant = 'vertical' | 'horizontal';
 
 type LobbyCardProps = PropsWithChildren<{
   variant?: Variant;
-  ariaLabel: string;
+  ariaLabel?: string;
   badge?: string;
   className?: string;
   compactBadge?: string;

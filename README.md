@@ -20,6 +20,8 @@ npm run storybook
 
 Open [localhost:6006](http://localhost:6006). No `.env.local` file is required for Storybook. To run the actual game, configure the variables described in [the application setup guide](docs/setup-clerk-neon-drizzle.md), then run `npm run dev`.
 
+Keep `@playwright/test` and `playwright` pinned to the same exact version when upgrading them, and install Chromium again after the upgrade. Use `npm ci` to restore the versions recorded in `package-lock.json`; mixing an independently updated test runner with an older Playwright CLI can prevent tests from loading.
+
 Start with [the controlled Switch](https://vladislavdegtyarenko.github.io/react-minesweeper/?path=/story/ui-switch--toggle-with-mouse-and-keyboard), [saved-game confirmation](https://vladislavdegtyarenko.github.io/react-minesweeper/?path=/story/lobby-continuebanner--cancel-and-escape), or [retry feedback](https://vladislavdegtyarenko.github.io/react-minesweeper/?path=/story/game-scoresyncnotice--retry-then-fail). A story is a named example of a component with fixed inputs. Use **Docs** for usage notes and **Controls** to change those inputs.
 
 ## Scripts

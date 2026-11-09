@@ -136,6 +136,44 @@ for (const viewport of [
   { width: 1280, height: 900 },
   { width: 390, height: 844 },
 ]) {
+  test(`keeps difficulty details accessible at ${viewport.width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(viewport);
+    for (const { story, name, selected } of [
+      {
+        story: 'easy',
+        name: /Fast Easy (Grid )?9 × 9 (Mines 10|10 mines)/i,
+        selected: false,
+      },
+      {
+        story: 'medium-selected',
+        name: /Balanced Medium (Grid )?16 × 16 (Mines 40|40 mines)/i,
+        selected: true,
+      },
+      {
+        story: 'expert',
+        name: /Demanding Expert (Grid )?16 × 30 (Mines 99|99 mines)/i,
+        selected: false,
+      },
+    ]) {
+      await page.goto(`iframe.html?id=lobby-levelcard--${story}&viewMode=story`);
+      const card = page.getByRole('button', { name });
+      await expect(card).toBeVisible();
+      await expect(card).toHaveAttribute('aria-pressed', String(selected));
+      await page.keyboard.press('Tab');
+      await expect(card).toBeFocused();
+      await page.keyboard.press('Space');
+      await expect(card).toHaveAttribute('aria-pressed', 'true');
+      await expect(card).toHaveAccessibleName(name);
+      if (story === 'easy') {
+        await page.screenshot({
+          path: `test-results/storybook-level-${viewport.width}.png`,
+        });
+      }
+    }
+  });
+
   test(`keeps the saved-game dialog usable at ${viewport.width}px`, async ({
     page,
   }) => {
