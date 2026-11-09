@@ -1,3 +1,4 @@
+import { getAssetUrl } from '@/utils/getAssetUrl';
 import { BOARD_CANVAS_ASSET_PATHS } from './constants';
 import type {
   BoardCanvasAssetName,
@@ -18,7 +19,7 @@ const loadImage = (
     image.onload = () => resolve([name, image]);
     image.onerror = () =>
       reject(new Error(`Failed to load board canvas asset: ${source}`));
-    image.src = source;
+    image.src = getAssetUrl(source as `/${string}`);
   });
 
 export const hasCompleteBoardCanvasAssets = (

@@ -14,15 +14,16 @@ export default function PrivacyPage() {
     <LegalDocument
       title="Privacy Policy"
       description="How Minesweeper collects, uses, stores, and discloses personal data for accounts and the shared leaderboard."
-      lastUpdatedDateTime="2026-05-14"
-      lastUpdated="May 14, 2026"
+      lastUpdatedDateTime="2026-10-30"
+      lastUpdated="October 30, 2026"
     >
       <section>
         <h2>1. Controller and scope</h2>
         <p>
           Minesweeper is operated by Vladyslav Dihtiarenko. This Privacy Policy
           applies to the public website, account features, shared leaderboard,
-          and related support interactions for the game.
+          related support interactions for the game, and the public Storybook
+          component demonstration.
         </p>
         <p>
           For privacy questions, requests, or account-related concerns, use the
@@ -70,9 +71,17 @@ export default function PrivacyPage() {
             working, and browser local storage used for guest best scores, guest
             daily challenge history and streaks, saved in-progress game state,
             first-time onboarding status, and gameplay preferences such as
-            control mode, zoom, dig/flag toggle, question mark preference,
-            sound mute setting, and the selected game mode (free play or daily
+            control mode, zoom, dig/flag toggle, question mark preference, sound
+            mute setting, and the selected game mode (free play or daily
             challenge).
+          </li>
+          <li>
+            <strong>Website analytics:</strong> anonymized page views collected
+            through Vercel Web Analytics, including the visited URL or route,
+            timestamp, referrer, filtered query parameters, approximate
+            location, browser, operating system, and device type. This data is
+            used only in aggregate and is not associated with an account or IP
+            address.
           </li>
         </ul>
       </section>
@@ -94,6 +103,9 @@ export default function PrivacyPage() {
             Let you delete your account and associated stored profile data.
           </li>
           <li>Operate, secure, and troubleshoot the service.</li>
+          <li>
+            Understand aggregate website traffic and which pages are used.
+          </li>
         </ul>
       </section>
 
@@ -143,16 +155,26 @@ export default function PrivacyPage() {
           </li>
           <li>
             The site is hosted on Vercel, which processes request and runtime
-            metadata necessary to deliver the service.
+            metadata necessary to deliver the service and provides anonymized
+            Web Analytics.
+          </li>
+          <li>
+            The separate Storybook component demonstration is hosted on GitHub
+            Pages. GitHub processes technical request information to deliver
+            that site, as described in its{' '}
+            <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">
+              privacy statement
+            </a>
+            . The demonstration uses sample game data and does not connect to
+            Clerk, Neon, or Vercel Web Analytics.
           </li>
           <li>
             Public leaderboard visitors can see the public profile and score
             fields described above.
           </li>
           <li>
-            Minesweeper does not sell personal information and does not
-            currently use advertising trackers or analytics trackers in this
-            app.
+            Minesweeper does not sell personal information and does not use
+            advertising trackers or cross-site analytics trackers.
           </li>
         </ul>
       </section>
@@ -170,11 +192,16 @@ export default function PrivacyPage() {
             the account is deleted.
           </li>
           <li>
-            Guest best scores, guest daily challenge history, saved
-            in-progress games, onboarding status, and gameplay preferences
-            stored in local storage remain on your device until you clear them,
-            they expire according to feature rules, or your browser storage is
-            removed.
+            Guest best scores, guest daily challenge history, saved in-progress
+            games, onboarding status, and gameplay preferences stored in local
+            storage remain on your device until you clear them, they expire
+            according to feature rules, or your browser storage is removed.
+          </li>
+          <li>
+            Vercel uses a request-derived hash to distinguish visitors for Web
+            Analytics and discards the visitor session after 24 hours.
+            Aggregated analytics are retained according to the reporting period
+            available for the project&apos;s Vercel plan.
           </li>
           <li>
             You can delete your account from the account page. That flow removes
@@ -189,9 +216,14 @@ export default function PrivacyPage() {
         <p>
           Minesweeper currently uses cookies that are necessary for signed-in
           Clerk sessions and browser local storage that supports gameplay and
-          account functionality. At the time of this policy, the app does not
-          use analytics cookies, advertising cookies, or cross-site tracking
-          technologies.
+          account functionality. Vercel Web Analytics does not use cookies and
+          does not track visitors across websites. The app does not use
+          advertising cookies or cross-site tracking technologies.
+        </p>
+        <p>
+          The Storybook demonstration may remember interface preferences in
+          browser storage, such as panel layout. Its examples do not read or
+          save the game&apos;s preferences, saved boards, or account scores.
         </p>
         <p>
           If that changes, the site will need updated disclosures and may need

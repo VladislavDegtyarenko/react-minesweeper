@@ -1,0 +1,27 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Introduction" />
+
+# Minesweeper component workshop
+
+Explore seven real components from the [Minesweeper application](https://minesweeper-classix.vercel.app). A **story** is a named example with fixed inputs: a disabled button, a flagged cell, or a saved game awaiting confirmation.
+
+Start with **UI / Switch** to change a controlled value, **Lobby / ContinueBanner** to inspect dialog focus, and **Game / ScoreSyncNotice** to follow a simulated retry. The **Controls** panel changes component inputs. The **Actions** panel records callbacks. The **Interactions** panel shows assertions and simulated user actions.
+
+## What runs here
+
+The components, SCSS, Radix interactions, Canvas board renderer, cell assets, and difficulty definitions come from the application. Example wrappers own temporary selection and retry state. Saved boards and dates are fixed. Cell examples pass zoom directly to the Canvas renderer. A small in-memory settings substitute isolates other examples from the application's browser-storage subscriptions.
+
+No account, database, analytics provider, or real score synchronization runs in these examples. Cell stories mount the real Canvas renderer with fixed one-cell boards and demonstrate marker updates. The full application board owns gameplay input.
+
+## Read the tests
+
+Each interactive story includes a **play function**, which performs actions and checks the result. The Vitest addon runs the same stories in Chromium, a real browser, and the accessibility addon checks the rendered HTML with axe. The development server also offers a test runner in its sidebar; the static public site has no background test server. Automated results are available in [GitHub Actions](https://github.com/VladislavDegtyarenko/react-minesweeper/actions/workflows/storybook.yml).
+
+An automated accessibility pass cannot establish that the entire game is accessible. Keyboard interaction and dialog focus are checked explicitly; layout and findings marked incomplete still need human review.
+
+## Run locally
+
+Use Node.js 24 and run `npm ci`, `npx playwright install chromium`, and `npm run storybook`. No application credentials are needed. Run `npm run test:storybook` for component and accessibility tests, or `npm test` for the game-logic unit tests.
+
+See the [README walkthrough](https://github.com/VladislavDegtyarenko/react-minesweeper#storybook-walkthrough) for a guided tour and implementation decisions you can explain in an interview.
