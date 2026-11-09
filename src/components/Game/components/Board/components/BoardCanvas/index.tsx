@@ -1,4 +1,10 @@
-import { useMemo, useRef, type CSSProperties, type RefObject } from 'react';
+import {
+  useMemo,
+  useRef,
+  type CSSProperties,
+  type PropsWithChildren,
+  type RefObject,
+} from 'react';
 import { getBoardCanvasStyle } from '@/components/Game/components/Board/utils';
 import { useBoardCanvasRenderer } from '@/components/Game/components/Board/hooks/useBoardCanvasRenderer';
 import {
@@ -10,20 +16,23 @@ import {
 import type { TBoard } from '@/types';
 import styles from './styles.module.scss';
 
-type Props = BoardCanvasInteractionState & {
-  board: TBoard;
-  boardRef: RefObject<HTMLDivElement>;
-  bleedFrameRef: RefObject<HTMLDivElement>;
-  cols: number;
-  isGameLost: boolean;
-  renderLayerRef: RefObject<HTMLDivElement>;
-  rows: number;
-  surfaceRef: RefObject<HTMLDivElement>;
-  zoom: number;
-};
+type Props = PropsWithChildren<
+  BoardCanvasInteractionState & {
+    board: TBoard;
+    boardRef: RefObject<HTMLDivElement>;
+    bleedFrameRef: RefObject<HTMLDivElement>;
+    cols: number;
+    isGameLost: boolean;
+    renderLayerRef: RefObject<HTMLDivElement>;
+    rows: number;
+    surfaceRef: RefObject<HTMLDivElement>;
+    zoom: number;
+  }
+>;
 
 const BoardCanvas = ({
   board,
+  children,
   boardRef,
   bleedFrameRef,
   cols,
@@ -81,6 +90,7 @@ const BoardCanvas = ({
         <canvas
           ref={canvasRef}
           aria-label={accessibleLabel}
+          aria-hidden={children ? true : undefined}
           className={styles.canvas}
           data-board-canvas="true"
           data-board-canvas-ready={areAssetsReady ? 'true' : 'false'}
@@ -96,6 +106,7 @@ const BoardCanvas = ({
           data-board-surface="true"
           style={getBoardCanvasStyle({ cols, rows, zoom })}
         />
+        {children}
       </div>
     </div>
   );

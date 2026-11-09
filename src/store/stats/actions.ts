@@ -171,6 +171,14 @@ export const recordAccountBestTime = async (
 };
 
 export const syncStatsWithUser = async (isSignedIn: boolean) => {
+  const previous = useStatsStore.getState();
+
+  // Auth may finish loading after a guest has already won. Keep that result
+  // unless we are actually switching from account stats back to guest stats.
+  if (!isSignedIn && !previous.isSignedIn && previous.scoreSource === 'guest') {
+    return undefined;
+  }
+
   useStatsStore.setState({ isSignedIn });
 
   if (!isSignedIn) {

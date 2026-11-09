@@ -17,20 +17,10 @@ import type { Viewport } from 'next';
  */
 export const metadata = generateMetadata({ isRootLayout: true });
 
-/**
- * Disables pinch- and double-tap-zoom at the viewport level, since the game
- * ships its own in-app zoom.
- *
- * Note: iOS Safari ignores `maximumScale` and `userScalable` for accessibility
- * reasons, so this does nothing there — including for the "drag to select"
- * magnifier that a tap → release → press-and-hold sequence triggers. That
- * gesture is suppressed by `useBoardTouchDefaultSuppression` instead.
- */
+// Keep browser zoom available. Board-local handlers own game pan and pinch.
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {

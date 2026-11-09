@@ -1,3 +1,4 @@
+import { useBoardCanvasPixelRatio } from '@/hooks/useBoardCanvasPixelRatio';
 import type { CellMarker, TBoard } from '@/types';
 import { recordBoardCanvasDraw } from '@/components/Game/debug/pinchPerf';
 import { useBoardCanvasAssets } from '@/hooks/useBoardCanvasAssets';
@@ -224,6 +225,7 @@ export function useBoardCanvasRenderer({
     return keys;
   }, [board]);
 
+  useBoardCanvasPixelRatio(() => requestRenderRef.current(true));
   useBoardCanvasFontReady(() => requestRenderRef.current(true));
 
   useEffect(() => {

@@ -21,8 +21,13 @@ const isPositiveInteger = (value: number) =>
 const isValidGrid = ({ rows, cols }: BoardGridSize) =>
   isPositiveInteger(rows) && isPositiveInteger(cols);
 
-const isValidSurfaceRect = ({ width, height }: BoardClientRect) =>
-  Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0;
+const isValidSurfaceRect = ({ left, top, width, height }: BoardClientRect) =>
+  Number.isFinite(left) &&
+  Number.isFinite(top) &&
+  Number.isFinite(width) &&
+  Number.isFinite(height) &&
+  width > 0 &&
+  height > 0;
 
 const isCellWithinGrid = ({
   rowIndex,
@@ -54,7 +59,12 @@ export const getBoardCellFromClientPoint = ({
   cols,
   surfaceRect,
 }: HitTestOptions): BoardCellCoordinates | null => {
-  if (!isValidGrid({ rows, cols }) || !isValidSurfaceRect(surfaceRect)) {
+  if (
+    !Number.isFinite(clientX) ||
+    !Number.isFinite(clientY) ||
+    !isValidGrid({ rows, cols }) ||
+    !isValidSurfaceRect(surfaceRect)
+  ) {
     return null;
   }
 

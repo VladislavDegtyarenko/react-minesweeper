@@ -1,0 +1,36 @@
+.grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: repeat(var(--board-rows), 1fr);
+  pointer-events: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(var(--board-cols), 1fr);
+}
+
+.cell {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-cell);
+  padding: 0;
+  pointer-events: none;
+
+  &:focus-visible {
+    outline: 3px solid var(--text-primary);
+    outline-offset: -3px;
+  }
+}
+
+.instructions {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0;
+  pointer-events: none;
+}

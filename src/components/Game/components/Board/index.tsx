@@ -13,6 +13,7 @@ import ScrollHints from '@/components/Game/components/ScrollHints';
 import { useBoardScrollHints } from '@/components/Game/components/ScrollHints/hooks/useBoardScrollHints';
 import BoardWrapper from './BoardWrapper';
 import { useBoardInputHandlers } from './hooks/useBoardInputHandlers';
+import AccessibleBoard from './components/AccessibleBoard';
 import BoardCanvas from './components/BoardCanvas';
 import styles from './styles.module.scss';
 
@@ -89,7 +90,13 @@ const Board = ({ dailyCardHeight, gameFooterHeight }: Props) => {
             rows={rows}
             surfaceRef={boardSurfaceRef}
             zoom={zoom}
-          />
+          >
+            <AccessibleBoard
+              key={`${rows}:${cols}`}
+              board={board}
+              gameStatus={gameStatus}
+            />
+          </BoardCanvas>
         </div>
       </BoardFrame>
 

@@ -1,3 +1,4 @@
+import { useBoardCanvasPixelRatio } from '@/hooks/useBoardCanvasPixelRatio';
 import { useLayoutEffect, useRef, type RefObject } from 'react';
 import {
   createBoardResultHighlightTweens,
@@ -33,6 +34,7 @@ export function usePreviewBoardCanvasRenderer({
   const requestRenderRef = useRef<() => void>(() => undefined);
   const themeRef = useRef<ReturnType<typeof readBoardCanvasTheme> | null>(null);
 
+  useBoardCanvasPixelRatio(() => requestRenderRef.current());
   useBoardCanvasFontReady(() => requestRenderRef.current());
 
   useLayoutEffect(() => {

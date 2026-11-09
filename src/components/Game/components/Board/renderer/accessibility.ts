@@ -1,7 +1,7 @@
 import { CELL_MARKERS } from '@/config';
 import type { GameCell, TBoard } from '@/types';
 
-const describeCell = (cell: GameCell, isGameLost: boolean): string => {
+export const describeBoardCell = (cell: GameCell, isGameLost: boolean): string => {
   const isMine = cell.value === 'mine';
 
   if (isGameLost && cell.marker === CELL_MARKERS.FLAG && !isMine) {
@@ -43,7 +43,7 @@ export const getBoardCanvasAccessibleLabel = ({
   const rowDescriptions = board.map(
     (row, rowIndex) =>
       `Row ${rowIndex + 1}: ${row
-        .map((cell) => describeCell(cell, isGameLost))
+        .map((cell) => describeBoardCell(cell, isGameLost))
         .join(', ')}`,
   );
 

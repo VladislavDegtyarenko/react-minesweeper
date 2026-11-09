@@ -112,3 +112,104 @@ describe('board geometry', () => {
     ).toBeNull();
   });
 });
+
+describe('board geometry boundaries', () => {
+  it('round-trips every cell center after fractional scaling and scrolling', () => {
+    for (const scale of [0.65, 1, 1.375, 2]) {
+      const surfaceRect = {
+        left: -117.25,
+        top: -35.5,
+        width: 930 * scale,
+        height: 496 * scale,
+        right: -117.25 + 930 * scale,
+        bottom: -35.5 + 496 * scale,
+      };
+      for (let rowIndex = 0; rowIndex < 16; rowIndex++) {
+        for (let cellIndex = 0; cellIndex < 30; cellIndex++) {
+          const cellRect = getBoardCellClientRect({
+            rowIndex,
+            cellIndex,
+            rows: 16,
+            cols: 30,
+            surfaceRect,
+          });
+          expect(cellRect).not.toBeNull();
+          expect(
+            getBoardCellFromClientPoint({
+              rows: 16,
+              cols: 30,
+              surfaceRect,
+              clientX: cellRect!.left + cellRect!.width / 2,
+              clientY: cellRect!.top + cellRect!.height / 2,
+            }),
+          ).toEqual({ rowIndex, cellIndex });
+        }
+      }
+    }
+  });
+
+  it('includes the upper-left edge but excludes the lower-right edges', () => {
+    const options = { rows: 9, cols: 9, surfaceRect: SURFACE_RECT };
+    expect(
+      getBoardCellFromClientPoint({ ...options, clientX: 100, clientY: 200 }),
+    ).toEqual({ rowIndex: 0, cellIndex: 0 });
+    for (const [clientX, clientY] of [
+      [99.99, 200],
+      [100, 199.99],
+      [460, 200],
+      [100, 920],
+    ]) {
+      expect(
+        getBoardCellFromClientPoint({ ...options, clientX, clientY }),
+      ).toBeNull();
+    }
+    expect(
+      getBoardCellFromClientPoint({ ...options, clientX: 140, clientY: 280 }),
+    ).toEqual({ rowIndex: 1, cellIndex: 1 });
+  });
+
+  it('rejects non-finite pointer positions before producing cell indexes', () => {
+    for (const value of [NaN, Infinity, -Infinity]) {
+      expect(
+        getBoardCellFromClientPoint({
+          rows: 9,
+          cols: 9,
+          surfaceRect: SURFACE_RECT,
+          clientX: value,
+          clientY: 200,
+        }),
+      ).toBeNull();
+      expect(
+        getBoardCellFromClientPoint({
+          rows: 9,
+          cols: 9,
+          surfaceRect: SURFACE_RECT,
+          clientX: 100,
+          clientY: value,
+        }),
+      ).toBeNull();
+    }
+  });
+
+  it('rejects unusable layout rectangles in both coordinate directions', () => {
+    for (const invalid of [
+      { left: NaN },
+      { top: Infinity },
+      { width: 0 },
+      { height: -1 },
+      { width: Infinity },
+    ]) {
+      const options = {
+        rows: 9,
+        cols: 9,
+        surfaceRect: { ...SURFACE_RECT, ...invalid },
+      };
+      expect(
+        getBoardCellFromClientPoint({ ...options, clientX: 100, clientY: 200 }),
+      ).toBeNull();
+      expect(
+        getBoardCellClientRect({ ...options, rowIndex: 0, cellIndex: 0 }),
+      ).toBeNull();
+    }
+  });
+});

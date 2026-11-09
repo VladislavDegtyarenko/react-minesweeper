@@ -316,6 +316,46 @@ const toggleMarker = (
   }));
 };
 
+/** Applies an explicit cell command using the same rules as pointer input. */
+export const activateBoardCell = (
+  row: number,
+  col: number,
+  action: 'open' | 'mark',
+) => {
+  const { board } = useGameStore.getState();
+  const settings = useSettingsStore.getState();
+
+  if (
+    settings.isSettingsOpened ||
+    !Number.isInteger(row) ||
+    !Number.isInteger(col) ||
+    !board[row]?.[col]
+  ) {
+    return undefined;
+  }
+
+  const canActivate =
+    action === 'open'
+      ? shouldOpenCell(row, col)
+      : shouldToggleMarker(row, col, selectIsQuestionMarkEnabled(settings));
+
+  if (!canActivate) {
+    return undefined;
+  }
+
+  if (!useSFXStore.getState().isLoaded) {
+    initSFX();
+  }
+
+  if (action === 'open') {
+    handleOpenCell(row, col);
+  } else {
+    toggleMarker(row, col, selectIsQuestionMarkEnabled(settings));
+  }
+
+  return undefined;
+};
+
 export const handleCellInteraction = ({
   e,
   row,
